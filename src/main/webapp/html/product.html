@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+  <nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+  <div class="container">
+    <h3>Products</h3>
+
+    <!-- Top row with form-->
+    <div class="row">
+      <div class="col-12">
+        <form class="form-inline" id="product-form">
+          <div class="form-group">
+            <label for="inputProductName" class="col-sm-2 col-form-label">Product Name</label>
+            <div class="col-sm-10">
+              <input required type="text" class="form-control" name="productName" id="inputProductName"
+                placeholder="Enter Product name" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputProductBrandName" class="col-sm-2 col-form-label">Product's Brand Name</label>
+            &nbsp; &nbsp;
+            <select required class="form-control" name="productBrandName" id="inputProductBrandName">
+              <option value="string">Volvo</option>
+              <option value="saab">Saab</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProductBrandCategoryName" class="col-sm-2 col-form-label">Product's Category</label>
+            &nbsp; &nbsp;
+            <select required class="form-control" name="productBrandCategoryName" id="inputProductBrandCategoryName">
+              <option value="string">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label for="inputProductBarcode" class="col-sm-2 col-form-label">Product's Barcode</label>
+            <div class="col-sm-10">
+              <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
+                placeholder="Enter Product's barcode" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProductMrp" class="col-sm-2 col-form-label">Product MRP</label>
+            <div class="col-sm-10">
+              <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
+                placeholder="Enter Product's MRP" />
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="add-product">
+            Add
+          </button>
+          &nbsp;
+          <button type="button" class="btn btn-primary" id="refresh-data">
+            Refresh
+          </button>
+          &nbsp;
+          <button type="button" class="btn btn-primary" id="upload-data">
+            Upload
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Blank Row -->
+    <div class="row">&nbsp;</div>
+    <div class="row">
+      <!-- Table -->
+      <div class="col-12">
+        <table class="table table-striped" id="product-table">
+          <thead>
+            <tr>
+              <th scope="col">Product ID</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Product's Brand Name</th>
+              <th scope="col">Product's Category</th>
+              <th scope="col">MRP</th>
+              <th scope="col">Barcode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Jordan</td>
+              <td>Nike</td>
+              <td>Shoes</td>
+              <td>1140</td>
+              <td>Edit | Delete</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Non marking</td>
+              <td>Yonex</td>
+              <td>Shoes</td>
+              <td>3389</td>
+              <td>Edit | Delete</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Product Edit Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="form-inline" id="product-edit-form">
+              <div class="form-group">
+                <label for="productName" class="col-sm-2 col-form-label">Product Name</label>
+                <div class="col-sm-10">
+                  <input required type="text" class="form-control" name="productName"
+                    placeholder="Enter Product name" />
+                </div>
+              </div>
+<!-- 
+              <div class="form-group">
+                <label for="productBrandName" class="col-sm-2 col-form-label">Product's Brand Name</label>
+                <div class="col-sm-10">
+                  <input required type="text" class="form-control" name="productBrandName"
+                    placeholder="Enter Product's Brand name" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="productBrandCategoryName" class="col-sm-2 col-form-label">Product's Category</label>
+                <div class="col-sm-10">
+                  <input required type="text" class="form-control" name="productBrandCategoryName"
+                    placeholder="Enter Product's Category" />
+                </div>
+              </div>
+ -->
+              
+          <div class="form-group">
+            <label for="productBrandName" class="col-sm-2 col-form-label">Product's Brand Name</label>
+            &nbsp; &nbsp;
+            <select required class="form-control" name="productBrandName" id="editProductBrandName">
+              <option value="string">Volvo</option>
+              <option value="saab">Saab</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="productBrandCategoryName" class="col-sm-2 col-form-label">Product's Category</label>
+            &nbsp; &nbsp;
+            <select required class="form-control" name="productBrandCategoryName" id="editProductBrandCategoryName">
+              <option value="string">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </div>
+
+              <div class="form-group">
+                <label for="productBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                <div class="col-sm-10">
+                  <input required type="text" class="form-control" name="productBarcode" placeholder="Enter Barcode" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="productMrp" class="col-sm-2 col-form-label">MRP</label>
+                <div class="col-sm-10">
+                  <input required type="number" class="form-control" name="productMrp" placeholder="Enter MRP" />
+                </div>
+              </div>
+
+              <input type="hidden" name="productId" />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="update-product">
+              Update Product
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Edit Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="product-file">
+              <input type="file" class="custom-file-input" id="productFile" />
+              <label class="custom-file-label" for="productFile" id="productFileName">Choose Product File</label>
+            </div>
+            <a th:href="@{/sample/product.tsv}" target="_blank">Download Sample</a>
+            <br />
+            Rows: <span id="rowCount">0</span>, Processed:
+            <span id="processCount">0</span>, Errors:
+            <span id="errorCount">0</span>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="process-data">
+              Upload
+            </button>
+            <button type="button" class="btn btn-warning" id="download-errors">
+              Download Errors
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container end-->
+
+  <footer th:replace="snippets.html :: name_footer"></footer>
+
+  <script th:src="@{/static/brand.js}"></script>
+  <script th:src="@{/static/product.js}"></script>
+</body>
+
+</html>
