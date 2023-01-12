@@ -28,7 +28,7 @@ public class InventoryApiController {
 
 	@Autowired
 	private InventoryService inventoryService;
-	
+
 	@Autowired
 	private ProductService productService;
 
@@ -38,20 +38,30 @@ public class InventoryApiController {
 		InventoryPojo p = convert(form);
 		inventoryService.addInventory(p);
 	}
-	
-	
-	@ApiOperation(value = "Deletes Inventory")
-	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.DELETE)
-	// /api/1
-	public void delete(@PathVariable int id) {
-		inventoryService.deleteInventory(id);
-	}
 
-	@ApiOperation(value = "Gets Inventory by ID")
-	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET)
-	public InventoryData get(@PathVariable int id) throws ApiException {
-		InventoryPojo p = inventoryService.getInventorty(id);
-		return convert(p);
+//	@ApiOperation(value = "Deletes Inventory")
+//	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.DELETE)
+//	// /api/1
+//	public void delete(@PathVariable int id) {
+//		inventoryService.deleteInventory(id);
+//	}
+
+//	@ApiOperation(value = "Gets Inventory by ID")
+//	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET)
+//	public InventoryData get(@PathVariable int id) throws ApiException {
+//		InventoryPojo p = inventoryService.getInventory(id);
+//		return convert(p);
+//	}
+
+	@ApiOperation(value = "Gets Inventory by barcode")
+	@RequestMapping(path = "/api/inventory/{inventoryProductBarcode}", method = RequestMethod.GET)
+	public InventoryData get(@PathVariable String inventoryProductBarcode) throws ApiException {
+
+		ProductPojo p = productService.findProduct(inventoryProductBarcode);
+		int productId = p.getProductId();
+
+		InventoryPojo pi = inventoryService.getInventory(productId);
+		return convert(pi);
 	}
 
 	@ApiOperation(value = "Gets list of Inventory")
@@ -65,19 +75,25 @@ public class InventoryApiController {
 		return list2;
 	}
 
+//	@ApiOperation(value = "Updates Inventory")
+//	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.PUT)
+//	public void update(@PathVariable int id, @RequestBody InventoryForm f) throws ApiException {
+//		InventoryPojo p = convert(f);
+//		inventoryService.updateInventory(p);
+//	}
+	
 	@ApiOperation(value = "Updates Inventory")
-	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.PUT)
-	public void update(@PathVariable int id, @RequestBody InventoryForm f) throws ApiException {
+	@RequestMapping(path = "/api/inventory", method = RequestMethod.PUT)
+	public void update(@RequestBody InventoryForm f) throws ApiException {
 		InventoryPojo p = convert(f);
 		inventoryService.updateInventory(p);
 	}
-	
 
 	private InventoryData convert(InventoryPojo p) throws ApiException {
 		InventoryData d = new InventoryData();
-		
+
 		ProductPojo prod = productService.findProduct(p.getProductId());
-		
+
 		d.setInventoryProductBarcode(prod.getProductBarcode());
 		d.setProductQuantity(p.getProductQuantity());
 		return d;
@@ -85,13 +101,13 @@ public class InventoryApiController {
 
 	private InventoryPojo convert(InventoryForm f) throws ApiException {
 		InventoryPojo p = new InventoryPojo();
-		
-		if(StringUtil.isEmpty(f.getInventoryProductBarcode())) {
+
+		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
 			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
 		}
-		
+
 		ProductPojo prod = productService.findProduct(f.getInventoryProductBarcode());
-		
+
 		p.setProductId(prod.getProductId());
 		p.setProductQuantity(f.getProductQuantity());
 		return p;

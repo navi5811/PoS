@@ -29,10 +29,11 @@ public class InventoryService {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public InventoryPojo getInventorty(int id) throws ApiException {
-		return dao.select(id);
+	public InventoryPojo getInventory(int productId) throws ApiException {
+		return dao.select(productId);
 	}
 
+	
 	@Transactional
 	public List<InventoryPojo> getAllInventory() {
 		return dao.selectAll();
@@ -58,13 +59,14 @@ public class InventoryService {
 	}
 
 	protected static void validateInventory(InventoryPojo p) throws ApiException {
-		
-		if(p.getProductQuantity()==null) {
+
+		if (p.getProductQuantity() == null) {
 			throw new ApiException("Product quantity cannot be null");
 		}
-		
-		if(p.getProductQuantity()<0) {
+
+		if (p.getProductQuantity() < 0) {
 			throw new ApiException("Product quantity cannot be less than 0");
 		}
+		
 	}
 }
