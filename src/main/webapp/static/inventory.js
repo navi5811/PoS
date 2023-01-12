@@ -14,7 +14,7 @@ function addInventory(event){
 
 	$.ajax({
 	   url: url,
-	   type: 'POST',
+	   type: 'PUT',
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
@@ -32,10 +32,10 @@ function addInventory(event){
 function updateInventory(event){
 	$('#edit-inventory-modal').modal('toggle');
 	//Get the ID
-	var id = $("#inventory-edit-form input[name=brandId]").val();	
-	console.log("Heyy"+ id);
-	var url = getInventoryUrl() + "/" + id;
-	console.log(id, url);
+	var productId = $("#inventory-edit-form input[name=productId]").val();	
+	console.log("Heyy"+ productId);
+	var url = getInventoryUrl() + "/" + productId;
+	console.log(productId, url);
 
 	//Set the values to update
 	var $form = $("#inventory-edit-form");
@@ -59,11 +59,13 @@ function updateInventory(event){
 
 // Done
 function getInventoryList(){
+    console.log("just entered get inventory");
 	var url = getInventoryUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
+        console.log("just entring the display inventory");
 	   		displayInventoryList(data);  
 	   },
 	   error: handleAjaxError
@@ -159,26 +161,35 @@ function displayInventoryList(data){
 	for(var i in data){
 		var e = data[i];
 		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
-		var buttonHtml = ' <button onclick="displayEditInventory(' + e.inventoryProductBarcode + ')">Edit Inventory</button>'
+		var buttonHtml = ' <button onclick="displayEditInventory(' + e.productId + ')">Edit Inventory</button>'
 		var row = '<tr>'
+        + '<td>' + e.productId + '</td>'
 		+ '<td>' + e.inventoryProductBarcode + '</td>'
 		+ '<td>' + e.productQuantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
+    console.log("just finished display inventory");
 }
 
 // Displays Modal
-function displayEditInventory(id){
-	var url = getInventoryUrl() + "/" + id;
+function displayEditInventory(productId){
+    console.log("entered edit inventory");
+	var url = getInventoryUrl() + "/" + productId;
+    console.log("url is " ,url);
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
+        console.log("entring display inventory");
 	   		displayInventory(data);   
 	   },
-	   error: handleAjaxError
+	   error: function(data){
+        console.log("why this error is occuring");
+        handleAjaxError
+       }
+       
 	});	
 }
 

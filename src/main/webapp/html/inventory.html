@@ -16,8 +16,6 @@
  <div class="row">
 	 <div class="col-12">
 			<form class="form-inline" id="inventory-form">
-			  
-
 
 				<div class="form-group">
 			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Product Barcode</label>
@@ -58,12 +56,14 @@
 	<table class="table table-striped" id="inventory-table">
 	  <thead>
 	    <tr>
+		  <th scope="col">Product Id</th>
 	      <th scope="col">Product Barcode</th>
-	      <th scope="col">Product MRP</th>
+	      <th scope="col">Product quantity</th>
 	    </tr>
 	  </thead>
 	  <tbody>
 	    <tr>
+		  <td>1</td>
 	      <td>2222</td>
 	      <td>58</td>
 	      <td>Edit | Delete</td>
@@ -87,8 +87,6 @@
       <div class="modal-body">
 			<form class="form-inline" id="inventory-edit-form">
 
-
-
 				<div class="form-group">
 			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Product Barcode</label>
 			    	<div class="col-sm-10">
@@ -102,13 +100,7 @@
 						<input type="number" class="form-control" name="productQuantity" id="inputProductQuantity" placeholder="Enter Product Quantity">
 					</div>
 				</div>
-
-
-
-
-
-
-
+				<input type="hidden" name="productId" >
 			</form>        
       </div>
       <div class="modal-footer">
@@ -157,7 +149,7 @@
 
 <footer th:replace="snippets.html :: name_footer"></footer>
 
-<script th:src="@{/static/invetory.js}"></script>
+<script th:src="@{/static/inventory.js}"></script>
 
 </body>	
 

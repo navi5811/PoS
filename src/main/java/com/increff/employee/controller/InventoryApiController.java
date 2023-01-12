@@ -39,30 +39,24 @@ public class InventoryApiController {
 		inventoryService.addInventory(p);
 	}
 
-//	@ApiOperation(value = "Deletes Inventory")
-//	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.DELETE)
-//	// /api/1
-//	public void delete(@PathVariable int id) {
-//		inventoryService.deleteInventory(id);
-//	}
-
-//	@ApiOperation(value = "Gets Inventory by ID")
-//	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.GET)
-//	public InventoryData get(@PathVariable int id) throws ApiException {
-//		InventoryPojo p = inventoryService.getInventory(id);
-//		return convert(p);
-//	}
-
-	@ApiOperation(value = "Gets Inventory by barcode")
-	@RequestMapping(path = "/api/inventory/{inventoryProductBarcode}", method = RequestMethod.GET)
-	public InventoryData get(@PathVariable String inventoryProductBarcode) throws ApiException {
-
-		ProductPojo p = productService.findProduct(inventoryProductBarcode);
-		int productId = p.getProductId();
-
-		InventoryPojo pi = inventoryService.getInventory(productId);
-		return convert(pi);
+	@ApiOperation(value = "Gets Inventory by ID")
+	@RequestMapping(path = "/api/inventory/{productId}", method = RequestMethod.GET)
+	public InventoryData get(@PathVariable int productId) throws ApiException {
+		InventoryPojo p = inventoryService.getInventory(productId);
+		return convert(p);
 	}
+
+//	@ApiOperation(value = "Gets Inventory by barcode")
+//	@RequestMapping(path = "/api/inventory/{inventoryProductBarcode}", method = RequestMethod.GET)
+//	public InventoryData get(@PathVariable String inventoryProductBarcode) throws ApiException {
+//
+//		ProductPojo p = productService.findProduct(inventoryProductBarcode);
+//		int productId = p.getProductId();
+//
+//		InventoryPojo pi = inventoryService.getInventory(productId);
+//		return convert(pi);
+//	}
+	
 
 	@ApiOperation(value = "Gets list of Inventory")
 	@RequestMapping(path = "/api/inventory", method = RequestMethod.GET)
@@ -74,6 +68,8 @@ public class InventoryApiController {
 		}
 		return list2;
 	}
+	
+	
 
 //	@ApiOperation(value = "Updates Inventory")
 //	@RequestMapping(path = "/api/inventory/{id}", method = RequestMethod.PUT)
@@ -95,6 +91,7 @@ public class InventoryApiController {
 		ProductPojo prod = productService.findProduct(p.getProductId());
 
 		d.setInventoryProductBarcode(prod.getProductBarcode());
+		d.setProductId(prod.getProductId());
 		d.setProductQuantity(p.getProductQuantity());
 		return d;
 	}

@@ -12,15 +12,15 @@ public class InventoryPojo {
 	private int productId;
 	private Integer productQuantity;
 	
-//	public InventoryPojo(int productId, Integer productQuantity) {
-//		super();
-//		this.productId = productId;
-//		this.productQuantity = productQuantity;
-//	}
-//	
-//	public InventoryPojo() {
-//		
-//	}
+	public InventoryPojo(int productId, Integer productQuantity) {
+		super();
+		this.productId = productId;
+		this.productQuantity = productQuantity;
+	}
+	
+	public InventoryPojo() {
+		
+	}
 
 	public Integer getProductQuantity() {
 		return productQuantity;
