@@ -19,7 +19,7 @@ public class BrandDao extends AbstractDao {
 	private static String select_id = "select p from BrandPojo p where brandId=:id";
 
 	private static String select_brand = "select p from BrandPojo p where brandName=:brandName and brandCategory=:brandCategory";
-	
+
 	private static String select_all = "select p from BrandPojo p";
 
 	@PersistenceContext
@@ -30,10 +30,10 @@ public class BrandDao extends AbstractDao {
 		em.persist(p);
 	}
 
-	public int delete(int id) {
+	public void delete(int id) {
 		Query query = em.createQuery(delete_id);
 		query.setParameter("id", id);
-		return query.executeUpdate();
+		query.executeUpdate();
 	}
 
 	public BrandPojo select(int id) {
@@ -42,16 +42,16 @@ public class BrandDao extends AbstractDao {
 		return getSingle(query);
 	}
 
-	public List<BrandPojo> selectAll() {
-		TypedQuery<BrandPojo> query = getQuery(select_all, BrandPojo.class);
-		return query.getResultList();
-	}
-	
 	public BrandPojo select(String brandName, String brandCategory) {
 		TypedQuery<BrandPojo> query = getQuery(select_brand, BrandPojo.class);
 		query.setParameter("brandName", brandName);
 		query.setParameter("brandCategory", brandCategory);
 		return getSingle(query);
+	}
+
+	public List<BrandPojo> selectAll() {
+		TypedQuery<BrandPojo> query = getQuery(select_all, BrandPojo.class);
+		return query.getResultList();
 	}
 
 	public void update(BrandPojo p) {

@@ -71,18 +71,18 @@ function getBrandList(){
 }
 
 // Done
-function deleteBrand(id){
-	var url = getBrandUrl() + "/" + id;
+// function deleteBrand(id){
+// 	var url = getBrandUrl() + "/" + id;
 
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		getBrandList();  
-	   },
-	   error: handleAjaxError
-	});
-}
+// 	$.ajax({
+// 	   url: url,
+// 	   type: 'DELETE',
+// 	   success: function(data) {
+// 	   		getBrandList();  
+// 	   },
+// 	   error: handleAjaxError
+// 	});
+// }
 
 // FILE UPLOAD METHODS
 var fileData = [];
@@ -158,8 +158,8 @@ function displayBrandList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
-		buttonHtml += ' <button onclick="displayEditBrand(' + e.brandId + ')">Edit Brand</button>'
+		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
+		var buttonHtml = ' <button onclick="displayEditBrand(' + e.brandId + ')">Edit Brand</button>'
 		var row = '<tr>'
 		+ '<td>' + e.brandId + '</td>'
 		+ '<td>' + e.brandName + '</td>'

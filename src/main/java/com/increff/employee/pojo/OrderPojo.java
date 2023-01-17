@@ -1,7 +1,6 @@
 package com.increff.employee.pojo;
 
-import java.time.LocalDateTime;
-
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,23 +10,23 @@ import javax.persistence.Id;
 public class OrderPojo {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int orderId;
-	private LocalDateTime orderTime;
-	
+	private Date date;
+
 	public int getOrderId() {
 		return orderId;
 	}
-	
+
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-	
-	public LocalDateTime getOrderTime() {
-		return orderTime;
+
+	public Date getDate() {
+		return date;
 	}
-	
-	public void setOrderTime(LocalDateTime orderTime) {
-		this.orderTime = orderTime;
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

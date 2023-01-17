@@ -15,7 +15,16 @@ public class OrderItemPojo {
 	private int orderProductId;
 	private int orderQuantity;
 	private Double orderSellingPrice;
+	private Double mrp;
 	
+	public Double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(Double mrp) {
+		this.mrp = mrp;
+	}
+
 	public int getOrderItemId() {
 		return orderItemId;
 	}

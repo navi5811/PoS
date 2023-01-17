@@ -18,8 +18,6 @@ public class InventoryService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void addInventory(InventoryPojo p) throws ApiException {
-		validateInventory(p);
-
 		dao.insert(p);
 	}
 
@@ -41,7 +39,7 @@ public class InventoryService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateInventory(InventoryPojo p) throws ApiException {
-		validateInventory(p);
+	
 		InventoryPojo ex = dao.select(p.getProductId());
 
 		ex.setProductQuantity(p.getProductQuantity());
@@ -52,21 +50,8 @@ public class InventoryService {
 	@Transactional
 	public InventoryPojo findInventory(int id) throws ApiException {
 		InventoryPojo p = dao.select(id);
-		if (p == null) {
-			throw new ApiException("Brand with given ID does not exit, id: " + id);
-		}
 		return p;
 	}
 
-	protected static void validateInventory(InventoryPojo p) throws ApiException {
 
-		if (p.getProductQuantity() == null) {
-			throw new ApiException("Product quantity cannot be null");
-		}
-
-		if (p.getProductQuantity() < 0) {
-			throw new ApiException("Product quantity cannot be less than 0");
-		}
-		
-	}
 }

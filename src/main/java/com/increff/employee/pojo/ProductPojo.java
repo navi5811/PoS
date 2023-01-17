@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class ProductPojo {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productId;
 	private int productBrandCategory;
 	private String productBarcode;

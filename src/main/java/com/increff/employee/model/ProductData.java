@@ -1,7 +1,6 @@
 package com.increff.employee.model;
 
 public class ProductData extends ProductForm {
-
 	private int productId;
 
 	public int getProductId() {
