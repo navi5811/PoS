@@ -33,11 +33,6 @@ public class InventoryDto {
 		inventoryservice.addInventory(p);
 	}
 
-	@Transactional
-	public void deleteInventory(int id) {
-		inventoryservice.deleteInventory(id);
-	}
-
 	@Transactional(rollbackOn = ApiException.class)
 	public InventoryData getInventory(int productId) throws ApiException {
 		InventoryPojo ip = inventoryservice.getInventory(productId);
@@ -94,8 +89,10 @@ public class InventoryDto {
 
 		ProductPojo prod = productservice.findProduct(p.getProductId());
 
+		d.setProductId(prod.getProductId());
 		d.setInventoryProductBarcode(prod.getProductBarcode());
 		d.setProductQuantity(p.getProductQuantity());
+		
 		return d;
 	}
 
@@ -105,9 +102,8 @@ public class InventoryDto {
 		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
 			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
 		}
-
 		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
-
+		
 		p.setProductId(prod.getProductId());
 		p.setProductQuantity(f.getProductQuantity());
 		return p;

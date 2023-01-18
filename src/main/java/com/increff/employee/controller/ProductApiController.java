@@ -47,13 +47,13 @@ public class ProductApiController {
 		
 	}
 
-	
-	@ApiOperation(value = "Deletes a Product")
-	@RequestMapping(path = "/api/product/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable int id) {
-		productdto.deleteProduct(id);
-		inventorydto.deleteInventory(id);
-	}
+//	
+//	@ApiOperation(value = "Deletes a Product")
+//	@RequestMapping(path = "/api/product/{id}", method = RequestMethod.DELETE)
+//	public void delete(@PathVariable int id) {
+//		productdto.deleteProduct(id);
+//		inventorydto.deleteInventory(id);
+//	}
 
 	@ApiOperation(value = "Gets a Product by ID")
 	@RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)

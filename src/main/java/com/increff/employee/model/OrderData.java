@@ -1,17 +1,21 @@
 package com.increff.employee.model;
 
+import java.util.Date;
+
 public class OrderData {
 
 	private int orderId;
 	private double billAmount;
-	private String datetime;
+	private Date datetime;
 	
 
-	public String getDatetime() {
+
+
+	public Date getDatetime() {
 		return datetime;
 	}
 
-	public void setDatetime(String datetime) {
+	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
 
