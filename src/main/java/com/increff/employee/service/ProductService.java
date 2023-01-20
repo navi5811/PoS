@@ -61,5 +61,13 @@ public class ProductService {
 		return p;
 	}
 
-	
+	//use for checking if product already exists with different barcode
+	@Transactional
+	public ProductPojo find(String name,int id) throws ApiException {
+		ProductPojo p = dao.select(name,id);
+		return p;
+	}
+
+
+
 }

@@ -21,21 +21,14 @@ function addOrderItem(event) {
 	}
 
 	else if(orderItem.ProductQuantity <= 0) {
-		toastr.error("Quantity should be positive", "", {
-    	"closeButton" : true,
-    	"timeOut" : 0,
-    	"extentedTimeOut" : 0
-    });}
+		console.log("Quantity should be greater than 0");
+		}
 	else if(orderItem.productSellingPrice < 0) {
-		toastr.error("Selling Price should be 0 or more", "", {
-    	"closeButton" : true,
-    	"timeOut" : 0,
-    	"extentedTimeOut" : 0
-    });}
+		console.log("Selling price should be greater than or equal to 0");
+	}
 }
 function cancelOrder(event) {
 	order = [];
-	toastr.warning("Cart Cleared");
 	$("#order-add-form").trigger("reset");
 	$("#orderitemadd-table tbody").remove();
 }
@@ -66,6 +59,33 @@ function addOrder(event) {
 	return false;
 }
 
+function getInvoice(id) {
+    var url = getOrderUrl() + "/invoice/" + id;
+    console.log(url);
+    $.ajax({
+        url: url,
+        type: 'GET',
+        responseType: 'arraybuffer',
+        success: function (response) {
+            var arrayBuffer = base64ToArrayBuffer(response);
+            function base64ToArrayBuffer(base64) {
+                var binaryString = window.atob(base64);
+                var binaryLen = binaryString.length;
+                var bytes = new Uint8Array(binaryLen);
+                for (var i = 0; i < binaryLen; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes;
+            }
+
+            var blob = new Blob([arrayBuffer], {type: "application/pdf"});
+            var link = window.URL.createObjectURL(blob);
+            window.open(link, '');
+        },
+        error: handleAjaxError
+    })
+}
+
 function updateOrderItem(event) {
 	// Get the ID
 	var id = $("#order-edit-form input[name=id]").val();
@@ -84,7 +104,6 @@ function updateOrderItem(event) {
 		},
 		success : function(response) {
 			$('#edit-orderitem-modal').modal('hide');
-			// toastr.success("Changes Implemented Successfully");
 			// getOrderItemList(orderId);
 			getOrderList();	
 		},
@@ -95,38 +114,6 @@ function updateOrderItem(event) {
 
 	return false;
 }
-
-// function getInvoice(id) {
-//     var url = getOrderUrl() + "/invoice/" + id;
-//     console.log(url);
-//     $.ajax({
-//         url: url,
-//         type: 'GET',
-//         responseType: 'arraybuffer',
-//         success: function (response) {
-//             var arrayBuffer = base64ToArrayBuffer(response); // data is the
-// 																// base64
-// 																// encoded
-// 																// string
-//             function base64ToArrayBuffer(base64) {
-//                 var binaryString = window.atob(base64);
-//                 var binaryLen = binaryString.length;
-//                 var bytes = new Uint8Array(binaryLen);
-//                 for (var i = 0; i < binaryLen; i++) {
-//                     bytes[i] = binaryString.charCodeAt(i);
-//                 }
-//                 return bytes;
-//             }
-
-//             var blob = new Blob([arrayBuffer], {type: "application/pdf"});
-//             var link = window.URL.createObjectURL(blob);
-//             window.open(link, '');
-//         },
-//         error: handleAjaxError
-//     })
-// }
-
-
 function getOrderList() {
 	console.log("getting order list");
 	var url = getOrderUrl();
@@ -164,7 +151,6 @@ function deleteOrderItem(id) {
 		success : function(data) {
 			getOrderItemList(id);
 			getOrderList(id);
-			toastr.success("Order Item Deleted Successfully");
 		},
 		error : function(response) {
 			handleAjaxError(response)
@@ -188,24 +174,24 @@ function displayOrderList(data) {
 		var e = data[i];
 		var date = new Date(e.datetime);
         date = date.toLocaleString();
-		var buttonHtml = ' <button type="button" class="btn btn-sm btn-outline-primary mx-1" onclick="getOrderItemList('
+		var buttonHtml = ' <button type="button" class="btn btn-secondary" onclick="getOrderItemList('
 				+ e.orderId + ')">View</button>'
-			buttonHtml += '<button type="button" class="btn btn-sm btn-outline-primary mx-1" onclick="getInvoice('
+		buttonHtml += '<button type="button" class="btn btn-secondary" onclick="getInvoice('
                             				+ e.orderId + ')">Download Invoice</button>'
 		var row = '<tr>' + '<td>' + e.orderId + '</td>' + '<td>' + date + '</td>'+ '<td>' + e.billAmount + '</td>' + '<td>' + buttonHtml
 				+ '</td>' + '</tr>';
 		$tbody.append(row);
 	}
 }
-
+//edited the button edit// class="btn text-bodye" data-toggle="tooltip" title="Edit" 
 function displayOrderItem(data) {
 	var $tbody = $('#orderitem-table').find('tbody');
 	$tbody.empty();
 	console.log("dataaa : ", data);
 	for ( var i in data) {
 		var e = data[i];
-		var buttonHtml = ' <button type="button" class="btn text-bodye" data-toggle="tooltip" title="Edit" onclick="displayEditOrderItem('
-				+ e.orderItemId + ')"><i class="fas fa-pencil-alt"></i></button>'
+		var buttonHtml = ' <button type="button"onclick="displayEditOrderItem('
+				+ e.orderItemId + ')">Edit</button>'
 		var row = '<tr>' + '<td>' + e.name + '</td>' + '<td>' + e.productBarcode
 				+ '</td>' + '<td>' + e.productQuantity + '</td>' + '<td>'
 				+ e.productSellingPrice + '</td>' + '<td>' + buttonHtml + '</td>'
@@ -220,7 +206,7 @@ function displayOrderItemListAdd(data) {
 	$tbody.empty();
 	for ( var i in data) {
 		var e = data[i];
-		var buttonHtml = '<button type="button" class="btn text-bodye" data-toggle="tooltip" title="Delete" onclick="deleteRow(\'' + e.productBarcode + '\')"><i class="fas fa-trash-alt"></i></button>'
+		var buttonHtml = '<button type="button" class="btn btn-danger" title="Delete" onclick="deleteRow(\'' + e.productBarcode + '\')">delete</button>'
 		var row = '<tr>' + '<td>' + e.productBarcode + '</td>' + '<td>' + e.productQuantity
 				+ '</td>' + '<td>' + e.productSellingPrice + '</td>'+ '<td>' + buttonHtml + '</td>' + '</tr>';
 		$tbody.append(row);

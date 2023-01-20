@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.increff.employee.dao.OrderDao;
 import com.increff.employee.dto.InventoryDto;
 import com.increff.employee.dto.ProductDto;
+import com.increff.employee.model.BillData;
 import com.increff.employee.model.OrderData;
 import com.increff.employee.model.OrderItemData;
 import com.increff.employee.model.OrderItemForm;
@@ -26,6 +27,7 @@ import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.OrderService;
+import com.increff.employee.util.PDFUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -154,5 +156,28 @@ public class OrderApiController {
 		ProductPojo productPojo = productdto.findProduct(f.getProductBarcode());
 		OrderItemPojo orderItemPojo = orderservice.convertOrderItemForm(f, productPojo);
 		orderservice.update(id, orderItemPojo);
+	}
+	@ApiOperation(value = "Get Invoice")
+	@RequestMapping(path = "/api/order/invoice/{orderId}", method = RequestMethod.GET)
+	public String getInvoice(@PathVariable int orderId) throws Exception {
+		BillData billData = new BillData();
+		OrderPojo orderPojo = orderservice.getOrder(orderId);
+		List<OrderItemPojo> orderItemPojo_list = orderservice.getOrderItems(orderId);
+		List<OrderItemData> d = new ArrayList<OrderItemData>();
+		for (OrderItemPojo orderItemPojo : orderItemPojo_list) {
+			ProductPojo productPojo = productdto.findProduct(orderItemPojo.getOrderProductId());
+			InventoryPojo inventoryPojo =inventorydto.convert( inventorydto.getInventory(productPojo.getProductId()));
+			d.add(orderservice.convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
+		}
+		billData.setOrderItemData(d);
+		billData.setBillAmount(orderservice.billTotal(orderId));
+		billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(orderPojo.getDate()));
+		billData.setOrderId(orderId);
+		//orderService.updateInvoice(orderId);
+		PDFUtils.generatePDFFromJavaObject(billData);
+		File file = new File("invoice.pdf");
+		byte[] contents = Files.readAllBytes(file.toPath());
+		return Base64.getEncoder().encodeToString(contents);
+	
 	}
 }

@@ -28,6 +28,59 @@ function addInventory(event){
 	return false;
 }
 
+// async function addInventory(event){
+//     //Set the values to update
+//     var barcode = $("#inventory-form input[name=inventoryProductBarcode]").val();
+// 	console.log("product barcode is",barcode);
+//     var $form = $("#inventory-form");
+//     var json = toJson($form);
+//     var inventoryObj = JSON.parse(json, barcode);
+// 	console.log("invetory obj values",inventoryObj);
+//     await updateQuantity(inventoryObj, barcode);
+//     var finalInvObj = await inventoryObj;
+//     json = await JSON.stringify(finalInvObj);
+//     await updateApiCall(json);
+// }
+// async function updateQuantity(inventoryObj, barcode){
+//     var url = getInventoryUrl() + "/?barcode=" + barcode;
+// 	console.log(url);
+// 	console.log("product quantity",inventoryObj.productQuantity);
+//     await $.ajax({
+//         url: url,
+//         type: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         success: function(response) {
+//             qty = parseInt(response.productQuantity);
+//             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity) + parseInt(qty);
+//             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity);
+//             console.log("Value in update qty fn " + inventoryObj.productQuantity);
+//         },
+//         error: handleAjaxError
+//     });
+//     await console.log(inventoryObj.productQuantity);
+//     return await inventoryObj;
+// }
+// function updateApiCall(json){
+//     var url = getInventoryUrl();
+// 	console.log("entered update api call");
+//     $.ajax({
+//         url: url,
+//         type: 'PUT',
+//         data: json,
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         success: function(response) {
+//             getInventoryList();
+//         },
+//         error: handleAjaxError
+//      });
+//      return false;
+// }
+
+
 //Done//doubtfull
 function updateInventory(event){
 	$('#edit-inventory-modal').modal('toggle');
@@ -53,7 +106,6 @@ function updateInventory(event){
 	   },
 	   error: handleAjaxError
 	});
-
 	return false;
 }
 
@@ -71,21 +123,6 @@ function getInventoryList(){
 	   error: handleAjaxError
 	});
 }
-
-// Done
-// function deleteInventory(id){
-// 	var url = getInventoryUrl() + "/" + id;
-
-// 	$.ajax({
-// 	   url: url,
-// 	   type: 'DELETE',
-// 	   success: function(data) {
-// 	   		getBrandList();  
-// 	   },
-// 	   error: handleAjaxError
-// 	});
-// }
-
 // FILE UPLOAD METHODS
 var fileData = [];
 var errorData = [];
@@ -161,9 +198,9 @@ function displayInventoryList(data){
 	for(var i in data){
 		var e = data[i];
 		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
-		var buttonHtml = ' <button onclick="displayEditInventory(' + e.productId + ')">Edit Inventory</button>'
+		var buttonHtml = ' <button class="btn btn-secondary" onclick="displayEditInventory(' + e.productId + ')">Edit</button>'
 		var row = '<tr>'
-        + '<td>' + e.productId + '</td>'
+		+ '<td>' + e.productName + '</td>'
 		+ '<td>' + e.inventoryProductBarcode + '</td>'
 		+ '<td>' + e.productQuantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'

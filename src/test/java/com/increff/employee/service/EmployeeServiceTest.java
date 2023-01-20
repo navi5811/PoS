@@ -26,5 +26,4 @@ public class EmployeeServiceTest extends AbstractUnitTest {
 		EmployeeService.normalize(p);
 		assertEquals("romil jain", p.getName());
 	}
-
 }

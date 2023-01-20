@@ -28,7 +28,8 @@ public class BrandService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo getBrand(int id) throws ApiException {
-		return findBrand(id);
+		BrandPojo p = dao.select(id);
+		return p;
 	}
 
 	@Transactional
@@ -38,7 +39,7 @@ public class BrandService {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandPojo p) throws ApiException {
-		BrandPojo ex = findBrand(id);
+		BrandPojo ex = getBrand(id);
 		ex.setBrandName(p.getBrandName());
 		ex.setBrandCategory(p.getBrandCategory());
 		dao.update(ex);
@@ -47,12 +48,6 @@ public class BrandService {
 	@Transactional
 	public BrandPojo findBrand(String brandName, String brandCategory) throws ApiException {
 		BrandPojo p = dao.select(brandName, brandCategory);
-		return p;
-	}
-
-	@Transactional
-	public BrandPojo findBrand(int id) throws ApiException {
-		BrandPojo p = dao.select(id);
 		return p;
 	}
 }

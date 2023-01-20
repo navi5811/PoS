@@ -21,29 +21,34 @@ public class BrandDto {
 	@Autowired
 	private BrandService brandservice;
 
+	//adding a brand
 	@Transactional(rollbackOn = ApiException.class)
 	public void addBrand(BrandForm f) throws ApiException {
 		BrandPojo p = convert(f);
 		normalizeBrand(p);
-
 		validation(p);
-
 		brandservice.addBrand(p);
 	}
 
+	//delete a brand only for backend purpose
 	@Transactional
 	public void deleteBrand(int id) {
 		brandservice.deleteBrand(id);
 	}	
 
+	//gets brand by id
 	@Transactional(rollbackOn = ApiException.class)
 	public BrandData getBrand(int id) throws ApiException {
-		BrandPojo bp = brandservice.findBrand(id);
+		BrandPojo bp = brandservice.getBrand(id);
 
+		if (bp == null) {
+			throw new ApiException("Brand with given ID does not exit, id: " + id);
+		}
 		BrandData bd = convert(bp);
 		return bd;
 	}
 
+	//get list of all brands
 	@Transactional
 	public List<BrandData> getAllBrand() {
 
@@ -55,13 +60,14 @@ public class BrandDto {
 		return list2;
 	}
 
+	//update a brand using id
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandForm f) throws ApiException {
 		BrandPojo p = convert(f);
 		
 		normalizeBrand(p);
 		validation(p);
-		BrandPojo ex = brandservice.findBrand(id);
+		BrandPojo ex = brandservice.getBrand(id);
 
 		ex.setBrandName(p.getBrandName());
 		ex.setBrandCategory(p.getBrandCategory());
@@ -69,31 +75,26 @@ public class BrandDto {
 		brandservice.updateBrand(id,ex);
 	}
 
+	//finding a brand using brandname and category
 	@Transactional
-	public BrandPojo findBrand(String brandName, String brandCategory) throws ApiException {
+	public BrandData findBrand(String brandName, String brandCategory) throws ApiException {
 		BrandPojo p = brandservice.findBrand(brandName, brandCategory);
-		if (p != null) {
-			return p;
+		BrandData d=convert(p);
+		if (d != null) {
+			return d;
 		} else {
 			throw new ApiException(
 					"The given Brand: " + brandName + " Category: " + brandCategory + " Pair does not exist");
 		}
 	}
 
-	@Transactional
-	public BrandPojo findBrand(int id) throws ApiException {
-		BrandPojo p = brandservice.findBrand(id);
-		if (p == null) {
-			throw new ApiException("Brand with given ID does not exit, id: " + id);
-		}
-		return p;
-	}
-
+	//noramlization of brand
 	public void normalizeBrand(BrandPojo p) {
 		p.setBrandName(StringUtil.toLowerCase(p.getBrandName()));
 		p.setBrandCategory(StringUtil.toLowerCase(p.getBrandCategory()));
 	}
 
+	//validation of brand
 	public void validation(BrandPojo p) throws ApiException {
 		if (StringUtil.isEmpty(p.getBrandName())) {
 			throw new ApiException("Brand Name cannot be empty");
@@ -109,6 +110,7 @@ public class BrandDto {
 		}
 	}
 
+	//conversion from pojo to data
 	private static BrandData convert(BrandPojo p) {
 		BrandData d = new BrandData();
 		d.setBrandCategory(p.getBrandCategory());
@@ -117,6 +119,7 @@ public class BrandDto {
 		return d;
 	}
 
+	//conversion from form to pojo
 	private static BrandPojo convert(BrandForm f) {
 		BrandPojo p = new BrandPojo();
 		p.setBrandName(f.getBrandName());

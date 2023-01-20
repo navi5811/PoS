@@ -54,6 +54,12 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>4.2.13.RELEASE</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>fop</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 			<groupId>org.springframework</groupId>

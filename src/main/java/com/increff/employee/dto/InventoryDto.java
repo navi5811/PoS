@@ -29,7 +29,6 @@ public class InventoryDto {
 	public void addInventory(InventoryForm f) throws ApiException {
 		InventoryPojo p = convert(f);
 		validateInventory(p);
-
 		inventoryservice.addInventory(p);
 	}
 
@@ -84,7 +83,7 @@ public class InventoryDto {
 
 	}
 
-	private InventoryData convert(InventoryPojo p) throws ApiException {
+	public InventoryData convert(InventoryPojo p) throws ApiException {
 		InventoryData d = new InventoryData();
 
 		ProductPojo prod = productservice.findProduct(p.getProductId());
@@ -96,7 +95,7 @@ public class InventoryDto {
 		return d;
 	}
 
-	private InventoryPojo convert(InventoryForm f) throws ApiException {
+	public InventoryPojo convert(InventoryForm f) throws ApiException {
 		InventoryPojo p = new InventoryPojo();
 
 		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {

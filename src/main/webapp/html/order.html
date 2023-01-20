@@ -4,15 +4,15 @@
 <body>
 	<nav th:replace="snippets.html :: name_app_navbar"></nav>
 
-	<div class="container-fluid">
+	<div class="container-fluid" style="width:75%;">
 
 		<h3>Order</h3>
 
-		<button class="btn btn-sm btn-outline-primary"
+		<button class="btn btn-primary"
 			data-target="#add-order-modal" data-toggle="modal" type="button">Add
 		</button>
 		&nbsp;
-		<button class="btn btn-sm btn-outline-secondary" id="refresh-data"
+		<button class="btn btn-primary" id="refresh-data"
 			type="button">Refresh</button>
 		&nbsp;
 
@@ -80,12 +80,12 @@
 
 
 						<div class="modal-footer">
-							<button class="btn btn-sm btn-outline-secondary"
+							<button class="btn btn-primary"
 								data-dismiss="modal" id="cancel-order" type="button">Cancel
 							</button>
-							<button class="btn btn-sm btn-outline-primary" id="add-order"
+							<button class="btn btn-primary" id="add-order"
 								type="submit">Add To Cart</button>
-							<button class="btn btn-sm btn-outline-success" id="submit-order"
+							<button class="btn btn-primary" id="submit-order"
 								type="button">Place Order</button>
 						</div>
 					</form>
@@ -162,7 +162,7 @@
 						<input type="hidden" name="productBarcode"> <input name="id"
 							type="hidden"> <input name="orderId" type="hidden">
 						<div class="modal-footer">
-							<button class="btn btn-sm btn-outline-primary"
+							<button class="btn btn-primary"
 								id="update-orderitem" type="submit">Submit</button>
 						</div>
 					</form>

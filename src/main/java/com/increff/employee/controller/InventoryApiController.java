@@ -26,15 +26,13 @@ public class InventoryApiController {
 //	@ApiOperation(value = "Adds Inventory")
 //	@RequestMapping(path = "/api/inventory", method = RequestMethod.POST)
 //	public void add(@RequestBody InventoryForm form) throws ApiException {
-//		InventoryPojo p = convert(form);
-//		inventoryService.addInventory(p);
+//		inventoryService.addInventory(form);
 //	}
 
 	@ApiOperation(value = "Gets Inventory by ID")
 	@RequestMapping(path = "/api/inventory/{productId}", method = RequestMethod.GET)
 	public InventoryData get(@PathVariable int productId) throws ApiException {
 		return inventorydto.getInventory(productId);
-
 	}
 
 //	@ApiOperation(value = "Gets Inventory by barcode")

@@ -3,7 +3,10 @@ function getProductUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/product";
 }
-
+function getBrandUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/brand";
+}
 //BUTTON ACTIONS
 // Done
 function addProduct(event){
@@ -31,6 +34,7 @@ function addProduct(event){
 
 //Done
 function updateProduct(event){
+	console.log("inside update");
 	$('#edit-product-modal').modal('toggle');
 	getBrandList();
 	//Get the ID
@@ -160,10 +164,8 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteProduct(' + e.productId + ')">Delete Product</button>'
-		buttonHtml += ' <button onclick="displayEditProduct(' + e.productId + ')">Edit Product</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.productId + ')">Edit</button>'
 		var row = '<tr>'
-		+ '<td>' + e.productId + '</td>'
 		+ '<td>' + e.productName + '</td>'
 		+ '<td>'  + e.productBrandName + '</td>'
 		+ '<td>'  + e.productBrandCategoryName + '</td>'
@@ -191,6 +193,7 @@ function displayEditProduct(id){
 // To reset the modal values
 function resetUploadDialog(){
 	//Reset file name
+	console.log("inside reset upload dialog");
 	var $file = $('#productFile');
 	$file.val('');
 	$('#productFileName').html("Choose File");
@@ -217,7 +220,8 @@ function updateFileName(){
 }
 
 function displayUploadData(){
- 	resetUploadDialog(); 	
+	console.log("entered upload modal");
+ 	resetUploadDialog();
 	$('#upload-product-modal').modal('toggle');
 }
 

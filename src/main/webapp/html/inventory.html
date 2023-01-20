@@ -18,16 +18,16 @@
 			<form class="form-inline" id="inventory-form">
 
 				<div class="form-group">
-			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Product Barcode</label>
+			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Barcode</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Product Barcode">
+			      		<input type="text" class="form-control" name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Barcode">
 					</div>
 			    </div>
 
 				<div class="form-group">
-					<label for="inputProductQuantity" class="col-sm-2 col-form-label">Product Quantity</label>
+					<label for="inputProductQuantity" class="col-sm-2 col-form-label">Quantity</label>
 					<div class="col-sm-10">
-						<input type="number" class="form-control" name="productQuantity" id="inputProductQuantity" placeholder="Enter Product Quantity">
+						<input type="number" class="form-control" name="productQuantity" id="inputProductQuantity" placeholder="Enter Quantity">
 					</div>
 				</div>
 
@@ -56,17 +56,16 @@
 	<table class="table table-striped" id="inventory-table">
 	  <thead>
 	    <tr>
-		  <th scope="col">Product Id</th>
-	      <th scope="col">Product Barcode</th>
-	      <th scope="col">Product quantity</th>
+		  <th scope="col">Brand Name</th>
+	      <th scope="col">Barcode</th>
+	      <th scope="col">Quantity</th>
 	    </tr>
 	  </thead>
 	  <tbody>
 	    <tr>
-		  <td>1</td>
 	      <td>2222</td>
 	      <td>58</td>
-	      <td>Edit | Delete</td>
+	      <td>Edit</td>
 	    </tr>
 	  </tbody>
 	</table>
@@ -79,7 +78,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Inventory</h5>
+        <h5 class="modal-title">Edit</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -88,16 +87,16 @@
 			<form class="form-inline" id="inventory-edit-form">
 
 				<div class="form-group">
-			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Product Barcode</label>
+			    	<label for="inputProductBarcode" class="col-sm-2 col-form-label">Barcode</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Product Barcode">
+			      		<input type="text" class="form-control" name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Barcode">
 					</div>
 			    </div>
 
 				<div class="form-group">
-					<label for="inputProductQuantity" class="col-sm-2 col-form-label">Product Quantity</label>
+					<label for="inputProductQuantity" class="col-sm-2 col-form-label">Quantity</label>
 					<div class="col-sm-10">
-						<input type="number" class="form-control" name="productQuantity" id="inputProductQuantity" placeholder="Enter Product Quantity">
+						<input type="number" class="form-control" name="productQuantity" id="inputProductQuantity" placeholder="Enter Quantity">
 					</div>
 				</div>
 				<input type="hidden" name="productId" >
@@ -135,7 +134,7 @@
 		Processed: <span id="processCount">0</span>, 
 		Errors: <span id="errorCount">0</span>
       </div>
-      
+	  
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="process-data">Upload</button>

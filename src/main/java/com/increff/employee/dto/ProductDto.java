@@ -29,8 +29,6 @@ public class ProductDto {
 	private BrandService brandservice;
 	@Autowired
 	private InventoryService inventoryservice;
-	
-//	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(ProductDto.class);
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void addProduct(ProductForm f) throws ApiException {
@@ -39,10 +37,7 @@ public class ProductDto {
 		normalizeProduct(p);
 		validateProduct(p);
 		productservice.addProduct(p);
-//		logger.error("reached inv");
 		InventoryPojo inv = new InventoryPojo(p.getProductId(), 0);
-		
-//		logger.error("the value of product id is ",p.getProductId());
 		inventoryservice.addInventory(inv);
 		
 	}
@@ -132,16 +127,16 @@ public class ProductDto {
 			throw new ApiException("Product with the same Barcode already exists");
 		}
 
-		// To check if Product already exists with a different barcode
-//			BrandPojo check = brandservice.findBrand(p.getProductName(), p.getProductBrandCategory());
-//
-//		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
-//			throw new ApiException("The given product already exists in the Database");
-//		}
-//
-//		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
-//			throw new ApiException("The given product already exists with a different Barcode");
-//		}
+//		 To check if Product already exists with a different barcode
+			ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
+
+		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
+			throw new ApiException("The given product already exists in the Database");
+		}
+
+		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
+			throw new ApiException("The given product already exists with a different Barcode");
+		}
 	}
 
 	private ProductData convert(ProductPojo p) throws ApiException {
@@ -153,7 +148,7 @@ public class ProductDto {
 		d.setProductMrp(p.getProductMrp());
 
 		int productBrandId = p.getProductBrandCategory();
-		BrandPojo brandPojo = brandservice.findBrand(productBrandId);
+		BrandPojo brandPojo = brandservice.getBrand(productBrandId);
 		
 		d.setProductBrandCategoryName(brandPojo.getBrandCategory());
 		d.setProductBrandName(brandPojo.getBrandName());
