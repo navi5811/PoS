@@ -7,9 +7,6 @@ public class OrderData {
 	private int orderId;
 	private double billAmount;
 	private Date datetime;
-	
-
-
 
 	public Date getDatetime() {
 		return datetime;

@@ -83,7 +83,7 @@
           <thead>
             <tr>
               <th scope="col">Product Name</th>
-              <th scope="col">Brand Name</th>
+              <th scope="col">Brand</th>
               <th scope="col">Category</th>
               <th scope="col">Barcode</th>
               <th scope="col">MRP</th>
@@ -120,6 +120,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+            
           </div>
           <div class="modal-body">
             <form class="form-inline" id="product-edit-form">
@@ -129,25 +130,7 @@
                   <input required type="text" class="form-control" name="productName"
                     placeholder="Enter Product Name" />
                 </div>
-              </div>
-<!-- 
-              <div class="form-group">
-                <label for="productBrandName" class="col-sm-2 col-form-label">Product's Brand Name</label>
-                <div class="col-sm-10">
-                  <input required type="text" class="form-control" name="productBrandName"
-                    placeholder="Enter Product's Brand name" />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="productBrandCategoryName" class="col-sm-2 col-form-label">Product's Category</label>
-                <div class="col-sm-10">
-                  <input required type="text" class="form-control" name="productBrandCategoryName"
-                    placeholder="Enter Product's Category" />
-                </div>
-              </div>
- -->
-              
+              </div>    
           <div class="form-group">
             <label for="productBrandName" class="col-sm-2 col-form-label">Brand Name</label>
             &nbsp; &nbsp;
@@ -171,7 +154,7 @@
               <div class="form-group">
                 <label for="productBarcode" class="col-sm-2 col-form-label">Barcode</label>
                 <div class="col-sm-10">
-                  <input required type="text" class="form-control" name="productBarcode" placeholder="Enter Barcode" />
+                  <input readonly name="productBarcode">
                 </div>
               </div>
 

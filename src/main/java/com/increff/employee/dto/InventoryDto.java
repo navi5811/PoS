@@ -8,8 +8,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.increff.employee.model.BrandData;
 import com.increff.employee.model.InventoryData;
 import com.increff.employee.model.InventoryForm;
+import com.increff.employee.model.ProductData;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.ProductPojo;
 import com.increff.employee.service.ApiException;
@@ -24,6 +26,10 @@ public class InventoryDto {
 	private InventoryService inventoryservice;
 	@Autowired
 	private ProductService productservice;
+	@Autowired
+	private ProductDto productdto;
+	@Autowired
+	private BrandDto branddto;
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void addInventory(InventoryForm f) throws ApiException {
@@ -33,20 +39,38 @@ public class InventoryDto {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public InventoryData getInventory(int productId) throws ApiException {
-		InventoryPojo ip = inventoryservice.getInventory(productId);
-		InventoryData id = convert(ip);
+	public InventoryData getInventory(String inventoryProductBarcode) throws ApiException {
+		ProductData pp = productdto.findProduct(inventoryProductBarcode);
+		InventoryPojo ip = inventoryservice.getInventory(pp.getProductId());
+		InventoryData id= convert(ip);
+
 		return id;
 	}
+	
+//	//only for calling purpose in order api controller
+//	@Transactional(rollbackOn = ApiException.class)
+//	public InventoryData getInventory(int productid) throws ApiException {
+//		
+//		InventoryPojo ip = inventoryservice.getInventory(productid);
+//		InventoryData id= convert(ip);
+//
+//		return id;
+//	}
 
 	@Transactional
 	public List<InventoryData> getAllInventory() throws ApiException {
-
-		
 		List<InventoryPojo> list = inventoryservice.getAllInventory();
 		List<InventoryData> list2 = new ArrayList<InventoryData>();
 		for (InventoryPojo p : list) {
-			list2.add(convert(p));
+			InventoryData d=convert(p);
+			d.getInventoryProductBarcode();
+			ProductPojo productpojo=productservice.findProduct(d.getInventoryProductBarcode());
+			
+			BrandData bd=branddto.getBrand(productpojo.getProductBrandCategory());
+			d.setProductName(productpojo.getProductName());
+			d.setBrandName(bd.getBrandName());
+			d.setBrandCategory(bd.getBrandCategory());
+			list2.add(d);
 		}
 		return list2;
 	}
@@ -63,12 +87,13 @@ public class InventoryDto {
 	}
 
 	@Transactional
-	public InventoryPojo findInventory(int id) throws ApiException {
+	public InventoryData findInventory(int id) throws ApiException {
 		InventoryPojo p = inventoryservice.getInventory(id);
 		if (p == null) {
 			throw new ApiException("Brand with given ID does not exit, id: " + id);
 		}
-		return p;
+		InventoryData i=convert(p);
+		return i;
 	}
 
 	protected static void validateInventory(InventoryPojo p) throws ApiException {
@@ -107,4 +132,17 @@ public class InventoryDto {
 		p.setProductQuantity(f.getProductQuantity());
 		return p;
 	}
+	public InventoryPojo convertip(InventoryData f) throws ApiException {
+		InventoryPojo p = new InventoryPojo();
+
+		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
+			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
+		}
+		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
+		
+		p.setProductId(prod.getProductId());
+		p.setProductQuantity(f.getProductQuantity());
+		return p;
+	}
+	
 }

@@ -37,6 +37,8 @@ function addOrder(event) {
 	var url = getOrderUrl();
 	console.log("submit order");
 	console.log(JSON.stringify(order));
+	console.log("order : ", order);
+	
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -89,7 +91,7 @@ function getInvoice(id) {
 function updateOrderItem(event) {
 	// Get the ID
 	var id = $("#order-edit-form input[name=id]").val();
-	var orderId = $("#order-edit-form input[name=orderId]").val();
+	// var orderId = $("#order-edit-form input[name=orderId]").val();
 	var url = getOrderUrl() + "/item/" + id;
 	// Set the values to update
 	var $form = $("#order-edit-form");
@@ -227,15 +229,15 @@ function displayEditOrderItem(id) {
 }
 
 function displayOrderItemEdit(data) {
-	console.log(data);
+	console.log("dataa : ",data);
 	$("#order-edit-form input[name=productBarcode]").val(data.productBarcode);
 	$("#productBarcode").html("" + data.productBarcode);
 	$("#mrp").html("" + data.mrp);
 	$("#availableQuantity").html("" + data.availableQuantity);
 	$("#order-edit-form input[name=productQuantity]").val(data.productQuantity);
 	$("#order-edit-form input[name=productSellingPrice]").val(data.productSellingPrice);
-	$("#order-edit-form input[name=id]").val(data.id);
-	$("#order-edit-form input[name=orderId]").val(data.orderId);
+	$("#order-edit-form input[name=id]").val(data.orderItemId);
+	$("#order-edit-form input[name=orderId]").val(data.id);
 	$('#edit-orderitem-modal').modal('toggle');
 	
 }

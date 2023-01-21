@@ -2,9 +2,11 @@ package com.increff.employee.service;
 
 import com.increff.employee.dao.OrderDao;
 import com.increff.employee.dao.OrderItemDao;
+import com.increff.employee.dto.ProductDto;
 import com.increff.employee.model.OrderData;
 import com.increff.employee.model.OrderItemData;
 import com.increff.employee.model.OrderItemForm;
+import com.increff.employee.model.ProductData;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
@@ -35,6 +37,9 @@ public class OrderService {
 	@Autowired
 	private ProductService productservice;
 	
+	@Autowired
+	private ProductDto productdto;
+	
 
 	// Creating order
 	@Transactional(rollbackFor = ApiException.class)
@@ -46,7 +51,7 @@ public class OrderService {
 		orderPojo.setDate(new Date());
 		orderDao.insert(orderPojo);
 		for (OrderItemPojo p : orderItemList) {
-			ProductPojo productPojo = productservice.getProduct(p.getOrderProductId());
+			ProductPojo productPojo= productservice.getProduct(p.getOrderProductId());
 			if (productPojo == null) {
 				throw new ApiException("Product does not exist.");
 			}

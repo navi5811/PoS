@@ -65,7 +65,7 @@ public class TestBrandDto extends AbstractUnitTest {
 	        String category = "testCategory";
 
 	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category);
+	        p.setBrandCategory(category); 
 	        p.setBrandName(brand);
 	        dao.insert(p);
 
@@ -74,7 +74,7 @@ public class TestBrandDto extends AbstractUnitTest {
 	        //Verifying the Update function
 	        brand="brand";
 	        category="category";
-	        int id = list.get(0).getBrandId();
+	        int id = list.get(0).getBrandId(); 
 	        //creating new brandform and entering the brand and category and sendinf it to update brand
 	        BrandForm f= new BrandForm();
 	        f.setBrandName(brand);
