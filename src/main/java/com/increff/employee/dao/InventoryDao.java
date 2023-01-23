@@ -15,7 +15,6 @@ import com.increff.employee.pojo.InventoryPojo;
 @Repository
 public class InventoryDao extends AbstractDao {
 
-	private static String delete_id = "delete from InventoryPojo p where ProductId=:id";
 	private static String select_id = "select p from InventoryPojo p where ProductId=:id";
 	private static String select_bar = "select p from InventoryPojo p where inventoryProductBarcode=:barcode";
 	private static String select_all = "select p from InventoryPojo p";
@@ -28,17 +27,12 @@ public class InventoryDao extends AbstractDao {
 		em.persist(p);
 	}
 
-	public int delete(int id) {
-		Query query = em.createQuery(delete_id);
-		query.setParameter("id", id);
-		return query.executeUpdate();
-	}
-
 	public InventoryPojo select(int id) {
 		TypedQuery<InventoryPojo> query = getQuery(select_id, InventoryPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);
 	}
+
 	public InventoryPojo select(String barcode) {
 		TypedQuery<InventoryPojo> query = getQuery(select_bar, InventoryPojo.class);
 		query.setParameter("barcode", barcode);

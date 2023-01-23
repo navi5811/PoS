@@ -51,7 +51,7 @@ public class OrderService {
 		orderPojo.setDate(new Date());
 		orderDao.insert(orderPojo);
 		for (OrderItemPojo p : orderItemList) {
-			ProductPojo productPojo= productservice.getProduct(p.getOrderProductId());
+			ProductPojo productPojo= productservice.findProduct(p.getOrderProductId());
 			if (productPojo == null) {
 				throw new ApiException("Product does not exist.");
 			}
@@ -183,12 +183,12 @@ public class OrderService {
 		if (p.getOrderQuantity() < 0) {
 			throw new ApiException("Quantity must be positive or 0 if you want to cancel order");
 		} else if (inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity() < p.getOrderQuantity()) {
-			throw new ApiException("Available quantity for product with barcode: " + productservice.getProduct(p.getOrderProductId()).getProductBarcode() + " is: " + inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity());
+			throw new ApiException("Available quantity for product with barcode: " + productservice.findProduct(p.getOrderProductId()).getProductBarcode() + " is: " + inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity());
 		}
 		
 		if(p.getOrderSellingPrice() > p.getMrp())
 		{
-			throw new ApiException("SP for product with barcode: " + productservice.getProduct(p.getOrderProductId()).getProductBarcode() + " can't be greater than MRP: " + p.getMrp());
+			throw new ApiException("SP for product with barcode: " + productservice.findProduct(p.getOrderProductId()).getProductBarcode() + " can't be greater than MRP: " + p.getMrp());
 		}
 	}
 

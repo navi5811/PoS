@@ -25,11 +25,11 @@ public class ProductService {
 	public void deleteProduct(int id) {
 		dao.delete(id);
 	}
-
-	@Transactional(rollbackOn = ApiException.class)
-	public ProductPojo getProduct(int id) throws ApiException {
-		return findProduct(id);
-	}
+//
+//	@Transactional(rollbackOn = ApiException.class)
+//	public ProductPojo getProduct(int id) throws ApiException {
+//		return findProduct(id);
+//	}
 
 	@Transactional
 	public List<ProductPojo> getAllProduct() {

@@ -21,17 +21,11 @@ public class InventoryService {
 		dao.insert(p);
 	}
 
-	@Transactional
-	public void deleteInventory(int id) {
-		dao.delete(id);
-	}
-
 	@Transactional(rollbackOn = ApiException.class)
 	public InventoryPojo getInventory(int productId) throws ApiException {
 		return dao.select(productId);
 	}
 
-	
 	@Transactional
 	public List<InventoryPojo> getAllInventory() {
 		return dao.selectAll();
@@ -49,6 +43,5 @@ public class InventoryService {
 		InventoryPojo p = dao.select(id);
 		return p;
 	}
-
 
 }

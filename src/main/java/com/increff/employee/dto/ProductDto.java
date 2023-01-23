@@ -45,17 +45,17 @@ public class ProductDto {
 	public void deleteProduct(int id) {
 		productservice.deleteProduct(id);
 	}
-
-	@Transactional(rollbackOn = ApiException.class)
-	public ProductData getProduct(int id) throws ApiException {
-
-		ProductPojo pp = productservice.findProduct(id);
-		if (pp == null) {
-			throw new ApiException("Product with given id does not exist, Barcode: " + id);
-		}
-		ProductData pd = convert(pp);
-		return pd;
-	}
+//
+//	@Transactional(rollbackOn = ApiException.class)
+//	public ProductData getProduct(int id) throws ApiException {
+//
+//		ProductPojo pp = productservice.findProduct(id);
+//		if (pp == null) {
+//			throw new ApiException("Product with given id does not exist, Barcode: " + id);
+//		}
+//		ProductData pd = convert(pp);
+//		return pd;
+//	}
 
 	@Transactional
 	public List<ProductData> getAllProduct() throws ApiException {
@@ -88,7 +88,7 @@ public class ProductDto {
 		ProductPojo p = productservice.findProduct(id);
 		
 		if (p == null) {
-			throw new ApiException("Product with given ID does not exit, id: " + id);
+			throw new ApiException("Product with given ID does not exist, id: " + id);
 		}
 		ProductData pd=convert(p);
 		return pd;
@@ -98,7 +98,7 @@ public class ProductDto {
 	public ProductData findProduct(String barcode) throws ApiException {
 		ProductPojo p = productservice.findProduct(barcode);
 		if (p == null) {
-			throw new ApiException("Product with given barcode does not exit, Barcode: " + barcode);
+			throw new ApiException("Product with given barcode does not exist, Barcode: " + barcode);
 		}
 		ProductData pd=convert(p);
 		return pd;
