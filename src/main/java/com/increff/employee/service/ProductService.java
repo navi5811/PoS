@@ -67,6 +67,12 @@ public class ProductService {
 		ProductPojo p = dao.select(name,id);
 		return p;
 	}
+	
+	@Transactional
+	public List<ProductPojo> findAllProduct(int brandId) throws ApiException {
+		List<ProductPojo> p = dao.selectProduct(brandId);
+		return p;
+	}
 
 
 

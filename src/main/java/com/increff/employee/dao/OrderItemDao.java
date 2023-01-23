@@ -18,6 +18,7 @@ public class OrderItemDao extends AbstractDao {
 	private static String delete_id = "delete from OrderItemPojo p where orderItemId=:id";
 	private static String select_id = "select p from OrderItemPojo p where orderItemId=:id";
 
+	private static String select_productId="select p from OrderItemPojo p where orderProductId=:id";
 	
 	
 	public void delete(int id) {
@@ -54,4 +55,5 @@ public class OrderItemDao extends AbstractDao {
 		query.setParameter("orderId", orderId);
 		return query.getResultList();
 	}
+	
 }
