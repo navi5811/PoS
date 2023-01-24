@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.increff.employee.pojo.BrandPojo;
-
+//todo criteria query use instead of typed query easy to use not compulsary
 @Repository
 public class BrandDao extends AbstractDao {
 

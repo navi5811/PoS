@@ -179,7 +179,7 @@ function displayOrderList(data) {
 		var buttonHtml = ' <button type="button" class="btn btn-secondary" onclick="getOrderItemList('
 				+ e.orderId + ')">View</button>'
 		buttonHtml += '<button type="button" class="btn btn-secondary" onclick="getInvoice('
-                            				+ e.orderId + ')">Download Invoice</button>'
+                            				+ e.orderId + ')">Invoice</button>'
 		var row = '<tr>' + '<td>' + e.orderId + '</td>' + '<td>' + date + '</td>'+ '<td>' + e.billAmount + '</td>' + '<td>' + buttonHtml
 				+ '</td>' + '</tr>';
 		$tbody.append(row);

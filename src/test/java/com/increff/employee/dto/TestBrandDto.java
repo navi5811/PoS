@@ -33,7 +33,6 @@ public class TestBrandDto extends AbstractUnitTest {
 	        BrandPojo p = new BrandPojo();
 	        p.setBrandCategory(category);
 	        p.setBrandName(brand);
-	        
 	        dao.insert(p);
 
 	        //Verifying the getAll operation

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.increff.employee.dao.BrandDao;
 import com.increff.employee.pojo.BrandPojo;
-
+//todo we can add @transactional on the top of class
 @Service
 public class BrandService {
 

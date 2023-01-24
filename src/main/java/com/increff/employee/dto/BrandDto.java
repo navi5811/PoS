@@ -14,7 +14,9 @@ import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.util.StringUtil;
-
+//todo dto to service call is done via flow service
+//todo @transactional removal from dto layer compulsary to apply on dao layer
+//todo
 @Service
 public class BrandDto {
 

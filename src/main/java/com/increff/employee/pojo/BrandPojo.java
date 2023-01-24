@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+//todo to use lombok @setter @getter
+//todo create new abstract pojo and keep three fields in it create time , update time and version
+//todo zonedDateTime is used
+//todo @NotNull
 
 @Entity
 public class BrandPojo {

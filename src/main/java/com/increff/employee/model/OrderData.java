@@ -5,7 +5,7 @@ import java.util.Date;
 public class OrderData {
 
 	private int orderId;
-	private double billAmount;
+	private Double billAmount;
 	private Date datetime;
 
 	public Date getDatetime() {
@@ -16,11 +16,11 @@ public class OrderData {
 		this.datetime = datetime;
 	}
 
-	public double getBillAmount() {
+	public Double getBillAmount() {
 		return billAmount;
 	}
 
-	public void setBillAmount(double billAmount) {
+	public void setBillAmount(Double billAmount) {
 		this.billAmount = billAmount;
 	}
 
