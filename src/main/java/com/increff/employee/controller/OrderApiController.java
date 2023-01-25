@@ -56,6 +56,8 @@ public class OrderApiController {
 	@Autowired
 	private OrderDto orderdto;
 
+	private static Logger logger = (Logger) LogManager.getLogger(OrderApiController.class);
+	
 	// getting list of order items of a particular order using arraylist
 	@ApiOperation(value = "Add Order Details")
 	@RequestMapping(path = "/api/order", method = RequestMethod.POST)
@@ -91,7 +93,7 @@ public class OrderApiController {
 	@ApiOperation(value = "Delete Order Item record")
 	@RequestMapping(path = "/api/order/item/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable int id) throws ApiException {
-		orderdto.deleteOrder(id);
+		orderdto.delete(id);
 	}
 
 	@ApiOperation(value = "Delete Order by id")

@@ -14,13 +14,12 @@ import com.increff.employee.pojo.OrderPojo;
 
 @Repository
 public class OrderItemDao extends AbstractDao {
-	
+
 	private static String delete_id = "delete from OrderItemPojo p where orderItemId=:id";
 	private static String select_id = "select p from OrderItemPojo p where orderItemId=:id";
 
-	private static String select_productId="select p from OrderItemPojo p where orderProductId=:id";
-	
-	
+	private static String select_productId = "select p from OrderItemPojo p where orderProductId=:id";
+
 	public void delete(int id) {
 		Query query = em.createQuery(delete_id);
 		query.setParameter("id", id);
@@ -32,19 +31,18 @@ public class OrderItemDao extends AbstractDao {
 		query.setParameter("id", id);
 		return getSingle(query);
 	}
-	
+
 	public void update(OrderItemPojo p) {
 	}
-	
-	
+
 	@Transactional
 	public void insert(OrderItemPojo p) {
 		em.persist(p);
 	}
+
 	// Select all OrderItems
 	public List<OrderItemPojo> selectAll() {
-		TypedQuery<OrderItemPojo> query = getQuery("select p from OrderItemPojo p",
-				OrderItemPojo.class);
+		TypedQuery<OrderItemPojo> query = getQuery("select p from OrderItemPojo p", OrderItemPojo.class);
 		return query.getResultList();
 	}
 
@@ -55,5 +53,5 @@ public class OrderItemDao extends AbstractDao {
 		query.setParameter("orderId", orderId);
 		return query.getResultList();
 	}
-	
+
 }

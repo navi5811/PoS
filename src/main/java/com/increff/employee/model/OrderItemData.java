@@ -5,7 +5,7 @@ public class OrderItemData extends OrderItemForm {
 	private int id;
 	private int orderItemId;
 	private String name;
-	private double mrp;
+	private Double mrp;
 	private int availableQuantity;
 
 	public int getId() {
@@ -24,11 +24,11 @@ public class OrderItemData extends OrderItemForm {
 		this.name = name;
 	}
 
-	public double getMrp() {
+	public Double getMrp() {
 		return mrp;
 	}
 
-	public void setMrp(double mrp) {
+	public void setMrp(Double mrp) {
 		this.mrp = mrp;
 	}
 

@@ -57,8 +57,8 @@ public class OrderService {
 	}
 
 	// Calculate Total
-	public double billTotal(int orderId) {
-		double total = 0;
+	public Double billTotal(int orderId) {
+		Double total = 0.0;
 		List<OrderItemPojo> lis = orderItemDao.selectOrder(orderId);
 		for (OrderItemPojo orderItemPojo : lis) {
 			total += orderItemPojo.getOrderQuantity() * orderItemPojo.getOrderSellingPrice();

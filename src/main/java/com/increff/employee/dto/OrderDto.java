@@ -32,6 +32,7 @@ import com.increff.employee.service.OrderService;
 import com.increff.employee.service.ProductService;
 import com.increff.employee.util.PDFUtils;
 import com.increff.employee.util.StringUtil;
+
 //todo
 @Service
 public class OrderDto {
@@ -47,6 +48,7 @@ public class OrderDto {
 
 	@Autowired
 	private InventoryDto inventorydto;
+
 //	
 //	
 //	
@@ -55,17 +57,19 @@ public class OrderDto {
 	public OrderData createOrder(List<OrderItemForm> forms) throws ApiException {
 		List<OrderItemPojo> orderItemList = new ArrayList<OrderItemPojo>();
 		for (OrderItemForm f : forms) {
+			normalize(f.getProductBarcode());
 			ProductPojo p = productservice.findProduct(f.getProductBarcode());
-			OrderItemPojo orderitempojo=convertOrderItemForm(f, p);
+			OrderItemPojo orderitempojo = convertOrderItemForm(f, p);
+			
 			validate(orderitempojo);
 			orderItemList.add(orderitempojo);
 		}
 		if (orderItemList.size() == 0) {
 			throw new ApiException("Order List cannot be empty");
 		}
-		
+
 		int orderId = orderservice.createOrder(orderItemList);
-		
+
 		for (OrderItemPojo oip : orderItemList) {
 			ProductPojo productPojo = productservice.findProduct(oip.getOrderProductId());
 			if (productPojo == null) {
@@ -73,11 +77,11 @@ public class OrderDto {
 			}
 			updateInventory(oip);
 		}
-		
-		double total = orderservice.billTotal(orderId);
+
+		Double total = orderservice.billTotal(orderId);
 		return convertOrderPojo(orderservice.getOrder(orderId), total);
 	}
-	
+
 	@Transactional
 	public String createInvoice(int orderId) throws Exception {
 		BillData billData = new BillData();
@@ -102,17 +106,12 @@ public class OrderDto {
 	// Fetching an Order item by id
 	@Transactional
 	public OrderItemData getOrderItemDetails(int id) throws ApiException {
-
+		checkIfExists(id);
 		OrderItemPojo orderItemPojo = orderservice.get(id);
-
 		int i = orderItemPojo.getOrderProductId();
-
 		ProductPojo productpojo = productservice.findProduct(i);
-
 		OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
-
 		InventoryPojo inventorypojo = inventoryservice.findInventory(productpojo.getProductId());
-
 		return convert(orderItemPojo, productpojo, orderPojo, inventorypojo);
 
 	}
@@ -143,6 +142,7 @@ public class OrderDto {
 
 	@Transactional
 	public List<OrderItemData> getOrderItemByOrderId(int id) throws ApiException {
+		checkIfExistsOrder(id);
 		List<OrderItemPojo> orderItemPojo_list = orderservice.getOrderItems(id);
 		List<OrderItemData> d = new ArrayList<OrderItemData>();
 		for (OrderItemPojo orderItemPojo : orderItemPojo_list) {
@@ -154,37 +154,8 @@ public class OrderDto {
 		return d;
 	}
 
-//	@Transactional
-//	public OrderItemData get(int id) throws ApiException {
-//		OrderItemPojo p = checkIfExists(id);
-//		OrderItemData id = convert(p);
-//		return id;
-//	}
+	// Calculate Total
 
-//
-//		// Fetching an Order by id
-//		@Transactional
-//		public OrderPojo getOrder(int id) throws ApiException {
-//			OrderPojo p = checkIfExistsOrder(id);
-//			return p;
-//		}
-//
-//		// Fetch all order items of a particular order
-//		@Transactional
-//		public List<OrderItemPojo> getOrderItems(int order_id) throws ApiException {
-//			List<OrderItemPojo> lis = orderItemDao.selectOrder(order_id);
-//			return lis;
-//		}
-//
-//		// Calculate Total
-//		public double billTotal(int orderId) {
-//			double total = 0;
-//			List<OrderItemPojo> lis = orderItemDao.selectOrder(orderId);
-//			for (OrderItemPojo orderItemPojo : lis) {
-//				total += orderItemPojo.getOrderQuantity() * orderItemPojo.getOrderSellingPrice();
-//			}
-//			return total;
-//		}
 //
 //		// Fetching all order items
 	@Transactional
@@ -192,11 +163,13 @@ public class OrderDto {
 		return orderservice.getAll();
 	}
 
+	//deleting an order item
 	@Transactional
 	public void delete(int id) throws ApiException {
 		increaseInventory(orderservice.delete(id));
 	}
-//		// Deletion of order
+
+	// Deletion of order
 	@Transactional
 	public void deleteOrder(int orderId) throws ApiException {
 
@@ -208,7 +181,6 @@ public class OrderDto {
 		orderservice.deleteOrderhelper(orderId);
 	}
 
-//
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateOrderItem(int id, OrderItemForm f) throws ApiException {
 		ProductPojo productPojo = productservice.findProduct(f.getProductBarcode());
@@ -244,8 +216,7 @@ public class OrderDto {
 		inventoryservice.updateInventory(inventoryPojo);
 	}
 
-//
-//		// Checking if a particular order item exists or not
+	// Checking if a particular order item exists or not
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderItemPojo checkIfExists(int id) throws ApiException {
 		OrderItemPojo p = orderservice.checkIfExists(id);
@@ -255,8 +226,7 @@ public class OrderDto {
 		return p;
 	}
 
-//
-//		// Checking if a particular order exists or not
+	// Checking if a particular order exists or not
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderPojo checkIfExistsOrder(int id) throws ApiException {
 		OrderPojo p = orderservice.checkIfExistsOrder(id);
