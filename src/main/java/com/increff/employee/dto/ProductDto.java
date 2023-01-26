@@ -186,31 +186,31 @@ public class ProductDto {
 
 		return p;
 	}
-	public ProductPojo convertdp(ProductData f) throws ApiException {
-		ProductPojo p=new ProductPojo();
-		
-
-		if (StringUtil.isEmpty(f.getProductBrandName())) {
-			throw new ApiException("Product must belong to a brand, Brand name field cannot be empty");
-		}
-
-		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {
-			throw new ApiException("Product must belong to a , Category name field cannot be empty");
-		}
-
-		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());
-		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());
-
-		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
-
-		int foundBrandId = foundBrand.getBrandId();
-
-		p.setProductBrandCategory(foundBrandId);
-		p.setProductName(f.getProductName());
-		p.setProductMrp(f.getProductMrp());
-		p.setProductBarcode(f.getProductBarcode());
-		p.setProductId(f.getProductId());
-		return p;
-		
-	}
+//	public ProductPojo convertdp(ProductData f) throws ApiException {
+//		ProductPojo p=new ProductPojo();
+//		
+//
+//		if (StringUtil.isEmpty(f.getProductBrandName())) {
+//			throw new ApiException("Product must belong to a brand, Brand name field cannot be empty");
+//		}
+//
+//		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {
+//			throw new ApiException("Product must belong to a , Category name field cannot be empty");
+//		}
+//
+//		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());
+//		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());
+//
+//		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
+//
+//		int foundBrandId = foundBrand.getBrandId();
+//
+//		p.setProductBrandCategory(foundBrandId);
+//		p.setProductName(f.getProductName());
+//		p.setProductMrp(f.getProductMrp());
+//		p.setProductBarcode(f.getProductBarcode());
+//		p.setProductId(f.getProductId());
+//		return p;
+//		
+//	}
 }

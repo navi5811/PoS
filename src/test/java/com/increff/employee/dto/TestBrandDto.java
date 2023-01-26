@@ -20,198 +20,209 @@ public class TestBrandDto extends AbstractUnitTest {
 
 	@Autowired
 	private BrandDto dto;
-	
+
 	@Autowired
 	private BrandDao dao;
-	
-	 @Test
-	    public void testAddAndGetAll() throws ApiException {
-	        String brand = "testBrand";
-	        String category = "testCategory";
 
-	        //Check The Insert Operation
-	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category);
-	        p.setBrandName(brand);
-	        dao.insert(p);
+	@Test
+	public void testAddAndGetAll() throws ApiException {
+		String brand = "testBrand";
+		String category = "testCategory";
 
-	        //Verifying the getAll operation
-	        List<BrandData> list =dto.getAllBrand();
-	        assertEquals(list.get(0).getBrandName(),brand);
-	        assertEquals(list.get(0).getBrandCategory(),category);
-	    }
-	  @Test
-	    public void testGetById() throws ApiException {
-	        String brand = "testBrand";
-	        String category = "testCategory";
+		// Check The Insert Operation
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
 
-	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category);
-	        p.setBrandName(brand);
-	        dao.insert(p);
-	        List<BrandData> list = dto.getAllBrand();
+		// Verifying the getAll operation
+		List<BrandData> list = dto.getAllBrand();
+		assertEquals(list.get(0).getBrandName(), brand);
+		assertEquals(list.get(0).getBrandCategory(), category);
+	}
 
-	        //Verifying the getById operation
-	        BrandData data = dto.getBrand(list.get(0).getBrandId());
-	        assertEquals(data.getBrandName(),brand);
-	        assertEquals(data.getBrandCategory(),category);
+	@Test
+	public void testGetById() throws ApiException {
+		String brand = "testBrand";
+		String category = "testCategory";
 
-	    }
-	  
-	   @Test
-	    public void testUpdate() throws ApiException {
-	        String brand = "testBrand";
-	        String category = "testCategory";
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
+		List<BrandData> list = dto.getAllBrand();
 
-	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category); 
-	        p.setBrandName(brand);
-	        dao.insert(p);
+		// Verifying the getById operation
+		BrandData data = dto.getBrand(list.get(0).getBrandId());
+		assertEquals(data.getBrandName(), brand);
+		assertEquals(data.getBrandCategory(), category);
 
-	        List<BrandData> list = dto.getAllBrand();
+	}
 
-	        //Verifying the Update function
-	        brand="brand";
-	        category="category";
-	        int id = list.get(0).getBrandId(); 
-	        //creating new brandform and entering the brand and category and sendinf it to update brand
-	        BrandForm f= new BrandForm();
-	        f.setBrandName(brand);
-	        f.setBrandCategory(category);
-	       
-	        dto.updateBrand(list.get(0).getBrandId(),f);
-	        list = dto.getAllBrand();
-	        assertEquals(list.get(0).getBrandName(),brand);
-	        assertEquals(list.get(0).getBrandCategory(),category);
-	        assertEquals(list.get(0).getBrandId(),id);
-	    }
-	   
-	   
-	   
-	   @Test
-	   public void testaddbrand() throws ApiException  {
-		   String brand = "brand";
-	        String category = "category";
-		   BrandForm f= new BrandForm();
-		   f.setBrandName(brand);
-		   f.setBrandCategory(category);
+	@Test
+	public void testUpdate() throws ApiException {
+		String brand = "testBrand";
+		String category = "testCategory";
 
-		   dto.addBrand(f);
-		   List<BrandData> list = dto.getAllBrand();
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
 
-		   //Verifying the getById operation
+		List<BrandData> list = dto.getAllBrand();
 
-		   assertEquals(list.get(0).getBrandName(),brand);
-		   assertEquals(list.get(0).getBrandCategory(),category);
-	   }
-	   @Test
-	    public void testBrandCategoryUniqueness(){
-		    String brand = "brand";
-	        String category = "category";
+		// Verifying the Update function
+		brand = "brand";
+		category = "category";
+		int id = list.get(0).getBrandId();
+		// creating new brandform and entering the brand and category and sendinf it to
+		// update brand
+		BrandForm f = new BrandForm();
+		f.setBrandName(brand);
+		f.setBrandCategory(category);
 
-	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category);
-	        p.setBrandName(brand);
-	        dao.insert(p);
-	        //Check Uniqueness at time of add
-	        boolean flag = false;
-	        try {
-	        	BrandForm f= new BrandForm();
-		        f.setBrandName(brand);
-		        f.setBrandCategory(category);
-	            dto.addBrand(f);
-	        }catch (ApiException e){
-	            flag=true;
-	        }
-	        if(Objects.equals(flag,false))fail();
+		dto.updateBrand(list.get(0).getBrandId(), f);
+		list = dto.getAllBrand();
+		assertEquals(list.get(0).getBrandName(), brand);
+		assertEquals(list.get(0).getBrandCategory(), category);
+		assertEquals(list.get(0).getBrandId(), id);
+	}
 
-	        //Check Uniqueness at the time of update
-	        try {
-	            List<BrandData> list = dto.getAllBrand();
-	            BrandForm f= new BrandForm();
-		        f.setBrandName(brand);
-		        f.setBrandCategory(category);
-	            dto.updateBrand(list.get(0).getBrandId(),f);
-	        }catch (ApiException e){
-	            return;
-	        }
-	        fail();
-	    }
-		@Test
-		 public void testdeletebrand(){
-			String brand = "brand";
-			String category = "category";
+	@Test
+	public void testaddbrand() throws ApiException {
+		String brand = "brand";
+		String category = "category";
+		BrandForm f = new BrandForm();
+		f.setBrandName(brand);
+		f.setBrandCategory(category);
 
-			BrandPojo p = new BrandPojo();
-			p.setBrandCategory(category);
-			p.setBrandName(brand);
-			dao.insert(p);
+		dto.addBrand(f);
+		List<BrandData> list = dto.getAllBrand();
 
+		// Verifying the getById operation
 
+		assertEquals(list.get(0).getBrandName(), brand);
+		assertEquals(list.get(0).getBrandCategory(), category);
+	}
 
-			List<BrandData> list = dto.getAllBrand();
-			int id = list.get(0).getBrandId();
-			dto.deleteBrand(id);
+	@Test
+	public void testBrandCategoryUniqueness() {
+		String brand = "brand";
+		String category = "category";
 
-			try{
-				dto.getBrand(id);
-			}catch(ApiException e){
-				return;
-			}
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
+		// Check Uniqueness at time of add
+		boolean flag = false;
+		try {
+			BrandForm f = new BrandForm();
+			f.setBrandName(brand);
+			f.setBrandCategory(category);
+			dto.addBrand(f);
+		} catch (ApiException e) {
+			flag = true;
+		}
+		if (Objects.equals(flag, false))
 			fail();
+
+		// Check Uniqueness at the time of update
+		try {
+			List<BrandData> list = dto.getAllBrand();
+			BrandForm f = new BrandForm();
+			f.setBrandName(brand);
+			f.setBrandCategory(category);
+			dto.updateBrand(list.get(0).getBrandId(), f);
+		} catch (ApiException e) {
+			return;
 		}
-		@Test
-		 public void testfindbrand() throws ApiException{
-			String brand = "testBrand";
-	        String category = "testCategory";
+		fail();
+	}
 
-	        BrandPojo p = new BrandPojo();
-	        p.setBrandCategory(category);
-	        p.setBrandName(brand);
-	        dao.insert(p);
-	        List<BrandData> list = dto.getAllBrand();
+	@Test
+	public void testdeletebrand() {
+		String brand = "brand";
+		String category = "category";
 
-	        //Verifying the getById operation
-	        BrandForm form = dto.findBrand(list.get(0).getBrandName(),list.get(0).getBrandCategory());
-	        assertEquals(form.getBrandName(),brand);
-	        assertEquals(form.getBrandCategory(),category);
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
+
+		List<BrandData> list = dto.getAllBrand();
+		int id = list.get(0).getBrandId();
+		dto.deleteBrand(id);
+
+		try {
+			dto.getBrand(id);
+		} catch (ApiException e) {
+			return;
 		}
-		
-		@Test
-		 public void testvalidation(){
-			 String brand = "";
-		        String category = "";
+		fail();
+	}
 
+	@Test
+	public void testfindbrand() throws ApiException {
+		String brand = "testBrand";
+		String category = "testCategory";
 
-			   BrandForm f= new BrandForm();
-			   f.setBrandName(brand);
-			   f.setBrandCategory(category);
+		BrandPojo p = new BrandPojo();
+		p.setBrandCategory(category);
+		p.setBrandName(brand);
+		dao.insert(p);
+		List<BrandData> list = dto.getAllBrand();
 
-			   boolean flag=false;
-			   try{
-					dto.addBrand(f);
-				}catch(ApiException e){
-					   flag=true;
-		        }
-		        if(Objects.equals(flag,false))fail();
-		        
-		        brand="name";
-		        category="";
-		        BrandForm p= new BrandForm();
-				   p.setBrandName(brand);
-				   p.setBrandCategory(category);
-		        
-		        flag=false;
-		        try{
-					dto.addBrand(p);
-				}catch(ApiException e){
-					   flag=true;
-		        }
-		        if(Objects.equals(flag,false))fail();
-		        
+		// Verifying the getById operation
+		BrandForm form = dto.findBrand(list.get(0).getBrandName(), list.get(0).getBrandCategory());
+		assertEquals(form.getBrandName(), brand);
+		assertEquals(form.getBrandCategory(), category);
+
+		// testing on random brand and category
+		String newbrand = "randomBrand";
+		String newcategory = "randomCategory";
+		try {
+			dto.findBrand(newbrand,newcategory);
+		} catch (ApiException e) {
+			return;
 		}
-		
-		
-		
-	   
+		fail();
+
+	}
+
+	@Test
+	public void testvalidation() {
+		String brand = "";
+		String category = "";
+
+		BrandForm f = new BrandForm();
+		f.setBrandName(brand);
+		f.setBrandCategory(category);
+
+		boolean flag = false;
+		try {
+			dto.addBrand(f);
+		} catch (ApiException e) {
+			flag = true;
+		}
+		if (Objects.equals(flag, false))
+			fail();
+
+		brand = "name";
+		category = "";
+		BrandForm p = new BrandForm();
+		p.setBrandName(brand);
+		p.setBrandCategory(category);
+
+		flag = false;
+		try {
+			dto.addBrand(p);
+		} catch (ApiException e) {
+			flag = true;
+		}
+		if (Objects.equals(flag, false))
+			fail();
+
+	}
+
 }

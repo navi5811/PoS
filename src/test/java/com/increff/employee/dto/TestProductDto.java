@@ -122,6 +122,17 @@ public class TestProductDto extends AbstractUnitTest {
 		assertEquals(form.getProductName(), productname);
 		assertEquals(form.getProductBrandName(), brandname);
 		assertEquals(form.getProductMrp(), mrp);
+
+		// now if we want to check exception in find product
+		// choosing random product id
+		String productbarcode = "abs";
+		try {
+			productdto.findProduct(productbarcode);
+		} catch (ApiException e) {
+			return;
+		}
+		fail();
+
 	}
 
 	@Test
@@ -199,7 +210,7 @@ public class TestProductDto extends AbstractUnitTest {
 		p.setProductBrandCategoryName(brandcategory);
 		p.setProductName(productname);
 		p.setProductMrp(mrp);
- 
+
 		productdto.updateProduct(id, p);
 		List<ProductData> nlist = productdto.getAllProduct();
 		assertEquals(nlist.get(0).getProductBarcode(), barcode);

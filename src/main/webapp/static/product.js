@@ -225,6 +225,12 @@ function displayUploadData(){
 	$('#upload-product-modal').modal('toggle');
 }
 
+var brands = new Set();
+var brandsAndCategory = {};
+
+
+var editbrands=new Set();
+var editbrandsAndCategory={};
 // To update options 
 function getBrandList(){
 	var url = getBrandUrl();
@@ -232,77 +238,139 @@ function getBrandList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-			updateBrandOptions(data); 
-			updateEditBrandOptions(data); 
+			// updateBrandOptions(data); 
+			// updateEditBrandOptions(data); 
+			brandOption(data);
+			editbrandOption(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-// Display options in the dropdown menu
-function updateBrandOptions(data){
-	var $selectBrandCategoryName = $("#inputProductBrandCategoryName");
-	$selectBrandCategoryName.empty();
 
-	var $selectBrandName = $("#inputProductBrandName");
-	$selectBrandName.empty();
-
-	const names = new Set();
-	const categories = new Set();
-
-	// Add Brand name and category to sets
-	for(var i in data){
-		var brandDetails = data[i];
-		names.add(brandDetails.brandName);
-		categories.add(brandDetails.brandCategory);
-
-	}
-	
-	console.log(names);
-	console.log(categories);
-
-	for(category of categories.values()){
-		var option1 = $('<option></option>').attr("value", category).text(category);
-        $selectBrandCategoryName.append(option1);
-	}
-	
-	for(brandName of names.values()){
-		var option2 = $('<option></option>').attr("value", brandName).text(brandName);
-		$selectBrandName.append(option2);
-	}
+function brandOption(data){
+    var selectTag = $('#inputProductBrandName');
+    selectTag.empty();
+    for(var i in data){
+        var e = data[i];
+        brands.add(e.brandName);
+		console.log("brandcategory is",e.brandCategory);
+        if(brandsAndCategory[e.brandName])
+        brandsAndCategory[e.brandName].add(e.brandCategory);
+        else
+        brandsAndCategory[e.brandName] =new Set([e.brandCategory]);
+    }
+    brands.forEach((el)=>{
+        var optionTag = '<option value="'+el+'">'+el+'</option>'
+        selectTag.append(optionTag);
+    });
+	categoryOption();
+}
+function categoryOption(){
+    var brd = $('#inputProductBrandName')[0].value;
+    var selectTag = $("#inputProductBrandCategoryName");
+    selectTag.empty();
+    brandsAndCategory[brd].forEach((el)=>{
+        var optionTag = '<option value="'+el+'">'+el+'</option>'
+        selectTag.append(optionTag);
+    });
 }
 
-function updateEditBrandOptions(data){
-	var $selectBrandCategoryName = $("#editProductBrandCategoryName");
-	$selectBrandCategoryName.empty();
 
-	var $selectBrandName = $("#editProductBrandName");
-	$selectBrandName.empty();
+function editbrandOption(data){
+    var editSelectTag = $('#editProductBrandName');
+    editSelectTag.empty();
+    for(var i in data){
+        var e = data[i];
+        editbrands.add(e.brandName);
+		console.log("brandcategory is",e.brandCategory);
 
-	const names = new Set();
-	const categories = new Set();
-
-	// Add Brand name and category to sets
-	for(var i in data){
-		var brandDetails = data[i];
-		names.add(brandDetails.brandName);
-		categories.add(brandDetails.brandCategory);
-
-	}
-	
-	console.log(names);
-	console.log(categories);
-
-	for(category of categories.values()){
-		var option1 = $('<option></option>').attr("value", category).text(category);
-        $selectBrandCategoryName.append(option1);
-	}
-	
-	for(brandName of names.values()){
-		var option2 = $('<option></option>').attr("value", brandName).text(brandName);
-		$selectBrandName.append(option2);
-	}
+        if(editbrandsAndCategory[e.brandName])
+        editbrandsAndCategory[e.brandName].add(e.brandCategory);
+        else
+        editbrandsAndCategory[e.brandName] =new Set([e.brandCategory]);
+    }
+    editbrands.forEach((el)=>{
+        var editOptionTag = '<option value="'+el+'">'+el+'</option>'
+        editSelectTag.append(editOptionTag);
+    });
+	editcategoryOption();
 }
+function editcategoryOption(){
+    var brd = $('#editProductBrandName')[0].value;
+    var editSelectTag = $("#editProductBrandCategoryName");
+    editSelectTag.empty();
+    editbrandsAndCategory[brd].forEach((el)=>{
+        var editOptionTag = '<option value="'+el+'">'+el+'</option>'
+        editSelectTag.append(editOptionTag);
+    });
+}
+
+
+// //Display options in the dropdown menu
+// function updateBrandOptions(data){
+// 	var $selectBrandCategoryName = $("#inputProductBrandCategoryName");
+// 	$selectBrandCategoryName.empty();
+
+// 	var $selectBrandName = $("#inputProductBrandName");
+// 	$selectBrandName.empty();
+
+// 	const names = new Set();
+// 	const categories = new Set();
+
+// 	// Add Brand name and category to sets
+// 	for(var i in data){
+// 		var brandDetails = data[i];
+// 		names.add(brandDetails.brandName);
+// 		categories.add(brandDetails.brandCategory);
+
+// 	}
+	
+// 	console.log(names);
+// 	console.log(categories);
+
+// 	for(category of categories.values()){
+// 		var option1 = $('<option></option>').attr("value", category).text(category);
+//         $selectBrandCategoryName.append(option1);
+// 	}
+	
+// 	for(brandName of names.values()){
+// 		var option2 = $('<option></option>').attr("value", brandName).text(brandName);
+// 		$selectBrandName.append(option2);
+// 	}
+// }
+
+// function updateEditBrandOptions(data){
+// 	var $selectBrandCategoryName = $("#editProductBrandCategoryName");
+// 	$selectBrandCategoryName.empty();
+
+// 	var $selectBrandName = $("#editProductBrandName");
+// 	$selectBrandName.empty();
+
+// 	const names = new Set();
+// 	const categories = new Set();
+
+// 	// Add Brand name and category to sets
+// 	for(var i in data){
+// 		var brandDetails = data[i];
+// 		names.add(brandDetails.brandName);
+// 		categories.add(brandDetails.brandCategory);
+
+// 	}
+	
+// 	console.log(names);
+// 	console.log(categories);
+
+// 	for(category of categories.values()){
+// 		var option1 = $('<option></option>').attr("value", category).text(category);
+//         $selectBrandCategoryName.append(option1);
+// 	}
+	
+// 	for(brandName of names.values()){
+// 		var option2 = $('<option></option>').attr("value", brandName).text(brandName);
+// 		$selectBrandName.append(option2);
+// 	}
+// }
 
 // Displays modal with given fields and detects id from displayEditBrand method
 function displayProduct(data){
@@ -325,6 +393,8 @@ function init(){
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName);
+	$('#inputProductBrandName').change(categoryOption);
+	$('#editProductBrandName').change(editcategoryOption);
 }
 
 $(document).ready(init);

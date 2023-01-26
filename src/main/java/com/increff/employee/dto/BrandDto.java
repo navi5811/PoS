@@ -14,6 +14,7 @@ import com.increff.employee.pojo.BrandPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.BrandService;
 import com.increff.employee.util.StringUtil;
+
 //todo dto to service call is done via flow service
 //todo @transactional removal from dto layer compulsary to apply on dao layer
 //todo
@@ -23,7 +24,7 @@ public class BrandDto {
 	@Autowired
 	private BrandService brandservice;
 
-	//adding a brand
+	// adding a brand
 	@Transactional(rollbackOn = ApiException.class)
 	public void addBrand(BrandForm f) throws ApiException {
 		BrandPojo p = convert(f);
@@ -32,13 +33,13 @@ public class BrandDto {
 		brandservice.addBrand(p);
 	}
 
-	//delete a brand only for backend purpose
+	// delete a brand only for backend purpose
 	@Transactional
 	public void deleteBrand(int id) {
 		brandservice.deleteBrand(id);
-	}	
+	}
 
-	//gets brand by id
+	// gets brand by id
 	@Transactional(rollbackOn = ApiException.class)
 	public BrandData getBrand(int id) throws ApiException {
 		BrandPojo bp = brandservice.getBrand(id);
@@ -50,7 +51,7 @@ public class BrandDto {
 		return bd;
 	}
 
-	//get list of all brands
+	// get list of all brands
 	@Transactional
 	public List<BrandData> getAllBrand() {
 
@@ -62,11 +63,11 @@ public class BrandDto {
 		return list2;
 	}
 
-	//update a brand using id
+	// update a brand using id
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandForm f) throws ApiException {
 		BrandPojo p = convert(f);
-		
+
 		normalizeBrand(p);
 		validation(p);
 		BrandPojo ex = brandservice.getBrand(id);
@@ -74,29 +75,28 @@ public class BrandDto {
 		ex.setBrandName(p.getBrandName());
 		ex.setBrandCategory(p.getBrandCategory());
 
-		brandservice.updateBrand(id,ex);
+		brandservice.updateBrand(id, ex);
 	}
 
-	//finding a brand using brandname and category
+	// finding a brand using brandname and category
 	@Transactional
 	public BrandData findBrand(String brandName, String brandCategory) throws ApiException {
 		BrandPojo p = brandservice.findBrand(brandName, brandCategory);
-		BrandData d=convert(p);
-		if (d != null) {
-			return d;
+		if (p != null) {
+			return convert(p);
 		} else {
 			throw new ApiException(
 					"The given Brand: " + brandName + " Category: " + brandCategory + " Pair does not exist");
 		}
 	}
 
-	//noramlization of brand
+	// noramlization of brand
 	public void normalizeBrand(BrandPojo p) {
 		p.setBrandName(StringUtil.toLowerCase(p.getBrandName()));
 		p.setBrandCategory(StringUtil.toLowerCase(p.getBrandCategory()));
 	}
 
-	//validation of brand
+	// validation of brand
 	public void validation(BrandPojo p) throws ApiException {
 		if (StringUtil.isEmpty(p.getBrandName())) {
 			throw new ApiException("Brand Name cannot be empty");
@@ -112,7 +112,7 @@ public class BrandDto {
 		}
 	}
 
-	//conversion from pojo to data
+	// conversion from pojo to data
 	private static BrandData convert(BrandPojo p) {
 		BrandData d = new BrandData();
 		d.setBrandCategory(p.getBrandCategory());
@@ -121,7 +121,7 @@ public class BrandDto {
 		return d;
 	}
 
-	//conversion from form to pojo
+	// conversion from form to pojo
 	private static BrandPojo convert(BrandForm f) {
 		BrandPojo p = new BrandPojo();
 		p.setBrandName(f.getBrandName());
