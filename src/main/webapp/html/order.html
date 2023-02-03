@@ -24,7 +24,7 @@
 
 			<!-- Table -->
 			<div class="col-12">
-				<table class="table table-striped" id="order-table">
+				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="order-table">
 					<thead>
 						<tr>
 							<th scope="col">Order Id</th>
@@ -41,7 +41,7 @@
 	</div>
 
 	<!-- order Add Modal -->
-	<div class="modal" id="add-order-modal" role="dialog" tabindex="-1">
+	<div class="modal fade" id="add-order-modal" role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -52,30 +52,30 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form id="order-add-form">
+					<form class=""id="order-add-form">
 
 
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label" for="inputbarcode">Barcode</label>
-							<div class="col-sm-10">
-								<input class="form-control" name="productBarcode"
+						<div class="form-group required col-md-12">
+							<label class="control-label" for="inputbarcode">Barcode</label>
+							
+								<input class="form-control w-100" name="productBarcode"
 									placeholder="Enter Barcode" required type="text">
-							</div>
+							
 						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label" for="inputquantity">Quantity</label>
-							<div class="col-sm-10">
-								<input class="form-control" name="productQuantity"
+						<div class="form-group required col-md-12">
+							<label class="control-label" for="inputquantity">Quantity</label>
+							
+								<input class="form-control w-100" name="productQuantity"
 									placeholder="Enter Quantity" required type="number">
-							</div>
+							
 						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label" for="inputsellingPrice">Selling
+						<div class="form-group required col-md-12">
+							<label class="control-label" for="inputsellingPrice">Selling
 								Price</label>
-							<div class="col-sm-10">
-								<input class="form-control" name="productSellingPrice"
+							
+								<input class="form-control w-100" name="productSellingPrice"
 									placeholder="Enter Selling Price" required type="number" step="0.01">
-							</div>
+							
 						</div>
 
 
@@ -116,7 +116,7 @@
 	</div>
 
 	<!-- Order Edit Modal -->
-	<div class="modal" id="edit-orderitem-modal" role="dialog"
+	<div class="modal fade" id="edit-orderitem-modal" role="dialog"
 		tabindex="-1">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -172,7 +172,7 @@
 	</div>
 
 	<!-- Order Display Modal -->
-	<div class="modal" data-backdrop="static" id="order-display-modal"
+	<div class="modal fade" data-backdrop="static" id="order-display-modal"
 		role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -192,7 +192,7 @@
 									<th scope="col">Barcode</th>
 									<th scope="col">Quantity</th>
 									<th scope="col">Selling Price</th>
-									<th scope="col">Actions</th>
+									<th scope="col" id="action-button" style="display:none">Actions</th>
 								</tr>
 							</thead>
 							<tbody>

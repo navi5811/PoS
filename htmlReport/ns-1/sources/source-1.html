@@ -1,0 +1,251 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BrandDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: BrandDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BrandDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (45/45)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BrandDto$$EnhancerBySpringCGLIB$$fc4004fb</td>
+  </tr>
+  <tr>
+    <td class="name">BrandDto$$EnhancerBySpringCGLIB$$fc4004fb$$FastClassBySpringCGLIB$$5be53847</td>
+  </tr>
+  <tr>
+    <td class="name">BrandDto$$FastClassBySpringCGLIB$$8dfdea8b</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (45/45)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import com.increff.pos.model.BrandData;
+&nbsp;import com.increff.pos.model.BrandForm;
+&nbsp;import com.increff.pos.pojo.BrandPojo;
+&nbsp;import com.increff.pos.service.ApiException;
+&nbsp;import com.increff.pos.service.BrandService;
+&nbsp;import com.increff.pos.util.StringUtil;
+&nbsp;
+&nbsp;//todo dto to service call is done via flow service
+&nbsp;//todo @transactional removal from dto layer compulsary to apply on dao layer
+&nbsp;//todo
+&nbsp;@Service
+<b class="fc">&nbsp;public class BrandDto {</b>
+&nbsp;
+&nbsp;	@Autowired
+&nbsp;	private BrandService brandservice;
+&nbsp;
+&nbsp;	// adding a brand
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public void addBrand(BrandForm f) throws ApiException {
+<b class="fc">&nbsp;		BrandPojo p = convert(f);</b>
+<b class="fc">&nbsp;		normalizeBrand(p);</b>
+<b class="fc">&nbsp;		validation(p);</b>
+<b class="fc">&nbsp;		brandservice.addBrand(p);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// delete a brand only for backend purpose
+&nbsp;	@Transactional
+&nbsp;	public void deleteBrand(int id) {
+<b class="fc">&nbsp;		brandservice.deleteBrand(id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// gets brand by id
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public BrandData getBrand(int id) throws ApiException {
+<b class="fc">&nbsp;		BrandPojo bp = brandservice.getBrand(id);</b>
+&nbsp;
+<b class="fc">&nbsp;		if (bp == null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Brand with given ID does not exit, id: &quot; + id);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		BrandData bd = convert(bp);</b>
+<b class="fc">&nbsp;		return bd;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// get list of all brands
+&nbsp;	@Transactional
+&nbsp;	public List&lt;BrandData&gt; getAllBrand() {
+&nbsp;
+<b class="fc">&nbsp;		List&lt;BrandPojo&gt; list = brandservice.getAllBrand();</b>
+<b class="fc">&nbsp;		List&lt;BrandData&gt; list2 = new ArrayList&lt;BrandData&gt;();</b>
+<b class="fc">&nbsp;		for (BrandPojo p : list) {</b>
+<b class="fc">&nbsp;			list2.add(convert(p));</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return list2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// update a brand using id
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public void updateBrand(int id, BrandForm f) throws ApiException {
+<b class="fc">&nbsp;		BrandPojo p = convert(f);</b>
+&nbsp;
+<b class="fc">&nbsp;		normalizeBrand(p);</b>
+<b class="fc">&nbsp;		validation(p);</b>
+<b class="fc">&nbsp;		BrandPojo ex = brandservice.getBrand(id);</b>
+&nbsp;
+<b class="fc">&nbsp;		ex.setBrandName(p.getBrandName());</b>
+<b class="fc">&nbsp;		ex.setBrandCategory(p.getBrandCategory());</b>
+&nbsp;
+<b class="fc">&nbsp;		brandservice.updateBrand(id, ex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// finding a brand using brandname and category
+&nbsp;	@Transactional
+&nbsp;	public BrandData findBrand(String brandName, String brandCategory) throws ApiException {
+<b class="fc">&nbsp;		BrandPojo p = brandservice.findBrand(brandName, brandCategory);</b>
+<b class="fc">&nbsp;		if (p != null) {</b>
+<b class="fc">&nbsp;			return convert(p);</b>
+&nbsp;		} else {
+<b class="fc">&nbsp;			throw new ApiException(</b>
+<b class="fc">&nbsp;					&quot;The given Brand: &quot; + brandName + &quot; Category: &quot; + brandCategory + &quot; Pair does not exist&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// noramlization of brand
+&nbsp;	public void normalizeBrand(BrandPojo p) {
+<b class="fc">&nbsp;		p.setBrandName(StringUtil.toLowerCase(p.getBrandName()));</b>
+<b class="fc">&nbsp;		p.setBrandCategory(StringUtil.toLowerCase(p.getBrandCategory()));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// validation of brand
+&nbsp;	public void validation(BrandPojo p) throws ApiException {
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(p.getBrandName())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Brand Name cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(p.getBrandCategory())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Brand Category cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// Check if Brand exists already
+<b class="fc">&nbsp;		if (brandservice.findBrand(p.getBrandName(), p.getBrandCategory()) != null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Given Brand-Category combination already exists&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// conversion from pojo to data
+&nbsp;	private static BrandData convert(BrandPojo p) {
+<b class="fc">&nbsp;		BrandData d = new BrandData();</b>
+<b class="fc">&nbsp;		d.setBrandCategory(p.getBrandCategory());</b>
+<b class="fc">&nbsp;		d.setBrandName(p.getBrandName());</b>
+<b class="fc">&nbsp;		d.setBrandId(p.getBrandId());</b>
+<b class="fc">&nbsp;		return d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// conversion from form to pojo
+&nbsp;	private static BrandPojo convert(BrandForm f) {
+<b class="fc">&nbsp;		BrandPojo p = new BrandPojo();</b>
+<b class="fc">&nbsp;		p.setBrandName(f.getBrandName());</b>
+<b class="fc">&nbsp;		p.setBrandCategory(f.getBrandCategory());</b>
+<b class="fc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-01-31 12:32</div>
+</div>
+</body>
+</html>

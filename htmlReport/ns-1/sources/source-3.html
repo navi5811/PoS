@@ -1,0 +1,246 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > InventoryDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: InventoryDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InventoryDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.3%
+  </span>
+  <span class="absValue">
+    (41/43)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">InventoryDto$$EnhancerBySpringCGLIB$$d85317c</td>
+  </tr>
+  <tr>
+    <td class="name">InventoryDto$$EnhancerBySpringCGLIB$$d85317c$$FastClassBySpringCGLIB$$5d613f88</td>
+  </tr>
+  <tr>
+    <td class="name">InventoryDto$$FastClassBySpringCGLIB$$d857bf16</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.3%
+  </span>
+  <span class="absValue">
+    (41/43)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import com.increff.pos.model.BrandData;
+&nbsp;import com.increff.pos.model.InventoryData;
+&nbsp;import com.increff.pos.model.InventoryForm;
+&nbsp;import com.increff.pos.model.ProductData;
+&nbsp;import com.increff.pos.pojo.InventoryPojo;
+&nbsp;import com.increff.pos.pojo.ProductPojo;
+&nbsp;import com.increff.pos.service.ApiException;
+&nbsp;import com.increff.pos.service.InventoryService;
+&nbsp;import com.increff.pos.service.ProductService;
+&nbsp;import com.increff.pos.util.StringUtil;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class InventoryDto {</b>
+&nbsp;
+&nbsp;	@Autowired
+&nbsp;	private InventoryService inventoryservice;
+&nbsp;	@Autowired
+&nbsp;	private ProductService productservice;
+&nbsp;	@Autowired
+&nbsp;	private ProductDto productdto;
+&nbsp;	@Autowired
+&nbsp;	private BrandDto branddto;
+&nbsp;
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public InventoryData getInventory(String inventoryProductBarcode) throws ApiException {
+<b class="fc">&nbsp;		ProductData pp = productdto.findProduct(inventoryProductBarcode);</b>
+<b class="fc">&nbsp;		InventoryPojo ip = inventoryservice.getInventory(pp.getProductId());</b>
+<b class="fc">&nbsp;		InventoryData id = convert(ip);</b>
+<b class="fc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional
+&nbsp;	public List&lt;InventoryData&gt; getAllInventory() throws ApiException {
+<b class="fc">&nbsp;		List&lt;InventoryPojo&gt; list = inventoryservice.getAllInventory();</b>
+<b class="fc">&nbsp;		List&lt;InventoryData&gt; list2 = new ArrayList&lt;InventoryData&gt;();</b>
+<b class="fc">&nbsp;		for (InventoryPojo p : list) {</b>
+<b class="fc">&nbsp;			InventoryData d = convert(p);</b>
+<b class="fc">&nbsp;			ProductPojo productpojo = productservice.findProduct(d.getInventoryProductBarcode());</b>
+&nbsp;
+<b class="fc">&nbsp;			BrandData bd = branddto.getBrand(productpojo.getProductBrandCategory());</b>
+<b class="fc">&nbsp;			d.setProductName(productpojo.getProductName());</b>
+<b class="fc">&nbsp;			d.setBrandName(bd.getBrandName());</b>
+<b class="fc">&nbsp;			d.setBrandCategory(bd.getBrandCategory());</b>
+<b class="fc">&nbsp;			list2.add(d);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return list2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public void updateInventory(InventoryForm f) throws ApiException {
+<b class="fc">&nbsp;		InventoryPojo p = convert(f);</b>
+<b class="fc">&nbsp;		validateInventory(p);</b>
+<b class="fc">&nbsp;		InventoryPojo ex = inventoryservice.getInventory(p.getProductId());</b>
+<b class="fc">&nbsp;		ex.setProductQuantity(p.getProductQuantity());</b>
+<b class="fc">&nbsp;		inventoryservice.updateInventory(ex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional
+&nbsp;	public InventoryData findInventory(int id) throws ApiException {
+<b class="fc">&nbsp;		InventoryPojo p = inventoryservice.getInventory(id);</b>
+<b class="fc">&nbsp;		if (p == null) {</b>
+<b class="nc">&nbsp;			throw new ApiException(&quot;Brand with given ID does not exit, id: &quot; + id);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		InventoryData i = convert(p);</b>
+<b class="fc">&nbsp;		return i;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static void validateInventory(InventoryPojo p) throws ApiException {
+&nbsp;
+<b class="fc">&nbsp;		if (p.getProductQuantity() == null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product quantity cannot be null&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (p.getProductQuantity() &lt; 0) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product quantity cannot be less than 0&quot;);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	public InventoryData convert(InventoryPojo p) throws ApiException {
+<b class="fc">&nbsp;		InventoryData d = new InventoryData();</b>
+&nbsp;
+<b class="fc">&nbsp;		ProductPojo prod = productservice.findProduct(p.getProductId());</b>
+&nbsp;
+<b class="fc">&nbsp;		d.setProductId(prod.getProductId());</b>
+<b class="fc">&nbsp;		d.setInventoryProductBarcode(prod.getProductBarcode());</b>
+<b class="fc">&nbsp;		d.setProductQuantity(p.getProductQuantity());</b>
+&nbsp;
+<b class="fc">&nbsp;		return d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public InventoryPojo convert(InventoryForm f) throws ApiException {
+<b class="fc">&nbsp;		InventoryPojo p = new InventoryPojo();</b>
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {</b>
+<b class="nc">&nbsp;			throw new ApiException(&quot;Please enter a valid barcode, Barcode field cannot be empty&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());</b>
+&nbsp;
+<b class="fc">&nbsp;		p.setProductId(prod.getProductId());</b>
+<b class="fc">&nbsp;		p.setProductQuantity(f.getProductQuantity());</b>
+<b class="fc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;//	public InventoryPojo convertip(InventoryData f) throws ApiException {
+&nbsp;//		InventoryPojo p = new InventoryPojo();
+&nbsp;//
+&nbsp;//		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
+&nbsp;//			throw new ApiException(&quot;Please enter a valid barcode, Barcode field cannot be empty&quot;);
+&nbsp;//		}
+&nbsp;//		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
+&nbsp;//
+&nbsp;//		p.setProductId(prod.getProductId());
+&nbsp;//		p.setProductQuantity(f.getProductQuantity());
+&nbsp;//		return p;
+&nbsp;//	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-01-31 12:32</div>
+</div>
+</body>
+</html>

@@ -1,3 +1,5 @@
+var role;
+
 // Done
 function getInventoryUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
@@ -52,6 +54,7 @@ async function updateQuantity(inventoryObj, barcode){
             'Content-Type': 'application/json'
         },
         success: function(response) {
+			$('#add-inventory-modal').modal('toggle');
             qty = parseInt(response.productQuantity);
             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity) + parseInt(qty);
             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity);
@@ -199,21 +202,26 @@ function downloadErrors(){
 function displayInventoryList(data){
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
+	var j=0;
 	for(var i in data){
+		j++;
 		var e = data[i];
 		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
 		var buttonHtml = ' <button class="btn btn-secondary" onclick="displayEditInventory(' + e.inventoryProductBarcode + ')">Edit</button>'
 		var row = '<tr>'
+		+ '<td>' + j + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
 		+ '<td>' + e.productName + '</td>'
 		+ '<td>' + e.inventoryProductBarcode + '</td>'
 		+ '<td>' + e.productQuantity + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td class="edit-button" style="display:none">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
-    console.log("just finished display inventory");
+    if(role == "supervisor"){
+		$(".edit-button").show();
+   }
 }
 
 // Displays Modal
@@ -279,6 +287,11 @@ function displayInventory(data){
 
 //INITIALIZATION CODE
 function init(){
+	role = $("meta[name=userRole]").attr("content");
+    if(role == "supervisor"){
+        $("#top-buttons").show();
+		$("#edit-column").show();
+    }
 	$('#add-inventory').click(addInventory);
 	$('#update-inventory').click(updateInventory);
 	$('#refresh-data').click(getInventoryList);

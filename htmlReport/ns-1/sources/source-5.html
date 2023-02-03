@@ -1,0 +1,335 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProductDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.6%
+  </span>
+  <span class="absValue">
+    (72/73)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProductDto$$EnhancerBySpringCGLIB$$70235a83</td>
+  </tr>
+  <tr>
+    <td class="name">ProductDto$$EnhancerBySpringCGLIB$$70235a83$$FastClassBySpringCGLIB$$17a521d7</td>
+  </tr>
+  <tr>
+    <td class="name">ProductDto$$FastClassBySpringCGLIB$$1e3a6f63</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.6%
+  </span>
+  <span class="absValue">
+    (72/73)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;
+&nbsp;import org.apache.logging.log4j.LogManager;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import com.increff.pos.model.ProductData;
+&nbsp;import com.increff.pos.model.ProductForm;
+&nbsp;import com.increff.pos.pojo.BrandPojo;
+&nbsp;import com.increff.pos.pojo.InventoryPojo;
+&nbsp;import com.increff.pos.pojo.ProductPojo;
+&nbsp;import com.increff.pos.service.ApiException;
+&nbsp;import com.increff.pos.service.BrandService;
+&nbsp;import com.increff.pos.service.InventoryService;
+&nbsp;import com.increff.pos.service.ProductService;
+&nbsp;import com.increff.pos.util.StringUtil;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class ProductDto {</b>
+&nbsp;	
+&nbsp;	@Autowired
+&nbsp;	private ProductService productservice;
+&nbsp;	@Autowired
+&nbsp;	private BrandService brandservice;
+&nbsp;	@Autowired
+&nbsp;	private InventoryService inventoryservice;
+&nbsp;
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public void addProduct(ProductForm f) throws ApiException {
+&nbsp;
+<b class="fc">&nbsp;		ProductPojo p = convert(f);	</b>
+<b class="fc">&nbsp;		normalizeProduct(p);</b>
+<b class="fc">&nbsp;		validateProduct(p);</b>
+<b class="fc">&nbsp;		productservice.addProduct(p);</b>
+<b class="fc">&nbsp;		InventoryPojo inv = new InventoryPojo(p.getProductId(), 0);</b>
+<b class="fc">&nbsp;		inventoryservice.addInventory(inv);</b>
+&nbsp;		
+&nbsp;	}
+&nbsp;	@Transactional
+&nbsp;	public void deleteProduct(int id) {
+<b class="fc">&nbsp;		productservice.deleteProduct(id);</b>
+&nbsp;	}
+&nbsp;//
+&nbsp;//	@Transactional(rollbackOn = ApiException.class)
+&nbsp;//	public ProductData getProduct(int id) throws ApiException {
+&nbsp;//
+&nbsp;//		ProductPojo pp = productservice.findProduct(id);
+&nbsp;//		if (pp == null) {
+&nbsp;//			throw new ApiException(&quot;Product with given id does not exist, Barcode: &quot; + id);
+&nbsp;//		}
+&nbsp;//		ProductData pd = convert(pp);
+&nbsp;//		return pd;
+&nbsp;//	}
+&nbsp;
+&nbsp;	@Transactional
+&nbsp;	public List&lt;ProductData&gt; getAllProduct() throws ApiException {
+&nbsp;
+<b class="fc">&nbsp;		List&lt;ProductPojo&gt; list = productservice.getAllProduct();</b>
+<b class="fc">&nbsp;		List&lt;ProductData&gt; list2 = new ArrayList&lt;ProductData&gt;();</b>
+<b class="fc">&nbsp;		for (ProductPojo p : list) {</b>
+<b class="fc">&nbsp;			list2.add(convert(p));</b>
+<b class="fc">&nbsp;		}</b>
+<b class="fc">&nbsp;		return list2;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional(rollbackOn = ApiException.class)
+&nbsp;	public void updateProduct(int id, ProductForm f) throws ApiException {
+&nbsp;
+<b class="fc">&nbsp;		ProductPojo p = convert(f);</b>
+<b class="fc">&nbsp;		normalizeProduct(p);</b>
+<b class="fc">&nbsp;		ProductPojo ex = productservice.findProduct(id);</b>
+&nbsp;
+<b class="fc">&nbsp;		ex.setProductName(p.getProductName());</b>
+<b class="fc">&nbsp;		ex.setProductBrandCategory(p.getProductBrandCategory());</b>
+<b class="fc">&nbsp;		ex.setProductBarcode(p.getProductBarcode());</b>
+<b class="fc">&nbsp;		ex.setProductMrp(p.getProductMrp());</b>
+&nbsp;
+<b class="fc">&nbsp;		productservice.updateProduct(id, ex);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional
+&nbsp;	public ProductData findProduct(int id) throws ApiException {
+<b class="fc">&nbsp;		ProductPojo p = productservice.findProduct(id);</b>
+&nbsp;		
+<b class="fc">&nbsp;		if (p == null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product with given ID does not exist, id: &quot; + id);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		ProductData pd=convert(p);</b>
+<b class="fc">&nbsp;		return pd;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Transactional
+&nbsp;	public ProductData findProduct(String barcode) throws ApiException {
+<b class="fc">&nbsp;		ProductPojo p = productservice.findProduct(barcode);</b>
+<b class="fc">&nbsp;		if (p == null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product with given barcode does not exist, Barcode: &quot; + barcode);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		ProductData pd=convert(p);</b>
+<b class="fc">&nbsp;		return pd;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static void normalizeProduct(ProductPojo p) {
+&nbsp;
+<b class="fc">&nbsp;		p.setProductName(StringUtil.toLowerCase(p.getProductName()));</b>
+<b class="fc">&nbsp;		p.setProductBarcode(StringUtil.toLowerCase(p.getProductBarcode()));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void validateProduct(ProductPojo p) throws ApiException {
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(p.getProductName())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product Name cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(p.getProductBarcode())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product Barcode cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (p.getProductMrp() == null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product Mrp cannot be null&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (p.getProductMrp()&lt;0.0) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product Mrp cannot be less than 0&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (productservice.findProduct(p.getProductBarcode()) != null) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product with the same Barcode already exists&quot;);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;//		 To check if Product already exists with a different barcode
+<b class="fc">&nbsp;			ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());</b>
+&nbsp;
+<b class="fc">&nbsp;		if ((check != null) &amp;&amp; check.getProductBarcode() == p.getProductBarcode()) {</b>
+<b class="nc">&nbsp;			throw new ApiException(&quot;The given product already exists in the Database&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if ((check != null) &amp;&amp; check.getProductBarcode() != p.getProductBarcode()) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;The given product already exists with a different Barcode&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public ProductData convert(ProductPojo p) throws ApiException {
+<b class="fc">&nbsp;		ProductData d = new ProductData();</b>
+&nbsp;
+<b class="fc">&nbsp;		d.setProductBarcode(p.getProductBarcode());</b>
+<b class="fc">&nbsp;		d.setProductName(p.getProductName());</b>
+<b class="fc">&nbsp;		d.setProductId(p.getProductId());</b>
+<b class="fc">&nbsp;		d.setProductMrp(p.getProductMrp());</b>
+&nbsp;
+<b class="fc">&nbsp;		int productBrandId = p.getProductBrandCategory();</b>
+<b class="fc">&nbsp;		BrandPojo brandPojo = brandservice.getBrand(productBrandId);</b>
+&nbsp;		
+<b class="fc">&nbsp;		d.setProductBrandCategoryName(brandPojo.getBrandCategory());</b>
+<b class="fc">&nbsp;		d.setProductBrandName(brandPojo.getBrandName());</b>
+&nbsp;
+<b class="fc">&nbsp;		return d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public ProductPojo convert(ProductForm f) throws ApiException {
+<b class="fc">&nbsp;		ProductPojo p = new ProductPojo();</b>
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(f.getProductBrandName())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product must belong to a brand, Brand name field cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {</b>
+<b class="fc">&nbsp;			throw new ApiException(&quot;Product must belong to a category, Category name field cannot be empty&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());</b>
+<b class="fc">&nbsp;		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());</b>
+&nbsp;
+<b class="fc">&nbsp;		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);</b>
+&nbsp;
+<b class="fc">&nbsp;		int foundBrandId = foundBrand.getBrandId();</b>
+&nbsp;
+<b class="fc">&nbsp;		p.setProductBrandCategory(foundBrandId);</b>
+<b class="fc">&nbsp;		p.setProductName(f.getProductName());</b>
+<b class="fc">&nbsp;		p.setProductMrp(f.getProductMrp());</b>
+<b class="fc">&nbsp;		p.setProductBarcode(f.getProductBarcode());</b>
+&nbsp;
+<b class="fc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;//	public ProductPojo convertdp(ProductData f) throws ApiException {
+&nbsp;//		ProductPojo p=new ProductPojo();
+&nbsp;//		
+&nbsp;//
+&nbsp;//		if (StringUtil.isEmpty(f.getProductBrandName())) {
+&nbsp;//			throw new ApiException(&quot;Product must belong to a brand, Brand name field cannot be empty&quot;);
+&nbsp;//		}
+&nbsp;//
+&nbsp;//		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {
+&nbsp;//			throw new ApiException(&quot;Product must belong to a , Category name field cannot be empty&quot;);
+&nbsp;//		}
+&nbsp;//
+&nbsp;//		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());
+&nbsp;//		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());
+&nbsp;//
+&nbsp;//		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
+&nbsp;//
+&nbsp;//		int foundBrandId = foundBrand.getBrandId();
+&nbsp;//
+&nbsp;//		p.setProductBrandCategory(foundBrandId);
+&nbsp;//		p.setProductName(f.getProductName());
+&nbsp;//		p.setProductMrp(f.getProductMrp());
+&nbsp;//		p.setProductBarcode(f.getProductBarcode());
+&nbsp;//		p.setProductId(f.getProductId());
+&nbsp;//		return p;
+&nbsp;//		
+&nbsp;//	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-01-31 12:32</div>
+</div>
+</body>
+</html>

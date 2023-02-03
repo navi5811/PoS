@@ -1,3 +1,4 @@
+var role;
 // Done
 function getProductUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
@@ -24,6 +25,7 @@ function addProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+		$('#add-product-modal').modal('toggle');
 	   		getProductList();  
 	   },
 	   error: handleAjaxError
@@ -162,19 +164,25 @@ function displayProductList(data){
 	console.log("Display Product List");
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
+	var j=0;
 	for(var i in data){
+		j++;
 		var e = data[i];
 		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.productId + ')">Edit</button>'
 		var row = '<tr>'
+		+ '<td>' + j + '</td>'
 		+ '<td>' + e.productName + '</td>'
 		+ '<td>'  + e.productBrandName + '</td>'
 		+ '<td>'  + e.productBrandCategoryName + '</td>'
 		+ '<td>'  + e.productBarcode + '</td>'
 		+ '<td>'  + e.productMrp + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
+		+ '<td class="edit-button" style="display:none">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
+	if(role == "supervisor"){
+		$(".edit-button").show();
+   }
 }
 
 // Displays Modal
@@ -386,6 +394,11 @@ function displayProduct(data){
 
 //INITIALIZATION CODE
 function init(){
+	role = $("meta[name=userRole]").attr("content");
+    if(role == "supervisor"){
+        $("#top-buttons").show();
+		$("#edit-column").show();
+    }
 	$('#add-product').click(addProduct);
 	$('#update-product').click(updateProduct);
 	$('#refresh-data').click(getProductList);

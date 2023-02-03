@@ -48,10 +48,10 @@
                             <fo:table-body>
                                 <xsl:apply-templates select="orderItemData"/>
                                 <fo:table-row font-weight="bold">
-                                            <fo:table-cell number-columns-spanned="3" text-align="right" padding-right="3pt" border="1px solid #b8b6b6">
+                                            <fo:table-cell number-columns-spanned="3" text-align="right" padding-right="37pt" border="1px solid #b8b6b6">
                                               <fo:block padding="1mm">Total</fo:block>
                                             </fo:table-cell>
-                                            <fo:table-cell  text-align="right" padding-right="3pt" background-color="#f5f5f5" border="1px solid #b8b6b6" >
+                                            <fo:table-cell  text-align="center" padding-right="3pt" background-color="#f5f5f5" border="1px solid #b8b6b6" >
                                               <fo:block padding="1mm">
                                                 <xsl:value-of select="billAmount" />
                                               </fo:block>
@@ -69,7 +69,7 @@
         <fo:table-row>
 <!--            <xsl:attribute name="font-weight">bold</xsl:attribute>-->
 
-            <fo:table-cell border="1px solid #b8b6b6" padding-left="3pt">
+            <fo:table-cell border="1px solid #b8b6b6" text-align="center">
                 <fo:block padding="1mm">
                     <xsl:value-of select="name"/>
                 </fo:block>
@@ -80,13 +80,13 @@
                     <xsl:value-of select="productQuantity"/>
                 </fo:block>
             </fo:table-cell>
-            <fo:table-cell border="1px solid #b8b6b6" text-align="right" padding-right="3pt">
+            <fo:table-cell border="1px solid #b8b6b6" text-align="center">
                 <fo:block padding="1mm">
                     <xsl:value-of select="productSellingPrice"/>
                 </fo:block>
             </fo:table-cell>
 
-            <fo:table-cell border="1px solid #b8b6b6" text-align="right" padding-right="3pt">
+            <fo:table-cell border="1px solid #b8b6b6" text-align="center">
                 <fo:block padding="1mm">
                     <xsl:value-of select="(productQuantity * productSellingPrice)"/>
                 </fo:block>

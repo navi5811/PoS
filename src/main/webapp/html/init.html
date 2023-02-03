@@ -9,18 +9,17 @@
 <nav th:replace="snippets.html :: name_site_navbar"></nav>
 
 
-<div class="container">
+<div class="container" style="margin-top:98px">
 
-<div class="row">
-<div class="col-6">
+<div class="row mx-auto">
+<div class="col-6 mx-auto">
 	
-	<div class="card">
+	<div class="card mx-auto">
   	<div class="card-header">
-    	Initialize Application
+    	Sign Up
   	</div>
   	<div class="card-body">
-  		Provide an email and password to be used as "admin"
-		<form class="form" id="init-form" method="POST" th:action="@{/site/init}">
+		<form class="" id="init-form" method="POST" th:action="@{/site/init}">
 			<div class="form-group">
 				<label for="email" class="col-sm-10 col-form-label">Email</label>
 			    <div class="col-sm-10">
@@ -34,13 +33,11 @@
 			    </div>
 			</div>
 			<input type="hidden" name="role" id="role" value="admin">
-			<button type="submit" class="btn btn-primary" id="login">Go</button>
+			<div class="form-group">
+			<button type="submit" class="btn btn-primary" id="login">Sign Up</button>
+			</div>
 		</form>
-	</div>
-	<div class="card-footer text-danger">
-		[[${info.getMessage()}]]
-	</div>
-	
+	</div>	
 	</div>
 	
 	

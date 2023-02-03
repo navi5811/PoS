@@ -11,55 +11,9 @@
     <h3>Product</h3>
 
     <!-- Top row with form-->
-    <div class="row">
+    <div class="row"id="top-buttons" style="display:none">
       <div class="col-12">
-        <form class="form-inline" id="product-form">
-          <div class="form-group">
-            <label for="inputProductName" class="col-sm-2 col-form-label">Product Name</label>
-            <div class="col-sm-10">
-              <input required type="text" class="form-control" name="productName" id="inputProductName"
-                placeholder="Enter Product Name" />
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="inputProductBrandName" class="col-sm-2 col-form-label">Brand Name</label>
-            &nbsp; &nbsp;
-            <select required class="form-control" name="productBrandName" id="inputProductBrandName">
-              <!-- <option value="string">Volvo</option>
-              <option value="saab">Saab</option> -->
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="inputProductBrandCategoryName" class="col-sm-2 col-form-label">Category</label>
-            &nbsp; &nbsp;
-            <select required class="form-control" name="productBrandCategoryName" id="inputProductBrandCategoryName">
-              <!-- <option value="string">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option> -->
-            </select>
-          </div>
-
-
-          <div class="form-group">
-            <label for="inputProductBarcode" class="col-sm-2 col-form-label">Barcode</label>
-            <div class="col-sm-10">
-              <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
-                placeholder="Enter Barcode" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="inputProductMrp" class="col-sm-2 col-form-label">MRP</label>
-            <div class="col-sm-10">
-              <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
-                placeholder="Enter MRP" />
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-success" id="add-product">
+          <button type="button" class="btn btn-success" data-target="#add-product-modal" data-toggle="modal">
             Add
           </button>
           &nbsp;
@@ -70,7 +24,81 @@
           <button type="button" class="btn btn-primary" id="upload-data">
             Upload
           </button>
-        </form>
+    
+      </div>
+    </div>
+
+    <!-- Product Add Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="add-product-modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            
+          </div>
+          <div class="modal-body">
+            <form class="" id="product-form">
+
+              <div class="form-group required col-md-12">
+                <label for="inputProductName" class="control-label">Product Name</label>
+                
+                  <input required type="text" class="form-control" name="productName" id="inputProductName"
+                    placeholder="Enter Product Name" />
+                
+              </div>
+              <div class="row-md-12">
+              
+              <div class="col-md-6">
+                <label for="inputProductBrandName" class="control-label">Brand</label>
+                &nbsp; &nbsp;
+                <select required class="form-control" name="productBrandName" id="inputProductBrandName">
+                  <!-- <option value="string">Volvo</option>
+                  <option value="saab">Saab</option> -->
+                </select>
+              </div>
+          
+              <div class="col-md-6">
+                <label for="inputProductBrandCategoryName" class="control-label">Category</label>
+                &nbsp; &nbsp;
+                <select required class="form-control" name="productBrandCategoryName" id="inputProductBrandCategoryName">
+                  <!-- <option value="string">Volvo</option>
+                  <option value="saab">Saab</option>
+                  <option value="mercedes">Mercedes</option>
+                  <option value="audi">Audi</option> -->
+                </select>
+              </div>
+          
+            
+          </div>
+          
+              <div class="form-group required col-md-12">
+                <label for="inputProductBarcode" class="control-label">Barcode</label>
+                
+                  <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
+                    placeholder="Enter Barcode" />
+                
+              </div>
+          
+              <div class="form-group required col-md-12">
+                <label for="inputProductMrp" class="control-label">MRP</label>
+                
+                  <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
+                    placeholder="Enter MRP" />
+                
+              </div>
+              &nbsp;
+            </form>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel
+              </button>
+            <button type="button" class="btn btn-success" id="add-product">Add</button>
+                &nbsp; 
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -79,14 +107,16 @@
     <div class="row">
       <!-- Table -->
       <div class="col-12">
-        <table class="table table-striped" id="product-table">
+        <table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="product-table">
           <thead>
             <tr>
+              <th scope="col">Serial No</th>
               <th scope="col">Product Name</th>
               <th scope="col">Brand</th>
               <th scope="col">Category</th>
               <th scope="col">Barcode</th>
               <th scope="col">MRP</th>
+              <th scope="col" id="edit-column"style="display:none">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +142,7 @@
     </div>
 
     <!-- Product Edit Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="edit-product-modal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -154,7 +184,7 @@
               <div class="form-group">
                 <label for="productBarcode" class="col-sm-2 col-form-label">Barcode</label>
                 <div class="col-sm-10">
-                  <input readonly name="productBarcode">
+                  <input type="text" readonly class="form-control-plaintext" name="productBarcode">
                 </div>
               </div>
 
@@ -181,7 +211,7 @@
     </div>
 
     <!-- Product upload Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="upload-product-modal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">

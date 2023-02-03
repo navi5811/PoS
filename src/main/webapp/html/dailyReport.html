@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="snippets.html :: name_head"></head>
+
+  <body>
+    <nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+    <div class="container">
+      <h3>Daily Report</h3>
+
+      <div class="col-12">
+        <table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="dailyReport-table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Orders</th>
+              <th scope="col">Items</th>
+              <th scope="col">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nike</td>
+              <td>Shoes</td>
+              <td>Edit</td>
+            </tr>
+            <tr>
+              <td>Nike</td>
+              <td>Shirts</td>
+              <td>Edit</td>
+            </tr>
+            <tr>
+              <td>Adidas</td>
+              <td>Hoodies</td>
+              <td>Edit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Container end-->
+
+    <footer th:replace="snippets.html :: name_footer"></footer>
+
+    <script th:src="@{/static/dailyReport.js}"></script>
+  </body>
+</html>

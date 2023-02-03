@@ -13,7 +13,8 @@ function toJson($form){
 }
 
 
-function handleAjaxError(response){
+function 
+handleAjaxError(response){ 
 	var response = JSON.parse(response.responseText);
 	alert(response.message);
 }
@@ -52,3 +53,11 @@ function writeFileData(arr){
     tempLink.setAttribute('download', 'download.tsv');
     tempLink.click(); 
 }
+
+function init() {
+    var role = $("meta[name=userRole]").attr("content");
+    if(role == "supervisor"){
+        $("#report_dropdown").show();
+    }
+}
+$(document).ready(init);
