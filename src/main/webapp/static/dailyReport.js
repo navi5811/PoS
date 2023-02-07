@@ -20,14 +20,19 @@ function displayReportList(data){
 	console.log("inside display report");
 	var $tbody = $('#dailyReport-table').find('tbody');
 	$tbody.empty();
+	var p=0;
 	for(var i in data){
+		p++;
 		var e = data[i];
+		var date = new Date(e.date);
+    	date = date.toLocaleString();
 		console.log(e.date);
 		console.log(e.numberOfOrders);
 		console.log(e.numberOfItems);
 		console.log(e.total);
 		var row = '<tr>'
-		+ '<td>' + e.date + '</td>'
+		+ '<td>' + p + '</td>'
+		+ '<td>' + date + '</td>'
 		+ '<td>'  + e.numberOfOrders + '</td>'
         + '<td>'  + e.numberOfItems + '</td>'
         + '<td>'  + e.total + '</td>'

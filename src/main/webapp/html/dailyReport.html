@@ -6,12 +6,15 @@
     <nav th:replace="snippets.html :: name_app_navbar"></nav>
 
     <div class="container">
+      <div class="col-12">
       <h3>Daily Report</h3>
+    </div>
 
       <div class="col-12">
         <table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="dailyReport-table">
           <thead>
             <tr>
+              <th scope="col">Serial No.</th>
               <th scope="col">Date</th>
               <th scope="col">Orders</th>
               <th scope="col">Items</th>

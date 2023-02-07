@@ -18,11 +18,14 @@ function getBrandList(){
 function displayBrandList(data){
 	var $tbody = $('#brand-table').find('tbody');
 	$tbody.empty();
+	var p=0;
 	for(var i in data){
+		p++;
 		var e = data[i];
 		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
 		// var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditBrand(' + e.brandId + ')"><i class="bi bi-pencil-square"></i> </button>'
 		var row = '<tr>'
+		+ '<td>' + p + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>'  + e.brandCategory + '</td>'
 		// + '<td>' + buttonHtml + '</td>'

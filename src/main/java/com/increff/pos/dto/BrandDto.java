@@ -20,7 +20,7 @@ import com.increff.pos.util.StringUtil;
 //todo dto to service call is done via flow service
 //todo @transactional removal from dto layer compulsary to apply on dao layer
 //todo
-@Service
+@Component
 public class BrandDto {
 
 	@Autowired

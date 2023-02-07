@@ -8,6 +8,7 @@
 
 	<nav th:replace="snippets.html :: name_app_navbar"></nav>
 
+
 	<div class="container">
 
 		<h3>Inventory</h3>
@@ -17,11 +18,11 @@
 			<div class="col-12">
 
 				<button type="button" class="btn btn-primary" data-target="#add-inventory-modal"
-					data-toggle="modal">Add</button>
+					data-toggle="modal"><i class="bi bi-database-add"></i> Add</button>
 				&nbsp;
-				<button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
+				<button type="button" class="btn btn-primary" id="refresh-data"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
 				&nbsp;
-				<button type="button" class="btn btn-primary" id="upload-data">Upload</button>
+				<button type="button" class="btn btn-primary" id="upload-data"><i class="bi bi-upload"></i> Upload</button>
 			</div>
 		</div>
 
@@ -52,9 +53,9 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel
+						<button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="bi bi-x-octagon"></i> Cancel
 						</button>
-						<button type="button" class="btn btn-success" id="add-inventory">Add</button>
+						<button type="button" class="btn btn-success" id="add-inventory"><i class="bi bi-plus"></i> Add</button>
 						&nbsp;
 					</div>
 
@@ -164,7 +165,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="button" class="btn btn-primary" id="process-data">Upload</button>
-						<button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
+						<button type="button" class="btn btn-warning" id="download-errors" style="display: none;">Download Errors</button>
 					</div>
 				</div>
 			</div>

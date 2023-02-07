@@ -38,24 +38,7 @@ public class InitApiController extends AbstractUiController {
 	@ApiOperation(value = "Initializes application")
 	@RequestMapping(path = "/site/init", method = RequestMethod.POST)
 	public ModelAndView initSite(UserForm form) throws ApiException {
-		List<UserData> list = userDto.getAll();
-		if (list.size() > 0) {
-			info.setMessage("Application already initialized. Please use existing credentials");
-		} else {
-			form.setRole("admin");
-			userDto.add(form);
-			info.setMessage("Application initialized");
-		}
-		return mav("init.html");
-
+		return userDto.register(form);
 	}
-
-//	private static UserPojo convert(UserForm f) {
-//		UserPojo p = new UserPojo();
-//		p.setEmail(f.getEmail());
-//		p.setRole(f.getRole());
-//		p.setPassword(f.getPassword());
-//		return p;
-//	}
 
 }

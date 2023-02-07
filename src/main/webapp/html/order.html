@@ -8,12 +8,12 @@
 
 		<h3>Order</h3>
 
-		<button class="btn btn-primary"
-			data-target="#add-order-modal" data-toggle="modal" type="button">Add
+		<button class="btn btn-dark"
+			data-target="#add-order-modal" data-toggle="modal" type="button"><i class="bi bi-cart-plus"></i> Add
 		</button>
 		&nbsp;
-		<button class="btn btn-primary" id="refresh-data"
-			type="button">Refresh</button>
+		<button class="btn btn-dark" id="refresh-data"
+			type="button"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
 		&nbsp;
 
 		<!-- Blank Row -->
@@ -30,7 +30,7 @@
 							<th scope="col">Order Id</th>
 							<th scope="col">Order Time</th>
 							<th scope="col">Bill Amount</th>
-							<th scope="col">Action</th>
+							<th scope="col">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -84,7 +84,7 @@
 								data-dismiss="modal" id="cancel-order" type="button">Cancel
 							</button>
 							<button class="btn btn-primary" id="add-order"
-								type="submit">Add To Cart</button>
+								type="submit">Add To Cart <i class="bi bi-cart"></i></button>
 							<button class="btn btn-primary" id="submit-order"
 								type="button">Place Order</button>
 						</div>
@@ -162,7 +162,7 @@
 						<input type="hidden" name="productBarcode"> <input name="id"
 							type="hidden"> <input name="orderId" type="hidden">
 						<div class="modal-footer">
-							<button class="btn btn-primary"
+							<button class="btn btn-success"
 								id="update-orderitem" type="submit">Submit</button>
 						</div>
 					</form>

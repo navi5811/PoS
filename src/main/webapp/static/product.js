@@ -168,7 +168,7 @@ function displayProductList(data){
 	for(var i in data){
 		j++;
 		var e = data[i];
-		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.productId + ')">Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.productId + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.productName + '</td>'
@@ -192,7 +192,7 @@ function displayEditProduct(id){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayProduct(data);   
+	   		displayProduct(data);
 	   },
 	   error: handleAjaxError
 	});	

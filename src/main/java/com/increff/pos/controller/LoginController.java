@@ -41,27 +41,7 @@ public class LoginController {
 	@ApiOperation(value = "Logs in a user")
 	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
-		System.out.println("entered email is "+f.getEmail());
-		UserData p = userDto.get(f.getEmail());
-		System.out.println("entered email is "+f.getEmail());
-		boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
-		System.out.println("authentication done");
-		if (!authenticated) {
-			info.setMessage("Invalid username or password");
-			return new ModelAndView("redirect:/site/login");
-		}
-
-		// Create authentication object
-		Authentication authentication = convert(p);
-		// Create new session
-		HttpSession session = req.getSession(true);
-		// Attach Spring SecurityContext to this new session
-		SecurityUtil.createContext(session);
-		// Attach Authentication object to the Security Context
-		SecurityUtil.setAuthentication(authentication);
-
-		return new ModelAndView("redirect:/ui/order");
-
+		return userDto.login(req,f);
 	}
 
 	@RequestMapping(path = "/session/logout", method = RequestMethod.GET)
@@ -70,21 +50,6 @@ public class LoginController {
 		return new ModelAndView("redirect:/site/logout");
 	}
 
-	private static Authentication convert(UserData p) {
-		// Create principal
-		UserPrincipal principal = new UserPrincipal();
-		principal.setEmail(p.getEmail());
-		principal.setId(p.getId());
-		principal.setRole(p.getRole());
-		// Create Authorities
-		ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(p.getRole()));
-		// you can add more roles if required
 
-		// Create Authentication
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null,
-				authorities);
-		return token;
-	}
 
 }

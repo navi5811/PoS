@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 import com.increff.pos.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.increff.pos.pojo.BrandPojo;
@@ -29,7 +30,7 @@ import com.increff.pos.util.PDFUtils;
 import com.increff.pos.util.StringUtil;
 
 //todo
-@Service
+@Component
 public class OrderDto {
 
 	@Autowired
@@ -197,21 +198,30 @@ public class OrderDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateOrderItem(int id, OrderItemForm f) throws ApiException {
 		ProductPojo productPojo = productservice.findProduct(f.getProductBarcode());
+
+		//orderItem pojo that is received through edit form
 		OrderItemPojo orderItemPojo = convertOrderItemForm(f, productPojo);
+
+		//orderItem pojo that is get from backend through id
 		OrderItemPojo oip=orderservice.get(id);
+		//quantity that is present in the order already
+		 Integer quantity=oip.getOrderQuantity();
+
+
+
 		int orderId=oip.getOrderId();
 		OrderPojo op=orderservice.getOrder(orderId);
 		if(op.isInvoiced()==true)
 		{
 			throw new ApiException("Order Item can't be edited");
 		}
-		update(id, orderItemPojo);
+		update(id, orderItemPojo, quantity);
 	}
 
 	// Updating order item
 	@Transactional(rollbackOn = ApiException.class)
-	public void update(int id, OrderItemPojo p) throws ApiException {
-		validate(p);
+	public void update(int id, OrderItemPojo p,Integer quantity) throws ApiException {
+		validateUpdate(p,quantity);
 		OrderItemPojo ex = checkIfExists(id);
 		increaseInventory(ex);
 		ex.setOrderQuantity(p.getOrderQuantity());
@@ -257,7 +267,33 @@ public class OrderDto {
 	}
 
 //
+
 	// Validation of order item
+	private void validateUpdate(OrderItemPojo p,Integer quantity) throws ApiException {
+		boolean flag =false;
+		if(p.getOrderQuantity()<=quantity)
+		{
+			flag=true;
+		}
+		Integer moduloQuantity=quantity-p.getOrderQuantity();
+		if (p.getOrderQuantity() <= 0) {
+			throw new ApiException("Quantity must be greater than or equal to 0");
+		}else if (inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity() < moduloQuantity && flag==false) {
+			throw new ApiException("Available quantity for product with barcode: "
+					+ productservice.findProduct(p.getOrderProductId()).getProductBarcode() + " is: "
+					+ inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity());
+		}
+
+		if(p.getOrderSellingPrice()<0)
+		{
+			throw new ApiException("Selling price cannot be less than 0");
+		}
+		if (p.getOrderSellingPrice() > p.getMrp()) {
+			throw new ApiException("SP for product with barcode: "
+					+ productservice.findProduct(p.getOrderProductId()).getProductBarcode()
+					+ " can't be greater than MRP: " + p.getMrp());
+		}
+	}
 	private void validate(OrderItemPojo p) throws ApiException {
 		if (p.getOrderQuantity() < 0) {
 			throw new ApiException("Quantity must be positive or 0 if you want to cancel order");

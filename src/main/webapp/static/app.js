@@ -26,6 +26,7 @@ function readFileData(file, callback){
 		skipEmptyLines: "greedy",
 		complete: function(results) {
 			callback(results);
+            $("#download-errors").show();
 	  	}	
 	}
 	Papa.parse(file, config);
@@ -61,3 +62,7 @@ function init() {
     }
 }
 $(document).ready(init);
+$(document).ready(function() {
+    $('.nav-item active').removeClass('active').removeAttr('aria-current');
+    $('a[href="' + location.pathname + '"]').closest('li').addClass('active').attr('aria-current', 'page');
+});

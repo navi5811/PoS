@@ -17,9 +17,12 @@ function addOrderItem(event) {
   var orderItem = JSON.parse(json);
 
   var barcode = orderItem.productBarcode;
+  var flag = false;
 
   var url = getInventoryUrl() + "/" + barcode;
-  var flag = false;
+
+
+
   $.ajax({
     url: url,
     type: "GET",
@@ -38,6 +41,8 @@ function addOrderItem(event) {
         flag = true;
         alert("order selling price must be less than MRP");
       }
+
+
     },
     error: function (data) {
       console.log("why this error is occuring");
@@ -45,6 +50,17 @@ function addOrderItem(event) {
       alert("barcode is not available");
     },
   }).then(function () {
+
+    var k = 0;
+    for (var p in order) {
+      console.log("producrtbarcode is ", order[k].productBarcode);
+      console.log("orderitem barcode", orderItem.productBarcode);
+      if (order[k].productBarcode == orderItem.productBarcode) {
+        flag = true;
+        alert("same barcode product cannot be entered again");
+      }
+      k++;
+    }
     if (
       orderItem.productQuantity > 0 &&
       orderItem.productSellingPrice >= 0 &&
@@ -100,8 +116,7 @@ function addOrder(event) {
 
 function getInvoice(id) {
 
-  getOrderList();
-
+  console.log("entered invoice");
   var url = getOrderUrl() + "/invoice/" + id;
   console.log(url);
   $.ajax({
@@ -123,6 +138,8 @@ function getInvoice(id) {
       var blob = new Blob([arrayBuffer], { type: "application/pdf" });
       var link = window.URL.createObjectURL(blob);
       window.open(link, "");
+      getOrderList();
+
     },
     error: handleAjaxError,
   });
@@ -213,24 +230,17 @@ function displayOrderList(data) {
   var $tbody = $("#order-table").find("tbody");
   $tbody.empty();
   for (var i in data) {
-    var e = data[i]; 
+    var e = data[i];
     var date = new Date(e.datetime);
     date = date.toLocaleString();
     var invoice = e.invoiced;
-    value = "Download Invoice";
+    value =  '<button type="button" id="button-invoice" class="btn btn-dark" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
     if (invoice == false) {
-      var value = "Generate Invoice";
+      var value =  '<button type="button" id="button-invoice" class="btn btn-secondary" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
     }
     var buttonHtml =
-      ' <button type="button" class="btn btn-secondary" onclick="getOrderItemList(' +
-      e.orderId +
-      "," +
-      invoice +
-      ')">View</button>';
-    buttonHtml +=
-      '<button type="button" id="button-invoice" class="btn btn-secondary invoice" onclick="getInvoice(' +
-      e.orderId +
-      ')">'+value+'</button>';
+      ' <button type="button" class="btn btn-dark mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice +')"><i class="bi bi-eye"></i> View</button>';
+    buttonHtml += value;
     var row =
       "<tr>" +
       "<td>" +
@@ -263,9 +273,9 @@ function displayOrderItem(data, invoice) {
     var e = data[i];
 
     var buttonHtml =
-      ' <button class="edit-button" style="display:none" type="button"onclick="displayEditOrderItem(' +
+      ' <button class="edit-button btn btn-dark" style="display:none" type="button"onclick="displayEditOrderItem(' +
       e.orderItemId +
-      ')">Edit</button>';
+      ')"><i class="bi bi-pencil-square"></i> Edit</button>';
     var row =
       "<tr>" +
       "<td>" +
@@ -362,3 +372,4 @@ function init() {
 
 $(document).ready(init);
 $(document).ready(getOrderList);
+ 
