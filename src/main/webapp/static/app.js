@@ -1,11 +1,11 @@
 
 //HELPER METHOD
-function toJson($form){
+function toJson($form) {
     var serialized = $form.serializeArray();
     console.log(serialized);
     var s = '';
     var data = {};
-    for(s in serialized){
+    for (s in serialized) {
         data[serialized[s]['name']] = serialized[s]['value']
     }
     var json = JSON.stringify(data);
@@ -13,36 +13,45 @@ function toJson($form){
 }
 
 
-function 
-handleAjaxError(response){ 
-	var response = JSON.parse(response.responseText);
-	alert(response.message);
+function handleAjaxError(response) {
+    var response = JSON.parse(response.responseText);
+    alert(response.message);
 }
 
-function readFileData(file, callback){
-	var config = {
-		header: true,
-		delimiter: "\t",
-		skipEmptyLines: "greedy",
-		complete: function(results) {
-			callback(results);
+function compare(a, b) {
+    if (a.brandName > b.brandName) {
+        return 1;
+    }
+    else if (a.brandName < b.brandName) {
+        return -1;
+    }
+    return 0;
+}
+
+function readFileData(file, callback) {
+    var config = {
+        header: true,
+        delimiter: "\t",
+        skipEmptyLines: "greedy",
+        complete: function (results) {
+            callback(results);
             $("#download-errors").show();
-	  	}	
-	}
-	Papa.parse(file, config);
+        }
+    }
+    Papa.parse(file, config);
 }
 
 
-function writeFileData(arr){
-	var config = {
-		quoteChar: '',
-		escapeChar: '',
-		delimiter: "\t"
-	};
-	
-	var data = Papa.unparse(arr, config);
-    var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
-    var fileUrl =  null;
+function writeFileData(arr) {
+    var config = {
+        quoteChar: '',
+        escapeChar: '',
+        delimiter: "\t"
+    };
+
+    var data = Papa.unparse(arr, config);
+    var blob = new Blob([data], { type: 'text/tsv;charset=utf-8;' });
+    var fileUrl = null;
 
     if (navigator.msSaveBlob) {
         fileUrl = navigator.msSaveBlob(blob, 'download.tsv');
@@ -52,17 +61,17 @@ function writeFileData(arr){
     var tempLink = document.createElement('a');
     tempLink.href = fileUrl;
     tempLink.setAttribute('download', 'download.tsv');
-    tempLink.click(); 
+    tempLink.click();
 }
 
 function init() {
     var role = $("meta[name=userRole]").attr("content");
-    if(role == "supervisor"){
+    if (role == "supervisor") {
         $("#report_dropdown").show();
     }
 }
 $(document).ready(init);
-$(document).ready(function() {
+$(document).ready(function () {
     $('.nav-item active').removeClass('active').removeAttr('aria-current');
     $('a[href="' + location.pathname + '"]').closest('li').addClass('active').attr('aria-current', 'page');
 });

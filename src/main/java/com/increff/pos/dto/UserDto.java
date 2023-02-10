@@ -27,6 +27,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -41,9 +43,18 @@ public class UserDto extends AbstractUiController {
 
     @Transactional
     public void add(UserForm f) throws ApiException {
-        UserPojo p= convert(f);
+
+        String email = f.getEmail();
+        String regex = "^(.+)@(.+)$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+        if(matcher.matches()==false){
+            throw new ApiException("email is not valid");
+        }
+        UserPojo p = convert(f);
         normalize(p);
-        String email= f.getEmail();
         UserPojo existing = userService.get(p.getEmail());
         if (existing != null) {
             throw new ApiException("User with given email already exists");
@@ -54,75 +65,73 @@ public class UserDto extends AbstractUiController {
     @Transactional
     public UserData get(String email) throws ApiException {
         System.out.println("entered get");
-        UserPojo p=userService.get(email);
-        if(p==null)
-        {
+        UserPojo p = userService.get(email);
+        if (p == null) {
             return null;
         }
         normalize(p);
-      return convert(p);
+        return convert(p);
     }
 
     @Transactional
-    public List<UserData> getAll()
-    {
-        List<UserData> list=new ArrayList<>();
-        List<UserPojo> up= userService.getAll();
-        for(UserPojo u: up)
-        {
+    public List<UserData> getAll() {
+        List<UserData> list = new ArrayList<>();
+        List<UserPojo> up = userService.getAll();
+        for (UserPojo u : up) {
             list.add(convert(u));
         }
         return list;
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(Integer id) {
         userService.delete(id);
     }
 
     @Transactional
     public ModelAndView register(UserForm form) throws ApiException {
-        if(supervisorEmails.contains(form.getEmail())) {
+        if (supervisorEmails.contains(form.getEmail())) {
             form.setRole("supervisor");
-        }else {
+        } else {
             form.setRole("operator");
         }
 
-       try {
-           add(form);
-       }catch (ApiException e){
-           info.setMessage("email already exists");
-       }
+        try {
+            add(form);
+        } catch (ApiException e) {
+            info.setMessage("email already exists");
+        }
         return mav("init.html");
     }
+
     @Transactional
     public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
 
-    UserData p = get(f.getEmail());
-    boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
-		if (!authenticated) {
-        info.setMessage("Invalid username or password");
-        return new ModelAndView("redirect:/site/login");
+        UserData p = get(f.getEmail());
+        boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
+        if (!authenticated) {
+            info.setMessage("Invalid username or password");
+            return new ModelAndView("redirect:/site/login");
+        }
+
+        // Create authentication object
+        Authentication authentication = convertp(p);
+        // Create new session
+        HttpSession session = req.getSession(true);
+        // Attach Spring SecurityContext to this new session
+        SecurityUtil.createContext(session);
+        // Attach Authentication object to the Security Context
+        SecurityUtil.setAuthentication(authentication);
+
+        return new ModelAndView("redirect:/ui/order");
     }
-
-    // Create authentication object
-    Authentication authentication =convertp(p);
-    // Create new session
-    HttpSession session = req.getSession(true);
-    // Attach Spring SecurityContext to this new session
-		SecurityUtil.createContext(session);
-    // Attach Authentication object to the Security Context
-		SecurityUtil.setAuthentication(authentication);
-
-		return new ModelAndView("redirect:/ui/order");
-    }
-
 
 
     protected static void normalize(UserPojo p) {
         p.setEmail(p.getEmail().toLowerCase().trim());
         p.setRole(p.getRole().toLowerCase().trim());
     }
+
     private static UserPojo convert(UserForm f) {
         UserPojo p = new UserPojo();
         p.setEmail(f.getEmail());
@@ -139,6 +148,7 @@ public class UserDto extends AbstractUiController {
         d.setPassword(p.getPassword());
         return d;
     }
+
     public static Authentication convertp(UserData p) {
         // Create principal
         UserPrincipal principal = new UserPrincipal();

@@ -34,9 +34,6 @@ public class LoginController {
 
 	@Autowired
 	public UserDto userDto;
-
-	@Autowired
-	private InfoData info;
 	
 	@ApiOperation(value = "Logs in a user")
 	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

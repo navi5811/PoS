@@ -34,11 +34,9 @@ public class ReportApiController {
 			return reportdto.getInventoryReport();
 		}
 		
-		
 		@ApiOperation(value = "Gets Sales Report")
 		@RequestMapping(path = "/api/report/sales", method = RequestMethod.POST)
 		public List<ReportSalesData> getSales(@RequestBody ReportSalesForm form) throws ApiException, ParseException {
-//			logger.error("Start Date : " + startDate);
 			return reportdto.getSalesReport(form);
 		}
 	}

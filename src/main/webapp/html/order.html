@@ -8,12 +8,10 @@
 
 		<h3>Order</h3>
 
-		<button class="btn btn-dark"
-			data-target="#add-order-modal" data-toggle="modal" type="button"><i class="bi bi-cart-plus"></i> Add
+		<button class="btn btn-dark" id="add-button" type="button"><i class="bi bi-cart-plus"></i> Add
 		</button>
 		&nbsp;
-		<button class="btn btn-dark" id="refresh-data"
-			type="button"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+		<button class="btn btn-dark" id="refresh-data" type="button"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
 		&nbsp;
 
 		<!-- Blank Row -->
@@ -80,11 +78,8 @@
 
 
 						<div class="modal-footer">
-							<button class="btn btn-primary"
-								data-dismiss="modal" id="cancel-order" type="button">Cancel
-							</button>
 							<button class="btn btn-primary" id="add-order"
-								type="submit">Add To Cart <i class="bi bi-cart"></i></button>
+								type="submit">Add To Cart</i></button>
 							<button class="btn btn-primary" id="submit-order"
 								type="button">Place Order</button>
 						</div>
@@ -100,6 +95,7 @@
 						<table class="table table-striped" id="orderitemadd-table">
 							<thead>
 								<tr>
+									<th scope="col">S No.</th>
 									<th scope="col">Barcode</th>
 									<th scope="col">Quantity</th>
 									<th scope="col">Selling Price</th>
@@ -122,6 +118,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Edit Order Item</h5>
+					<button class="btn" id="edit-close-button" type="button"><i class="bi bi-x"></i></button>
 				</div>
 				<div class="modal-body">
 					<form id="order-edit-form">
@@ -177,13 +174,24 @@
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
+					
 					<h5 class="modal-title">Order Item</h5>
+				
+				
+
 					<button aria-label="Close" class="close" data-dismiss="modal"
 						type="button">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
+
+					<div class="row">
+						<div class="col">
+							<label for="view-order-id" class="col"><b>Order ID:</b> <span id="view-order-id">0</span></label>
+						</div>
+					
+					</div>
 					<div class="col-12">
 						<table class="table table-striped" id="orderitem-table">
 							<thead>

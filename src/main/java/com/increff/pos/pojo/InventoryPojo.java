@@ -1,10 +1,14 @@
 package com.increff.pos.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+@Getter
+@Setter
 @Entity
 public class InventoryPojo {
 
@@ -22,19 +26,4 @@ public class InventoryPojo {
 		
 	}
 
-	public Integer getProductQuantity() {
-		return productQuantity;
-	}
-
-	public void setProductQuantity(Integer productQuantity) {
-		this.productQuantity = productQuantity;
-	}
-
-	public int getProductId() {
-		return productId;
-	}
-	
-	public void setProductId(int productId) {
-		this.productId = productId;
-	}
 }

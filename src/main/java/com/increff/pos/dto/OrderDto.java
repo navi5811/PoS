@@ -42,13 +42,7 @@ public class OrderDto {
 	@Autowired
 	private InventoryService inventoryservice;
 
-	@Autowired
-	private InventoryDto inventorydto;
 
-
-//	
-//	
-//	
 // Creating order
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderData createOrder(List<OrderItemForm> forms) throws ApiException {
@@ -69,7 +63,7 @@ public class OrderDto {
 			throw new ApiException("Order List cannot be empty");
 		}
 
-		int orderId = orderservice.createOrder(orderItemList);
+		Integer orderId = orderservice.createOrder(orderItemList);
 
 		for (OrderItemPojo oip : orderItemList) {
 			ProductPojo productPojo = productservice.findProduct(oip.getOrderProductId());
@@ -84,7 +78,7 @@ public class OrderDto {
 	}
 
 	@Transactional
-	public String createInvoice(int orderId) throws Exception {
+	public String createInvoice(Integer orderId) throws Exception {
 		BillData billData = new BillData();
 		OrderPojo orderPojo = orderservice.getOrder(orderId);
 		List<OrderItemPojo> orderItemPojo_list = orderservice.getOrderItems(orderId);
@@ -99,7 +93,7 @@ public class OrderDto {
 		billData.setBillAmount(orderservice.billTotal(orderId));
 
 			if(orderPojo.isInvoiced()!=true)
-			{ billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date()));
+			{ billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss aa").format(new Date()));
 			orderPojo.setInvoicedTime(new Date());
 			orderPojo.setInvoiced(true);
 //			orderData.setInvoiced(true);
@@ -119,10 +113,10 @@ public class OrderDto {
 
 	// Fetching an Order item by id
 	@Transactional
-	public OrderItemData getOrderItemDetails(int id) throws ApiException {
+	public OrderItemData getOrderItemDetails(Integer id) throws ApiException {
 		checkIfExists(id);
 		OrderItemPojo orderItemPojo = orderservice.get(id);
-		int i = orderItemPojo.getOrderProductId();
+		Integer i = orderItemPojo.getOrderProductId();
 		ProductPojo productpojo = productservice.findProduct(i);
 		OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
 		InventoryPojo inventorypojo = inventoryservice.findInventory(productpojo.getProductId());
@@ -155,7 +149,7 @@ public class OrderDto {
 	}
 
 	@Transactional
-	public List<OrderItemData> getOrderItemByOrderId(int id) throws ApiException {
+	public List<OrderItemData> getOrderItemByOrderId(Integer id) throws ApiException {
 		checkIfExistsOrder(id);
 		List<OrderItemPojo> orderItemPojo_list = orderservice.getOrderItems(id);
 		List<OrderItemData> d = new ArrayList<OrderItemData>();
@@ -179,13 +173,13 @@ public class OrderDto {
 
 	//deleting an order item
 	@Transactional
-	public void delete(int id) throws ApiException {
+	public void delete(Integer id) throws ApiException {
 		increaseInventory(orderservice.delete(id));
 	}
 
 	// Deletion of order
 	@Transactional
-	public void deleteOrder(int orderId) throws ApiException {
+	public void deleteOrder(Integer orderId) throws ApiException {
 
 		List<OrderItemPojo> orderItemList = orderservice.getOrderItems(orderId);
 		for (OrderItemPojo orderItemPojo : orderItemList) {
@@ -196,7 +190,7 @@ public class OrderDto {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateOrderItem(int id, OrderItemForm f) throws ApiException {
+	public void updateOrderItem(Integer id, OrderItemForm f) throws ApiException {
 		ProductPojo productPojo = productservice.findProduct(f.getProductBarcode());
 
 		//orderItem pojo that is received through edit form
@@ -209,7 +203,7 @@ public class OrderDto {
 
 
 
-		int orderId=oip.getOrderId();
+		Integer orderId=oip.getOrderId();
 		OrderPojo op=orderservice.getOrder(orderId);
 		if(op.isInvoiced()==true)
 		{
@@ -220,7 +214,7 @@ public class OrderDto {
 
 	// Updating order item
 	@Transactional(rollbackOn = ApiException.class)
-	public void update(int id, OrderItemPojo p,Integer quantity) throws ApiException {
+	public void update(Integer id, OrderItemPojo p,Integer quantity) throws ApiException {
 		validateUpdate(p,quantity);
 		OrderItemPojo ex = checkIfExists(id);
 		increaseInventory(ex);
@@ -241,14 +235,14 @@ public class OrderDto {
 	// To update inventory while adding order
 	public void updateInventory(OrderItemPojo orderItemPojo) throws ApiException {
 		InventoryPojo inventoryPojo = inventoryservice.getInventory(orderItemPojo.getOrderProductId());
-		int updatedQuantity = orderservice.updateInventory(inventoryPojo, orderItemPojo);
+		Integer updatedQuantity = orderservice.updateInventory(inventoryPojo, orderItemPojo);
 		inventoryPojo.setProductQuantity(updatedQuantity);
 		inventoryservice.updateInventory(inventoryPojo);
 	}
 
 	// Checking if a particular order item exists or not
 	@Transactional(rollbackOn = ApiException.class)
-	public OrderItemPojo checkIfExists(int id) throws ApiException {
+	public OrderItemPojo checkIfExists(Integer id) throws ApiException {
 		OrderItemPojo p = orderservice.checkIfExists(id);
 		if (p == null) {
 			throw new ApiException("Order Item with given ID does not exist, id: " + id);
@@ -258,7 +252,7 @@ public class OrderDto {
 
 	// Checking if a particular order exists or not
 	@Transactional(rollbackOn = ApiException.class)
-	public OrderPojo checkIfExistsOrder(int id) throws ApiException {
+	public OrderPojo checkIfExistsOrder(Integer id) throws ApiException {
 		OrderPojo p = orderservice.checkIfExistsOrder(id);
 		if (p == null) {
 			throw new ApiException("Order Item with given ID does not exist, id: " + id);
@@ -270,15 +264,24 @@ public class OrderDto {
 
 	// Validation of order item
 	private void validateUpdate(OrderItemPojo p,Integer quantity) throws ApiException {
-		boolean flag =false;
+
+		boolean flag=true;
+
+		Integer moduloQuantity=0;
 		if(p.getOrderQuantity()<=quantity)
 		{
-			flag=true;
+			flag=false;
+			moduloQuantity=quantity-p.getOrderQuantity();
 		}
-		Integer moduloQuantity=quantity-p.getOrderQuantity();
+		else{
+			moduloQuantity=p.getOrderQuantity()-quantity;
+		}
+
+
+
 		if (p.getOrderQuantity() <= 0) {
 			throw new ApiException("Quantity must be greater than or equal to 0");
-		}else if (inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity() < moduloQuantity && flag==false) {
+		}else if (inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity() < moduloQuantity && flag==true) {
 			throw new ApiException("Available quantity for product with barcode: "
 					+ productservice.findProduct(p.getOrderProductId()).getProductBarcode() + " is: "
 					+ inventoryservice.getInventory(p.getOrderProductId()).getProductQuantity());

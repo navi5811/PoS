@@ -30,13 +30,6 @@ public class BrandApiController {
 	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
 	public void add(@RequestBody BrandForm form) throws ApiException {
 		dto.addBrand(form);
-
-	}
-
-	@ApiOperation(value = "Deletes a brand")
-	@RequestMapping(path = "/api/brand/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable int id) {
-		dto.deleteBrand(id);
 	}
 
 	@ApiOperation(value = "Gets a brand by ID")

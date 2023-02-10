@@ -74,10 +74,8 @@ function displayUserList(data){
 
 //INITIALIZATION CODE
 function init(){
+	getUserList();
 	$('#add-user').click(addUser);
 	$('#refresh-data').click(getUserList);
 }
-
 $(document).ready(init);
-$(document).ready(getUserList);
-

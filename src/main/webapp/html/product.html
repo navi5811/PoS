@@ -11,17 +11,17 @@
     <h3>Product</h3>
 
     <!-- Top row with form-->
-    <div class="row"id="top-buttons" style="display:none">
+    <div class="row" id="top-buttons" style="display:none">
       <div class="col-12">
-          <button type="button" class="btn btn-success" data-target="#add-product-modal" data-toggle="modal"><i class="bi bi-database-add"></i> Add
-          </button>
-          &nbsp;
-          <button type="button" class="btn btn-primary" id="refresh-data"><i class="bi bi-arrow-clockwise"></i> Refresh
-          </button>
-          &nbsp;
-          <button type="button" class="btn btn-primary" id="upload-data"><i class="bi bi-upload"></i> Upload
-          </button>
-    
+        <button type="button" id="add-button" class="btn btn-success" data-target="#add-product-modal"
+          data-toggle="modal"><i class="bi bi-database-add"></i> Add
+        </button>
+        &nbsp;
+        <button type="button" class="btn btn-primary" id="upload-data"><i class="bi bi-upload"></i> Upload
+        </button>
+        &nbsp;
+        <button type="button" class="btn btn-primary" id="refresh-data"><i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
       </div>
     </div>
 
@@ -34,61 +34,60 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            
+
           </div>
           <div class="modal-body">
             <form class="" id="product-form">
 
               <div class="form-group required col-md-12">
                 <label for="inputProductName" class="control-label">Product Name</label>
-                
-                  <input required type="text" class="form-control" name="productName" id="inputProductName"
-                    placeholder="Enter Product Name" />
-                
+
+                <input required type="text" class="form-control" name="productName" id="inputProductName"
+                  placeholder="Enter Product Name" />
+
               </div>
               <div class="form-row col-md-12">
-              <div class="form-group required col-md-6">
-                <label for="inputProductBrandName" >Brand</label>
-                &nbsp; &nbsp;
-                <select required class="form-control" name="productBrandName" id="inputProductBrandName">
-                  <!-- <option value="string">Volvo</option>
-                  <option value="saab">Saab</option> -->
-                </select>
-              </div>
-          
-              <div class="form-group required col-md-6">
-                <label for="inputProductBrandCategoryName" >Category</label>
-                &nbsp; &nbsp;
-                <select required class="form-control" name="productBrandCategoryName" id="inputProductBrandCategoryName">
-                  <!-- <option value="string">Volvo</option>
+                <div class="form-group required col-md-6">
+                  <label for="inputProductBrandName">Brand</label>
+                  &nbsp; &nbsp;
+                  <select required class="form-control" name="productBrandName" id="inputProductBrandName">
+                    <option value=""></option>
+
+                  </select>
+                </div>
+
+                <div class="form-group required col-md-6">
+                  <label for="inputProductBrandCategoryName">Category</label>
+                  &nbsp; &nbsp;
+                  <select required class="form-control" name="productBrandCategoryName"
+                    id="inputProductBrandCategoryName">
+                    <!-- <option value="string">Volvo</option>
                   <option value="saab">Saab</option>
                   <option value="mercedes">Mercedes</option>
                   <option value="audi">Audi</option> -->
-                </select>
+                  </select>
+                </div>
               </div>
-            </div>
               <div class="form-group required col-md-12">
                 <label for="inputProductBarcode" class="control-label">Barcode</label>
-                
-                  <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
-                    placeholder="Enter Barcode" />
-                
+
+                <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
+                  placeholder="Enter Barcode" />
+
               </div>
-          
+
               <div class="form-group required col-md-12">
                 <label for="inputProductMrp" class="control-label">MRP</label>
-                
-                  <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
-                    placeholder="Enter MRP" />
-                
+
+                <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
+                  placeholder="Enter MRP" />
+
               </div>
               &nbsp;
             </form>
             <div class="modal-footer">
-              <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="bi bi-x-octagon"></i> Cancel
-              </button>
-            <button type="button" class="btn btn-success" id="add-product"><i class="bi bi-plus"></i> Add</button>
-                &nbsp; 
+              <button type="button" class="btn btn-success" id="add-product">Add</button>
+              &nbsp;
             </div>
           </div>
         </div>
@@ -109,7 +108,7 @@
               <th scope="col">Category</th>
               <th scope="col">Barcode</th>
               <th scope="col">MRP</th>
-              <th scope="col" id="edit-column"style="display:none">Action</th>
+              <th scope="col" id="edit-column" style="display:none">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -143,63 +142,54 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            
+
           </div>
           <div class="modal-body">
             <form class="" id="product-edit-form">
 
               <div class="form-group required col-md-12">
                 <label for="productName" class="control-label">Product Name</label>
-                
-                  <input required type="text" class="form-control" name="productName"
-                    placeholder="Enter Product Name" />
-                
-              </div> 
-              <div class="form-row col-md-12">  
-          <div class="form-group required col-md-6">
-            <label for="productBrandName" >Brand Name</label>
-            &nbsp; &nbsp;
-            <select required class="form-control" name="productBrandName" id="editProductBrandName">
-              <option value="string">Volvo</option>
-              <option value="saab">Saab</option>
-            </select>
-          </div>
+                <input required type="text" readonly class="form-control-plaintext" name="productName"
+                  placeholder="Enter Product Name" />
+              </div>
 
-          <div class="form-group required col-md-6">
-            <label for="productBrandCategoryName" >Category</label>
-            &nbsp; &nbsp;
-            <select required class="form-control" name="productBrandCategoryName" id="editProductBrandCategoryName">
-              <option value="string">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select>
-          </div>
-        </div> 
+              <div class="form-row col-md-12">
+
+                <div class="form-group required col-md-6">
+                  <label for="productBrandName">Brand Name</label>
+                  &nbsp; &nbsp;
+                  <select required class="form-control" name="productBrandName" id="editProductBrandName">
+                    <option value="string">Volvo</option>
+                  </select>
+                </div>
+
+                <div class="form-group required col-md-6">
+                  <label for="productBrandCategoryName">Category</label>
+                  &nbsp; &nbsp;
+                  <select required class="form-control" name="productBrandCategoryName"
+                    id="editProductBrandCategoryName">
+                    <option value="string">Volvo</option>
+                  </select>
+                </div>
+
+              </div>
+
               <div class="form-group required col-md-12">
                 <label for="productBarcode" class="control-label">Barcode</label>
-                
-                  <input type="text" readonly class="form-control-plaintext" name="productBarcode">
-               
+                <input type="text" readonly class="form-control-plaintext" name="productBarcode">
               </div>
 
               <div class="form-group required col-md-12">
                 <label for="productMrp" class="control-label">MRP</label>
-                
-                  <input required type="number" class="form-control" name="productMrp" placeholder="Enter MRP" />
-                
+                <input required type="number" class="form-control" name="productMrp" placeholder="Enter MRP" />
               </div>
 
               <input type="hidden" name="productId" />
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              Cancel
-            </button>
-            <button type="button" class="btn btn-success" id="update-product">
-              Update
-            </button>
+            <button type="button" class="btn btn-success" id="update-product">Update</button>
+            &nbsp;
           </div>
         </div>
       </div>
@@ -217,21 +207,23 @@
           </div>
 
           <div class="modal-body">
-            <div class="product-file">
-              <input type="file" class="custom-file-input" id="productFile" />
-              <label class="custom-file-label" for="productFile" id="productFileName">Choose File</label>
+
+            <div class="row-md-12">
+              <div class="product-file col-md-12">
+                <input type="file" class="custom-file-input" id="productFile" />
+                <label class="custom-file-label" for="productFile" id="productFileName">Choose File</label>
+              </div>
             </div>
-            <a th:href="@{/sample/product.tsv}" target="_blank">Download Sample</a>
-            <br />
+            <br>
+            <div class="row-md-12">
+              <a th:href="@{/sample/product.tsv}" target="_blank">Download Sample</a>
+            </div>
             Rows: <span id="rowCount">0</span>, Processed:
             <span id="processCount">0</span>, Errors:
             <span id="errorCount">0</span>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              Cancel
-            </button>
             <button type="button" class="btn btn-success" id="process-data">
               Upload
             </button>

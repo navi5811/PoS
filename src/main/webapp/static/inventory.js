@@ -1,34 +1,9 @@
 var role;
-
-// Done
 function getInventoryUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/inventory";
 }
 
-//BUTTON ACTIONS
-// Done
-// function addInventory(event){
-// 	//Set the values to update
-// 	var $form = $("#inventory-form");
-// 	var json = toJson($form);
-// 	var url = getInventoryUrl();
-
-// 	$.ajax({
-// 	   url: url,
-// 	   type: 'PUT',
-// 	   data: json,
-// 	   headers: {
-//        	'Content-Type': 'application/json'
-//        },	   
-// 	   success: function(response) {
-// 	   		getInventoryList();  
-// 	   },
-// 	   error: handleAjaxError
-// 	});
-
-// 	return false;  getInventoryUrl() + "/" + productId;
-// }
 var qty=0;
 async function addInventory(event){
     //Set the values to update
@@ -174,7 +149,7 @@ function uploadRows(){
 	//Make ajax call
 	$.ajax({
 	   url: url,
-	   type: 'POST',
+	   type: 'PUT',
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
@@ -184,7 +159,7 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+		row.error = JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
@@ -196,20 +171,17 @@ function downloadErrors(){
 	writeFileData(errorData);
 }
 
-//UI DISPLAY METHODS
-
 // Done
 function displayInventoryList(data){
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
-	var j=0;
-	for(var i in data){
-		j++;
+	var serial=0;
+	for (var i = data.length - 1; i >= 0; i--) {
+		serial++;
 		var e = data[i];
-		// var buttonHtml = '<button onclick="deleteBrand(' + e.brandId + ')">Delete Brand</button>'
 		var buttonHtml = ' <button class="btn btn-secondary" onclick="displayEditInventory(' + e.inventoryProductBarcode + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
 		var row = '<tr>'
-		+ '<td>' + j + '</td>'
+		+ '<td>' + serial + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
 		+ '<td>' + e.productName + '</td>'
@@ -268,11 +240,13 @@ function updateUploadDialog(){
 // To replace choose file with Upload File name
 function updateFileName(){
 	var $file = $('#inventoryFile');
-	var fileName = $file.val();
+	var fileName = document.getElementById("inventoryFile").files[0].name;
 	$('#inventoryFileName').html(fileName);
 }
 
 function displayUploadData(){
+	$('#upload-invetory-modal').trigger('reset');
+	$("#download-errors").hide();
  	resetUploadDialog(); 	
 	$('#upload-inventory-modal').modal('toggle');
 }

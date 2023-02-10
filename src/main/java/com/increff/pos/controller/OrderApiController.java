@@ -111,9 +111,6 @@ public class OrderApiController {
 	@ApiOperation(value = "Get Invoice")
 	@RequestMapping(path = "/api/order/invoice/{orderId}", method = RequestMethod.GET)
 	public String getInvoice(@PathVariable int orderId) throws Exception {
-		
 		return orderdto.createInvoice(orderId);
-		// orderService.updateInvoice(orderId);
-
 	}
 }

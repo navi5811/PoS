@@ -17,12 +17,13 @@ function getInventoryList(){
 function displayInventoryList(data){
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
-	var p=0;
+	var serial=0;
+	data.sort(compare);
 	for(var i in data){
-		p++;
+		serial++;
 		var e = data[i];
 		var row = '<tr>'
-		+ '<td>' + p + '</td>'
+		+ '<td>' + serial + '</td>'
 		+ '<td>' + e.brandName + '</td>'
 		+ '<td>' + e.brandCategory + '</td>'
 		+ '<td>' + e.reportInventoryQuantity + '</td>'

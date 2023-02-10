@@ -19,7 +19,7 @@ public class DailyReportService {
     private DailyReportDao dao;
 
     @Transactional(rollbackOn = ApiException.class)
-    public void addReport(DailyReportPojo p) throws ApiException {
+    public void addReport(DailyReportPojo p) {
         dao.insert(p);
     }
 

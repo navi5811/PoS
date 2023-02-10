@@ -1,3 +1,5 @@
+var closeinv;
+var closeid;
 function getOrderUrl() {
   var baseUrl = $("meta[name=baseUrl]").attr("content");
   return baseUrl + "/api/order";
@@ -43,6 +45,7 @@ function addOrderItem(event) {
       }
 
 
+
     },
     error: function (data) {
       console.log("why this error is occuring");
@@ -50,22 +53,26 @@ function addOrderItem(event) {
       alert("barcode is not available");
     },
   }).then(function () {
-
+    if (orderItem.productQuantity < 0 || orderItem.productSellingPrice < 0) {
+      flag = true;
+    }
     var k = 0;
     for (var p in order) {
       console.log("producrtbarcode is ", order[k].productBarcode);
       console.log("orderitem barcode", orderItem.productBarcode);
-      if (order[k].productBarcode == orderItem.productBarcode) {
+      if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice != orderItem.productSellingPrice) {
         flag = true;
         alert("same barcode product cannot be entered again");
       }
+      else if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice == orderItem.productSellingPrice) {
+        order[k].productQuantity = parseInt(orderItem.productQuantity) + parseInt(order[k].productQuantity);
+        flag = true;
+        $("#order-add-form").trigger("reset");
+        displayOrderItemListAdd(order);
+      }
       k++;
     }
-    if (
-      orderItem.productQuantity > 0 &&
-      orderItem.productSellingPrice >= 0 &&
-      flag == false
-    ) {
+    if (flag == false) {
       order.push(orderItem);
       $("#order-add-form").trigger("reset");
       console.log(order);
@@ -83,7 +90,7 @@ function addOrderItem(event) {
 function cancelOrder(event) {
   order = [];
   $("#order-add-form").trigger("reset");
-  $("#orderitemadd-table tbody").remove();
+  
 }
 
 function addOrder(event) {
@@ -145,14 +152,25 @@ function getInvoice(id) {
   });
 }
 
+
+
+
 function updateOrderItem(event) {
   // Get the ID
   var id = $("#order-edit-form input[name=id]").val();
+  var orderId = $("#order-edit-form input[name=orderId]").val();
   // var orderId = $("#order-edit-form input[name=orderId]").val();
+
   var url = getOrderUrl() + "/item/" + id;
   // Set the values to update
   var $form = $("#order-edit-form");
   var json = toJson($form);
+  let invoice=false;
+
+  
+  
+
+  
 
   $.ajax({
     url: url,
@@ -164,10 +182,15 @@ function updateOrderItem(event) {
     success: function (response) {
       $("#edit-orderitem-modal").modal("hide");
       // getOrderItemList(orderId);
+
+      getOrderItemList(orderId,invoice);
       getOrderList();
+      
     },
     error: function (response) {
       handleAjaxError(response);
+      $("#edit-orderitem-modal").modal("hide");
+      getOrderItemList(orderId,invoice);
     },
   });
 
@@ -225,21 +248,31 @@ function deleteRow(data) {
   });
   displayOrderItemListAdd(order);
 }
+function editRow(data) {
+  var k = 0;
+  for (var p in order) {
+
+    if (order[k].productBarcode == orderItem.productBarcode) {
+
+    }
+    k++;
+  }
+}
 
 function displayOrderList(data) {
   var $tbody = $("#order-table").find("tbody");
   $tbody.empty();
-  for (var i in data) {
+  for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
     var date = new Date(e.datetime);
     date = date.toLocaleString();
     var invoice = e.invoiced;
-    value =  '<button type="button" id="button-invoice" class="btn btn-dark" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
+    value = '<button type="button" id="button-invoice" class="btn btn-dark" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
     if (invoice == false) {
-      var value =  '<button type="button" id="button-invoice" class="btn btn-secondary" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
+      var value = '<button type="button" id="button-invoice" class="btn btn-secondary" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
     }
     var buttonHtml =
-      ' <button type="button" class="btn btn-dark mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice +')"><i class="bi bi-eye"></i> View</button>';
+      ' <button type="button" class="btn btn-dark mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice + ')"><i class="bi bi-eye"></i> View</button>';
     buttonHtml += value;
     var row =
       "<tr>" +
@@ -262,20 +295,18 @@ function displayOrderList(data) {
 }
 //edited the button edit// class="btn text-bodye" data-toggle="tooltip" title="Edit"
 function displayOrderItem(data, invoice) {
+  $("#view-order-id").html(data[0].id);
   var $tbody = $("#orderitem-table").find("tbody");
-  console.log("value of invoice is ", invoice);
   $tbody.empty();
   if (invoice == true) {
     $("#action-button").hide();
   }
   console.log("dataaa : ", data);
-  for (var i in data) {
+  for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
 
     var buttonHtml =
-      ' <button class="edit-button btn btn-dark" style="display:none" type="button"onclick="displayEditOrderItem(' +
-      e.orderItemId +
-      ')"><i class="bi bi-pencil-square"></i> Edit</button>';
+      ' <button class="edit-button btn btn-dark" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>';
     var row =
       "<tr>" +
       "<td>" +
@@ -291,9 +322,7 @@ function displayOrderItem(data, invoice) {
       e.productSellingPrice +
       "</td>" +
       "<td>" +
-      buttonHtml +
-      "</td>" +
-      "</tr>";
+      buttonHtml +"</td>" + "</tr>";
     $tbody.append(row);
   }
   if (invoice == false) {
@@ -301,75 +330,79 @@ function displayOrderItem(data, invoice) {
     $(".edit-button").show();
     // $(".edit-button").html("Generate Invoice");
   }
-
   $("#order-display-modal").modal("toggle");
 }
 
 function displayOrderItemListAdd(data) {
   var $tbody = $("#orderitemadd-table").find("tbody");
   $tbody.empty();
-  for (var i in data) {
+  let serial=0;
+  for (var i = data.length - 1; i >= 0; i--) {
+    serial++;
     var e = data[i];
     var buttonHtml =
       '<button type="button" class="btn btn-danger" title="Delete" onclick="deleteRow(\'' +
       e.productBarcode +
       "')\">delete</button>";
-    var row =
-      "<tr>" +
-      "<td>" +
-      e.productBarcode +
-      "</td>" +
-      "<td>" +
-      e.productQuantity +
-      "</td>" +
-      "<td>" +
-      e.productSellingPrice +
-      "</td>" +
-      "<td>" +
-      buttonHtml +
-      "</td>" +
+    var row ="<tr>" +
+      "<td>" + serial + "</td>" +
+      "<td>" + e.productBarcode + "</td>" +
+      "<td>" + e.productQuantity + "</td>" +
+      "<td>" + e.productSellingPrice + "</td>" +
+      "<td>" + buttonHtml + "</td>" +
       "</tr>";
     $tbody.append(row);
-  }
+  } 
 }
 
-function displayEditOrderItem(id) {
+function displayEditOrderItem(id , invoice) {
   $("#order-display-modal").modal("hide");
   var url = getOrderUrl() + "/item/" + id;
   $.ajax({
     url: url,
     type: "GET",
     success: function (data) {
-      displayOrderItemEdit(data);
+      displayOrderItemEdit(data , invoice);
     },
     error: handleAjaxError,
   });
 }
 
-function displayOrderItemEdit(data) {
+function displayOrderItemEdit(data ,invoice) {
   console.log("dataa : ", data);
   $("#order-edit-form input[name=productBarcode]").val(data.productBarcode);
   $("#productBarcode").html("" + data.productBarcode);
   $("#mrp").html("" + data.mrp);
   $("#availableQuantity").html("" + data.availableQuantity);
   $("#order-edit-form input[name=productQuantity]").val(data.productQuantity);
-  $("#order-edit-form input[name=productSellingPrice]").val(
-    data.productSellingPrice
-  );
+  $("#order-edit-form input[name=productSellingPrice]").val(data.productSellingPrice);
   $("#order-edit-form input[name=id]").val(data.orderItemId);
   $("#order-edit-form input[name=orderId]").val(data.id);
   $("#edit-orderitem-modal").modal("toggle");
+  closeinv=invoice;
+  closeid=data.id;
 }
 
+function addButton(){
+  $("#add-order-modal").modal("toggle");
+  $("#order-add-form").trigger("reset");
+  $("#orderitemadd-table tbody").empty();
+}
+function close(){
+  console.log("Closer hona chahie");
+  $("#edit-orderitem-modal").modal("hide");
+  getOrderItemList(closeid,closeinv);
+}
 // INITIALIZATION CODE
 function init() {
+  $("#add-button").click(addButton);
   $("#order-add-form").submit(addOrderItem);
   $("#order-edit-form").submit(updateOrderItem);
   $("#cancel-order").click(cancelOrder);
   $("#submit-order").click(addOrder);
   $("#refresh-data").click(getOrderList);
+  $("#edit-close-button").click(close);
 }
 
 $(document).ready(init);
 $(document).ready(getOrderList);
- 

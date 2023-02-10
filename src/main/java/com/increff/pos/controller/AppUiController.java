@@ -7,16 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AppUiController extends AbstractUiController {
 
-	@RequestMapping(value = "/ui/home")
-	public ModelAndView home() {
-		return mav("home.html");
-	}
-
-	@RequestMapping(value = "/ui/employee")
-	public ModelAndView employee() {
-		return mav("employee.html");
-	}
-
 	@RequestMapping(value = "/ui/brand")
 	public ModelAndView brand() {
 		return mav("brand.html");
@@ -55,10 +45,6 @@ public class AppUiController extends AbstractUiController {
 	@RequestMapping(value = "/ui/dailyReport")
 	public ModelAndView dailyReport() {
 		return mav("dailyReport.html");
-	}
-	@RequestMapping(value = "/ui/admin")
-	public ModelAndView admin() {
-		return mav("user.html");
 	}
 
 }

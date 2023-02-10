@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,13 +30,14 @@ public class InventoryDto {
 	@Autowired
 	private ProductService productservice;
 	@Autowired
-	private ProductDto productdto;
-	@Autowired
-	private BrandDto branddto;
+	private BrandService brandService;
 
 	@Transactional(rollbackOn = ApiException.class)
 	public InventoryData getInventory(String inventoryProductBarcode) throws ApiException {
-		ProductData pp = productdto.findProduct(inventoryProductBarcode);
+		ProductPojo pp=productservice.findProduct(inventoryProductBarcode);
+		if (pp == null) {
+			throw new ApiException("Product with given barcode does not exist, Barcode: " + inventoryProductBarcode);
+		}
 		InventoryPojo ip = inventoryservice.getInventory(pp.getProductId());
 		InventoryData id = convert(ip);
 		id.setMrp(pp.getProductMrp());
@@ -49,7 +52,11 @@ public class InventoryDto {
 			InventoryData d = convert(p);
 			ProductPojo productpojo = productservice.findProduct(d.getInventoryProductBarcode());
 
-			BrandData bd = branddto.getBrand(productpojo.getProductBrandCategory());
+			BrandPojo bd = brandService.getBrand(productpojo.getProductBrandCategory());
+			if(bd==null)
+			{
+				throw new ApiException("Brand with given id does not exist" + productpojo.getProductBrandCategory());
+			}
 			d.setProductName(productpojo.getProductName());
 			d.setBrandName(bd.getBrandName());
 			d.setBrandCategory(bd.getBrandCategory());
@@ -60,24 +67,25 @@ public class InventoryDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateInventory(InventoryForm f) throws ApiException {
+
+		validateInventory(f);
 		InventoryPojo p = convert(f);
-		validateInventory(p);
 		InventoryPojo ex = inventoryservice.getInventory(p.getProductId());
 		ex.setProductQuantity(p.getProductQuantity());
 		inventoryservice.updateInventory(ex);
 	}
 
 	@Transactional
-	public InventoryData findInventory(int id) throws ApiException {
+	public InventoryData findInventory(Integer id) throws ApiException {
 		InventoryPojo p = inventoryservice.getInventory(id);
 		if (p == null) {
-			throw new ApiException("Brand with given ID does not exit, id: " + id);
+			throw new ApiException("Inventory with given ID does not exit, id: " + id);
 		}
 		InventoryData i = convert(p);
 		return i;
 	}
 
-	protected static void validateInventory(InventoryPojo p) throws ApiException {
+	protected static void validateInventory(InventoryForm p) throws ApiException {
 
 		if (p.getProductQuantity() == null) {
 			throw new ApiException("Product quantity cannot be null");
@@ -109,21 +117,13 @@ public class InventoryDto {
 		}
 		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
 
+		if(prod==null)
+		{
+			throw new ApiException("product with given barcode does not exist");
+		}
 		p.setProductId(prod.getProductId());
 		p.setProductQuantity(f.getProductQuantity());
 		return p;
 	}
 
-//	public InventoryPojo convertip(InventoryData f) throws ApiException {
-//		InventoryPojo p = new InventoryPojo();
-//
-//		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
-//			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
-//		}
-//		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
-//
-//		p.setProductId(prod.getProductId());
-//		p.setProductQuantity(f.getProductQuantity());
-//		return p;
-//	}
 }

@@ -21,17 +21,10 @@ public class DailyReportApiController {
     @Autowired
     private DailyReportDto dailyReportDto;
 
-
     @ApiOperation(value = "Gets list of all Brands")
     @RequestMapping(path = "/api/report/daily", method = RequestMethod.GET)
     public List<DailyReportData> getAll() {
         return dailyReportDto.getAllReport();
     }
-
-
-
-
-
-
 
 }

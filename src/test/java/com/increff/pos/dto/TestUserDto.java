@@ -19,11 +19,6 @@ public class TestUserDto extends AbstractUnitTest {
 
     @Autowired
     public UserDto userDto;
-    @Autowired
-    public UserService userService;
-
-    @Autowired
-    public UserDao userDao;
 
     @Test
     public void testAddUser() throws ApiException {

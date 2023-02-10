@@ -18,38 +18,39 @@
 				<form class="" id="sales-form">
 
 					<div class="row">
-					<div class="form-group col-md-4">
-						<label for="inputStartDate">StartDate</label>
-						
+						<div class="form-group col-md-4">
+							<label for="inputStartDate">StartDate</label>
+
 							<input type="date" class="form-control" name="startDate" id="inputStartDate"
-								placeholder="Enter Start Date">
-						
-					</div>
-					<div class="form-group col-md-4">
-						<label for="inputEndDate" >EndDate</label>
+							min="1980-01-01" max="2100-01-01">
+
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputEndDate">EndDate</label>
 							<input type="date" class="form-control" name="endDate" id="inputEndDate"
-								placeholder="Enter End Date">
+							min="1980-01-01" max="2100-01-01">
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-4">
-						<label for="inputBrandName">Brand</label>
-						
-							<input type="text" class="form-control" name="brand" id="inputBrandName"
-								placeholder="Enter Brand Name">
+					<div class="row">
+						<div class="form-group col-md-4">
+							<label for="inputBrandName">Brand</label>
+							<select required class="form-control" name="brand" id="inputBrandName">
+								<option value="mercedes">Mercedes</option>
+								<option value="audi">Audi</option>
+							</select>
+						</div>
+					
+						<div class="form-group col-md-4">
+							<label for="inputBrandCategory">Category</label>
+							<select required class="form-control" name="category" id="inputBrandCategory" placeholder="select-Category"> 
+								<option value="fd"></option>
+							</select>
+						</div> 
 					</div>
+					
 
-					<div class="form-group col-md-4">
-						<label for="inputBrandCategory" >Category</label>
-						
-							<input type="text" class="form-control" name="category" id="inputBrandCategory"
-								placeholder="Enter Category">
-						
-					</div>
-
-				</div>
-
-					<button type="button" class="btn btn-success" id="get-sales"><i class="bi bi-funnel"></i> Filter Report</button>
+					<button type="button" class="btn btn-success" id="get-sales"><i class="bi bi-funnel"></i>
+						Filter</button>
 				</form>
 			</div>
 		</div>

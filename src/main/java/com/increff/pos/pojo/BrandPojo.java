@@ -1,14 +1,16 @@
 package com.increff.pos.pojo;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//todo to use lombok @setter @getter
-//todo create new abstract pojo and keep three fields in it create time , update time and version
-//todo zonedDateTime is used
-//todo @NotNull
 
+@Getter
+@Setter
 @Entity
 public class BrandPojo {
 
@@ -17,23 +19,5 @@ public class BrandPojo {
 	private int brandId;
 	private String brandName;
 	private String brandCategory;
-	
-	public int getBrandId() {
-		return brandId;
-	}
-	public void setBrandId(int brandId) {
-		this.brandId = brandId;
-	}
-	public String getBrandName() {
-		return brandName;
-	}
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
-	}
-	public String getBrandCategory() {
-		return brandCategory;
-	}
-	public void setBrandCategory(String brandCategory) {
-		this.brandCategory = brandCategory;
-	}
+
 }

@@ -20,7 +20,7 @@
   	</div>
   	<div class="card-body">
 		<div class="col-12">
-		<form class="" id="init-form" method="POST" th:action="@{/site/init}">
+		<form class="" id="init-form">
 			<div class="form-group">
 				<label for="email">Email</label>
 			    
@@ -36,7 +36,7 @@
 			<div class="form-group">
 				<input type="checkbox" onclick="myFunction()"> Show Password
 				</div>
-			<input type="hidden" name="role" id="role" value="admin">
+			<input type="hidden" name="role" id="role" value="operator">
 			
 			<button type="submit" class="btn btn-primary" id="login">Sign Up</button>
 			

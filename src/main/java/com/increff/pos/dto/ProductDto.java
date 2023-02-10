@@ -40,23 +40,7 @@ public class ProductDto {
 		productservice.addProduct(p);
 		InventoryPojo inv = new InventoryPojo(p.getProductId(), 0);
 		inventoryservice.addInventory(inv);
-		
 	}
-	@Transactional
-	public void deleteProduct(int id) {
-		productservice.deleteProduct(id);
-	}
-//
-//	@Transactional(rollbackOn = ApiException.class)
-//	public ProductData getProduct(int id) throws ApiException {
-//
-//		ProductPojo pp = productservice.findProduct(id);
-//		if (pp == null) {
-//			throw new ApiException("Product with given id does not exist, Barcode: " + id);
-//		}
-//		ProductData pd = convert(pp);
-//		return pd;
-//	}
 
 	@Transactional
 	public List<ProductData> getAllProduct() throws ApiException {
@@ -70,7 +54,7 @@ public class ProductDto {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateProduct(int id, ProductForm f) throws ApiException {
+	public void updateProduct(Integer id, ProductForm f) throws ApiException {
 
 		ProductPojo p = convert(f);
 		normalizeProduct(p);
@@ -87,7 +71,7 @@ public class ProductDto {
 	}
 
 	@Transactional
-	public ProductData findProduct(int id) throws ApiException {
+	public ProductData findProduct(Integer id) throws ApiException {
 		ProductPojo p = productservice.findProduct(id);
 		
 		if (p == null) {
@@ -182,7 +166,7 @@ public class ProductDto {
 		d.setProductId(p.getProductId());
 		d.setProductMrp(p.getProductMrp());
 
-		int productBrandId = p.getProductBrandCategory();
+		Integer productBrandId = p.getProductBrandCategory();
 		BrandPojo brandPojo = brandservice.getBrand(productBrandId);
 		if(brandPojo==null)
 		{
@@ -214,7 +198,7 @@ public class ProductDto {
 		{
 			throw new ApiException("can't find brand");
 		}
-		int foundBrandId = foundBrand.getBrandId();
+		Integer foundBrandId = foundBrand.getBrandId();
 
 		p.setProductBrandCategory(foundBrandId);
 		p.setProductName(f.getProductName());
@@ -223,31 +207,5 @@ public class ProductDto {
 
 		return p;
 	}
-//	public ProductPojo convertdp(ProductData f) throws ApiException {
-//		ProductPojo p=new ProductPojo();
-//		
-//
-//		if (StringUtil.isEmpty(f.getProductBrandName())) {
-//			throw new ApiException("Product must belong to a brand, Brand name field cannot be empty");
-//		}
-//
-//		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {
-//			throw new ApiException("Product must belong to a , Category name field cannot be empty");
-//		}
-//
-//		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());
-//		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());
-//
-//		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
-//
-//		int foundBrandId = foundBrand.getBrandId();
-//
-//		p.setProductBrandCategory(foundBrandId);
-//		p.setProductName(f.getProductName());
-//		p.setProductMrp(f.getProductMrp());
-//		p.setProductBarcode(f.getProductBarcode());
-//		p.setProductId(f.getProductId());
-//		return p;
-//		
-//	}
+
 }

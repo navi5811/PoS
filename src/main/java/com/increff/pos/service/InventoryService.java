@@ -17,12 +17,12 @@ public class InventoryService {
 	private InventoryDao dao;
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void addInventory(InventoryPojo p) throws ApiException {
+	public void addInventory(InventoryPojo p) {
 		dao.insert(p);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public InventoryPojo getInventory(int productId) throws ApiException {
+	public InventoryPojo getInventory(Integer productId) {
 		return dao.select(productId);
 	}
 
@@ -32,14 +32,14 @@ public class InventoryService {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateInventory(InventoryPojo p) throws ApiException {
+	public void updateInventory(InventoryPojo p) {
 		InventoryPojo ex = dao.select(p.getProductId());
 		ex.setProductQuantity(p.getProductQuantity());
 		dao.update(ex);
 	}
 
 	@Transactional
-	public InventoryPojo findInventory(int id) throws ApiException {
+	public InventoryPojo findInventory(Integer id) throws ApiException {
 		InventoryPojo p = dao.select(id);
 		return p;
 	}

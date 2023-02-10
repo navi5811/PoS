@@ -1,48 +1,19 @@
 package com.increff.pos.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
-
+@Getter
+@Setter
 public class OrderData {
 
-	private int orderId;
+	private Integer orderId;
 	private Double billAmount;
-	private Date datetime;
-
-	private boolean invoiced;
-
-	public boolean isInvoiced() {
-		return invoiced;
-	}
-
-	public void setInvoiced(boolean invoiced) {
-		this.invoiced = invoiced;
-	}
-
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date getDatetime() {
-		return datetime;
-	}
-
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
-	}
-
-	public Double getBillAmount() {
-		return billAmount;
-	}
-
-	public void setBillAmount(Double billAmount) {
-		this.billAmount = billAmount;
-	}
-
-	public int getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
-	}
+	private Date datetime;
+	private boolean invoiced;
 
 }

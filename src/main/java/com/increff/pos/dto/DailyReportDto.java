@@ -34,7 +34,6 @@ public class DailyReportDto {
     @Autowired
     OrderService orderService;
 
-    private static Logger logger = LogManager.getLogger(BrandService.class);
     @Autowired
     private BrandService brandservice;
 
@@ -43,20 +42,12 @@ public class DailyReportDto {
     @Scheduled(cron = "0 0 0 * * *")
     public void addReport() throws ApiException {
         DailyReportPojo p=new DailyReportPojo();
-
         Date date=new Date();
-        logger.error("todays date is"+ date);
-
         date.setDate(date.getDate()-1);
-
         Date todayDate=new Date();
-        logger.error("yesterdays date is"+ date);
         List<OrderPojo> op=orderService.getInvoicedBetween(date,todayDate);
-        logger.error("size of list is"+ op.size());
-
-
-        int orderItems=0;
-        int orders=0;
+        Integer orderItems=0;
+        Integer orders=0;
         Double amount=0.0;
         orders= op.size();
 

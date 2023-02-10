@@ -15,7 +15,7 @@ import com.increff.pos.pojo.BrandPojo;
 @Repository
 public class BrandDao extends AbstractDao {
 
-	private static String delete_id = "delete from BrandPojo p where brandId=:id";
+
 	private static String select_id = "select p from BrandPojo p where brandId=:id";
 
 	private static String select_brand = "select p from BrandPojo p where brandName=:brandName and brandCategory=:brandCategory";
@@ -28,12 +28,6 @@ public class BrandDao extends AbstractDao {
 	@Transactional
 	public void insert(BrandPojo p) {
 		em.persist(p);
-	}
-
-	public void delete(int id) {
-		Query query = em.createQuery(delete_id);
-		query.setParameter("id", id);
-		query.executeUpdate();
 	}
 
 	public BrandPojo select(int id) {

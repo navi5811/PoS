@@ -1,7 +1,6 @@
 package com.increff.pos.dto;
 
-import com.increff.pos.dao.BrandDao;
-import com.increff.pos.dao.ProductDao;
+
 import com.increff.pos.dto.BrandDto;
 import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.BrandData;
@@ -28,9 +27,6 @@ public class TestProductDto extends AbstractUnitTest {
 
 	@Autowired
 	private BrandDto branddto;
-
-	@Autowired
-	private ProductDao productdao;
 
 	@Test
 	public void testaddproduct() throws ApiException {
@@ -72,40 +68,40 @@ public class TestProductDto extends AbstractUnitTest {
 		fail();
 	}
 
-	@Test
-	public void testdeleteproduct() throws ApiException {
-
-		String barcode = "barcode";
-		String brandname = "name";
-		String brandcategory = "category";
-		String productname = "pname";
-		Double mrp = 800.0;
-
-		BrandForm brandform = new BrandForm();
-		brandform.setBrandName(brandname);
-		brandform.setBrandCategory(brandcategory);
-
-		branddto.addBrand(brandform);
-		ProductForm f = new ProductForm();
-		f.setProductBarcode(barcode);
-		f.setProductBrandName(brandname);
-		f.setProductBrandCategoryName(brandcategory);
-		f.setProductName(productname);
-		f.setProductMrp(mrp);
-		productdto.addProduct(f);
-
-		List<ProductData> list = productdto.getAllProduct();
-		int id = list.get(0).getProductId();
-
-		productdto.deleteProduct(id);
-
-		try {
-			productdto.findProduct(id);
-		} catch (ApiException e) {
-			return;
-		}
-		fail();
-	}
+//	@Test
+//	public void testdeleteproduct() throws ApiException {
+//
+//		String barcode = "barcode";
+//		String brandname = "name";
+//		String brandcategory = "category";
+//		String productname = "pname";
+//		Double mrp = 800.0;
+//
+//		BrandForm brandform = new BrandForm();
+//		brandform.setBrandName(brandname);
+//		brandform.setBrandCategory(brandcategory);
+//
+//		branddto.addBrand(brandform);
+//		ProductForm f = new ProductForm();
+//		f.setProductBarcode(barcode);
+//		f.setProductBrandName(brandname);
+//		f.setProductBrandCategoryName(brandcategory);
+//		f.setProductName(productname);
+//		f.setProductMrp(mrp);
+//		productdto.addProduct(f);
+//
+//		List<ProductData> list = productdto.getAllProduct();
+//		int id = list.get(0).getProductId();
+//
+//		productdto.deleteProduct(id);
+//
+//		try {
+//			productdto.findProduct(id);
+//		} catch (ApiException e) {
+//			return;
+//		}
+//		fail();
+//	}
 
 	@Test
 	public void testFindProductById() throws ApiException {

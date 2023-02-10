@@ -10,10 +10,10 @@ public class OrderItemPojo {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int orderItemId;
-	private int orderId;
-	private int orderProductId;
-	private int orderQuantity;
+	private Integer orderItemId;
+	private Integer orderId;
+	private Integer orderProductId;
+	private Integer orderQuantity;
 	private Double orderSellingPrice;
 	private Double mrp;
 	
