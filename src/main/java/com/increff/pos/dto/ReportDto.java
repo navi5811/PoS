@@ -61,6 +61,7 @@ public class ReportDto {
     public List<ReportInventoryData> getInventoryReport() throws ApiException {
 
         List<BrandPojo> list = brandservice.getAllBrand();
+        System.out.println("size of brand list is"+ list.size());
         List<ReportInventoryData> rid = new ArrayList<ReportInventoryData>();
         for (BrandPojo bp : list) {
             Integer number = 0;
@@ -70,14 +71,17 @@ public class ReportDto {
 
             for (ProductPojo productpojo : pp) {
                 InventoryPojo ip = inventoryservice.getInventory(productpojo.getProductId());
+                System.out.println("invetory pojo quantity is " + ip.getProductQuantity());
                 number += ip.getProductQuantity();
             }
 
             rd.setBrandCategory(bp.getBrandCategory());
             rd.setBrandName(bp.getBrandName());
             rd.setReportInventoryQuantity(number);
+
             rid.add(rd);
         }
+        System.out.println("just exiting");
         return rid;
     }
 

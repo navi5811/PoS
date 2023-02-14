@@ -22,7 +22,7 @@ public class InfoData implements Serializable {
 
 
 	public InfoData() {
-		message = "Welcome to Increff!!";
+		message = "";
 		email = "No email";
 	}
 

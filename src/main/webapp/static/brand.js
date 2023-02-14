@@ -21,6 +21,7 @@ function addBrand(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
+			sendAlert("Brand Added Successfully");
 			$('#add-brand-modal').modal('toggle');
 			getBrandList();
 		},
@@ -51,6 +52,7 @@ function updateBrand(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
+			sendAlert("Brand Updated Successfully");
 			$('#edit-brand-modal').modal('toggle');
 			getBrandList();
 		},
@@ -105,11 +107,28 @@ function uploadRows() {
 		return;
 	}
 
+	
+
 	//Process next row
 	var row = fileData[processCount];
 	processCount++;
 
-	var json = JSON.stringify(row);
+	var fileObject = Object.keys(row);
+
+	if((fileObject.length!=2) || (fileObject[0]!="Brand") || (fileObject[1]!="Category")){
+		handleJsError("File headers are not valid");
+    }
+
+
+	modifiedObj = {
+		brandName: row.Brand,
+		brandCategory: row.Category
+	}
+
+	var json = JSON.stringify(modifiedObj);
+
+
+
 	var url = getBrandUrl();
 
 	//Make ajax call
@@ -125,8 +144,8 @@ function uploadRows() {
 			uploadRows();
 		},
 		error: function (response) {
+			sendAlert("Errors are there in the file");
 			row.error = JSON.parse(response.responseText).message;
-			console.log(row);
 			errorData.push(row);
 			uploadRows();
 		}
@@ -149,7 +168,7 @@ function displayBrandList(data) {
 	for (var i = data.length - 1; i >= 0; i--) {
 		serial++;
 		var e = data[i];
-		var buttonHtml = ' <button class="btn btn-primary"  onclick="displayEditBrand(' + e.brandId + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary btn-sm"  onclick="displayEditBrand(' + e.brandId + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
 		var row = '<tr>'
 			+ '<td>' + serial + '</td>'
 			+ '<td>' + e.brandName + '</td>'
@@ -199,14 +218,16 @@ function updateUploadDialog() {
 
 // To replace choose file with Upload File name
 function updateFileName() {
-	var $file = $('#brandFile');
+	// var $file = $('#brandFile');
 	var fileName = document.getElementById("brandFile").files[0].name;
 	$('#brandFileName').html(fileName);
 }
 
 function displayUploadData() {
 	$('#upload-brand-modal').trigger('reset');
+	$("#process-data").show();
 	$("#download-errors").hide();
+	$("#error-row").hide();
 	resetUploadDialog();
 	$('#upload-brand-modal').modal('toggle');
 }

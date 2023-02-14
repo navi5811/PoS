@@ -13,67 +13,35 @@
 
 		<h3>Inventory</h3>
 
-		<!-- Top row with form-->
+		<!-- Top row with buttons-->
 		<div class="row" id="top-buttons" style="display:none">
 			<div class="col-12">
 
-				<button type="button" class="btn btn-primary" data-target="#add-inventory-modal" data-toggle="modal"><i
-						class="bi bi-database-add"></i> Add</button>
+				<button type="button" id="add-button-inventory" class="btn btn-success btn-sm" data-target="#add-inventory-modal"
+					data-toggle="modal"><i class="bi bi-plus-lg"></i> Add</button>
+
 				&nbsp;
-				<button type="button" class="btn btn-primary" id="upload-data"><i class="bi bi-upload"></i>
+				<button type="button" class="btn btn-secondary btn-sm" id="upload-data"><i class="bi bi-upload"></i>
 					Upload</button>
+
 				&nbsp;
-				<button type="button" class="btn btn-primary" id="refresh-data"><i class="bi bi-arrow-clockwise"></i>
+				<button type="button" class="btn btn-dark btn-sm" id="refresh-data"><i
+						class="bi bi-arrow-clockwise"></i>
 					Refresh</button>
+
 			</div>
 		</div>
-
-		<!-- invenotory Add Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="add-inventory-modal">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Add Inventory</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form class="" id="inventory-form">
-
-							<div class="form-group required col-md-12">
-								<label for="inputProductBarcode" class="control-label">Barcode</label>
-								<input type="text" class="form-control w-100" name="inventoryProductBarcode"
-									id="inputProductBarcode" placeholder="Enter Barcode">
-							</div>
-
-							<div class="form-group required col-md-12">
-								<label for="inputProductQuantity" class="control-label">Quantity</label>
-								<input type="number" class="form-control w-100" name="productQuantity"
-									id="inputProductQuantity" placeholder="Enter Quantity">
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success" id="add-inventory">Add</button>
-						&nbsp;
-					</div>
-
-				</div>
-			</div>
-		</div>
-
 
 		<!-- Blank Row -->
 		<div class="row">
 			&nbsp;
 		</div>
-		<div class="row">
 
+		<div class="row">
 			<!-- Table -->
-			<div class="col-12">
+			<div class="col-12"  style="z-index: 0;">
 				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="inventory-table">
-					<thead>
+					<thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
 						<tr>
 							<th scope="col">Serial No.</th>
 							<th scope="col">Brand</th>
@@ -82,7 +50,6 @@
 							<th scope="col">Barcode</th>
 							<th scope="col">Quantity</th>
 							<th scope="col" id="edit-column" style="display:none">Action</th>
-
 						</tr>
 					</thead>
 					<tbody>
@@ -97,8 +64,43 @@
 			</div>
 		</div>
 
+		<!-- invenotory Add Modal -->
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="add-inventory-modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add Inventory</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form class="" id="inventory-form">
+
+							<div class="form-group required col-md-12">
+								<label for="inputProductBarcode" class="control-label"><h6>Barcode</h6></label>
+								<input type="text" class="form-control w-100" name="inventoryProductBarcode"
+									id="inputProductBarcode" placeholder="Enter Barcode">
+							</div>
+
+							<div class="form-group required col-md-12">
+								<label for="inputProductQuantity" class="control-label"><h6>Quantity</h6></label>
+								<input type="number" class="form-control w-100" name="productQuantity"
+									id="inputProductQuantity" placeholder="Enter Quantity">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success btn-sm" id="add-inventory">Add</button>
+						&nbsp;
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 		<!-- Inventory edit Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="edit-inventory-modal">
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="edit-inventory-modal">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -111,7 +113,7 @@
 						<form class="" id="inventory-edit-form">
 
 							<div class="form-group required col-md-12">
-								<label for="inputProductBarcode" class="control-label">Barcode</label>
+								<label for="inputProductBarcode" class="control-label"><h6>Barcode</h6></label>
 
 								<input type="text" readonly class="form-control-plaintext w-100"
 									name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Barcode">
@@ -119,7 +121,7 @@
 							</div>
 
 							<div class="form-group required col-md-12">
-								<label for="inputProductQuantity" class="control-label">Quantity</label>
+								<label for="inputProductQuantity" class="control-label"><h6>Quantity</h6></label>
 
 								<input type="number" class="form-control w-100" name="productQuantity"
 									id="inputProductQuantity" placeholder="Enter Quantity">
@@ -129,7 +131,7 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" id="update-inventory">Update</button>
+						<button type="button" class="btn btn-success btn-sm" id="update-inventory">Update</button>
 					</div>
 				</div>
 			</div>
@@ -137,7 +139,7 @@
 
 
 		<!-- Inventory upload Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="upload-inventory-modal">
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="upload-inventory-modal">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 
@@ -152,9 +154,8 @@
 						<div class="row-md-12">
 							<div class="inventory-file col-md-12">
 								<input type="file" class="custom-file-input" id="inventoryFile">
-								<label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose
-									Inventory
-									File</label>
+								<label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose Inventory File
+								</label>
 							</div>
 						</div>
 						<br>
@@ -162,14 +163,16 @@
 							<a th:href="@{/sample/inventory.tsv}" target="_blank">Download Sample</a>
 						</div>
 
-						Rows: <span id="rowCount">0</span>,
-						Processed: <span id="processCount">0</span>,
-						Errors: <span id="errorCount">0</span>
+						<div class="row-md-12" id="error-row" style="display:none">
+							Rows: <span id="rowCount">0</span>, Processed:
+							<span id="processCount">0</span>, Errors:
+							<span id="errorCount">0</span>
+						</div>
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" id="process-data">Upload</button>
-						<button type="button" class="btn btn-warning" id="download-errors"
+						<button type="button" class="btn btn-success btn-sm" id="process-data">Upload</button>
+						<button type="button" class="btn btn-warning btn-sm" id="download-errors"
 							style="display: none;">Download Errors</button>
 					</div>
 				</div>

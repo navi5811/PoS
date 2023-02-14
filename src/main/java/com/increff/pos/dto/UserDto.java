@@ -53,6 +53,7 @@ public class UserDto extends AbstractUiController {
         if(matcher.matches()==false){
             throw new ApiException("email is not valid");
         }
+
         UserPojo p = convert(f);
         normalize(p);
         UserPojo existing = userService.get(p.getEmail());
@@ -90,18 +91,32 @@ public class UserDto extends AbstractUiController {
 
     @Transactional
     public ModelAndView register(UserForm form) throws ApiException {
+
+        String email = form.getEmail();
+        String regex = "^(.+)@(.+)$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+        if(matcher.matches()==false){
+            throw new ApiException("email format is not valid");
+        }
+
         if (supervisorEmails.contains(form.getEmail())) {
             form.setRole("supervisor");
         } else {
             form.setRole("operator");
         }
 
-        try {
-            add(form);
-        } catch (ApiException e) {
-            info.setMessage("email already exists");
+
+        UserPojo p = convert(form);
+        normalize(p);
+        UserPojo existing = userService.get(p.getEmail());
+        if (existing != null) {
+            throw new ApiException("User with given email already exists");
         }
-        return mav("init.html");
+        userService.add(p);
+        return new ModelAndView("redirect:/site/login");
     }
 
     @Transactional

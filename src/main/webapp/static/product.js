@@ -25,6 +25,7 @@ function addProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+		sendAlert("Product added successfully");
 		$('#add-product-modal').modal('toggle');
 	   		getProductList();  
 	   },
@@ -56,6 +57,7 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+		sendAlert("Product Updated successfully");
 	   		getProductList();   
 	   },
 	   error: handleAjaxError
@@ -128,7 +130,30 @@ function uploadRows(){
 	var row = fileData[processCount];
 	processCount++;
 	
-	var json = JSON.stringify(row);
+	var fileObject = Object.keys(row);
+
+	if((fileObject.length!=5) || (fileObject[0]!="ProductName") || (fileObject[1]!="Brand") || (fileObject[2]!="Category") || (fileObject[3]!="MRP") || (fileObject[4]!="Barcode")){
+		handleJsError("File headers are not valid");
+    }
+
+	console.log(row.MRP);
+
+	// var isNumber = /^\d+\.\d+$/.test(row.MRP);
+
+	// if(isNumber==false)
+	// {
+	// 	console.log("not valid");
+	// }
+
+	modifiedObj = {
+		productName: row.ProductName,
+		productBrandName: row.Brand,
+		productBrandCategoryName: row.Category,
+		productMrp: row.MRP,
+		productBarcode: row.Barcode
+	}
+
+	var json = JSON.stringify(modifiedObj);
 	var url = getProductUrl();
 
 	//Make ajax call
@@ -144,6 +169,7 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
+		sendAlert("Errors are there in the file");
 		row.error = JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
@@ -168,7 +194,7 @@ function displayProductList(data){
 	for (var i = data.length - 1; i >= 0; i--) {
 		serial++;
 		var e = data[i];
-		var buttonHtml = ' <button class="btn btn-primary" onclick="displayEditProduct(' + e.productId + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
+		var buttonHtml = ' <button class="btn btn-primary btn-sm" onclick="displayEditProduct(' + e.productId + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + serial + '</td>'
 		+ '<td>' + e.productName + '</td>'
@@ -187,6 +213,8 @@ function displayProductList(data){
 
 // Displays Modal
 function displayEditProduct(id){
+
+	editcategoryOption();
 	var url = getProductUrl() + "/" + id;
 	$.ajax({
 	   url: url,
@@ -230,14 +258,15 @@ function updateFileName(){
 function displayUploadData(){
 	$('#upload-product-modal').trigger('reset');
 	$("#download-errors").hide();
+	$("#error-row").hide();
+	$("#process-data").show();
  	resetUploadDialog();
 	$('#upload-product-modal').modal('toggle');
 }
 
-var brands = new Set();
+
 var brandsAndCategory = {};
-
-
+var brands = new Set();
 var editbrands=new Set();
 var editbrandsAndCategory={};
 // To update options 
@@ -258,10 +287,13 @@ function getBrandList(){
 
 
 function brandOption(data){
+	
+	
     var selectTag = $('#inputProductBrandName');
     selectTag.empty();
-	let Tag = '<option selected disabled value>'+"Select Brand"+'</option>'
-	selectTag.append(Tag);
+	// var tag = '<option value="'+'">'+"el"+'</option>'
+	// selectTag.append(tag);
+	
     for(var i in data){
         var e = data[i];
         brands.add(e.brandName);
@@ -272,10 +304,20 @@ function brandOption(data){
         brandsAndCategory[e.brandName] =new Set([e.brandCategory]);
     }
 	
-    brands.forEach((el)=>{
-        var optionTag = '<option value="'+el+'">'+el+'</option>'
-        selectTag.append(optionTag);
-    });
+	var brandOption = '<option selected disabled value="">'+"Select Brand"+'</option>'
+    selectTag.append(brandOption);
+	// let brandOption = $('<option></option>').attr("value","" ).text("Select Brand");
+	// 			selectTag.append(brandOption);
+	
+	for(brandName of brands.values()){
+				let option = $('<option></option>').attr("value", brandName).text(brandName);
+				selectTag.append(option);
+			}
+
+    // brands.forEach((el)=>{
+    //     var optionTag = '<option value="'+el+'">'+el+'</option>'
+    //     selectTag.append(optionTag);
+    // });
 	categoryOption();
 }
 function categoryOption(){
@@ -283,10 +325,21 @@ function categoryOption(){
     var selectTag = $("#inputProductBrandCategoryName");
     selectTag.empty();
 
-    brandsAndCategory[brd].forEach((ebl)=>{
-        var optionTag = '<option value="'+ebl+'">'+ebl+'</option>'
-        selectTag.append(optionTag);
-    });
+	
+		var categoryOption = '<option selected disabled value> Select Category</option>';
+		selectTag.append(categoryOption);
+
+
+
+		if(brd.length!=0){
+	for(categoryName of brandsAndCategory[brd].values()){
+		var option1 = $('<option></option>').attr("value", categoryName).text(categoryName);
+		selectTag.append(option1);
+	}}
+    // brandsAndCategory[brd].forEach((el)=>{
+    //     var optionTag = '<option value="'+el+'">'+el+'</option>'
+    //     selectTag.append(optionTag);
+    // });
 }
 
 
@@ -304,21 +357,30 @@ function editbrandOption(data){
         editbrandsAndCategory[e.brandName] =new Set([e.brandCategory]);
     }
 
-    editbrands.forEach((el)=>{
-        var editOptionTag = '<option value="'+el+'">'+el+'</option>'
-        editSelectTag.append(editOptionTag);
-    });
+	for(brandName of editbrands.values()){
+		let option = $('<option></option>').attr("value", brandName).text(brandName);
+		editSelectTag.append(option);
+	}
+    // editbrands.forEach((el)=>{
+    //     var editOptionTag = '<option value="'+el+'">'+el+'</option>'
+    //     editSelectTag.append(editOptionTag);
+    // });
 	editcategoryOption();
 }
 function editcategoryOption(){
-    var brd = $('#editProductBrandName')[0].value;
+    let bd = $('#editProductBrandName')[0].value;
     var editSelectTag = $("#editProductBrandCategoryName");
     editSelectTag.empty();
 
-    editbrandsAndCategory[brd].forEach((el)=>{
-        var editOptionTag = '<option value="'+el+'">'+el+'</option>'
-        editSelectTag.append(editOptionTag);
-    });
+	for(categoryName of editbrandsAndCategory[bd].values()){
+		let option1 = $('<option></option>').attr("value", categoryName).text(categoryName);
+		editSelectTag.append(option1);
+	}
+
+    // editbrandsAndCategory[brd].forEach((el)=>{
+    //     var editOptionTag = '<option value="'+el+'">'+el+'</option>'
+    //     editSelectTag.append(editOptionTag);
+    // });
 }
 
 
@@ -390,12 +452,14 @@ function editcategoryOption(){
 
 // Displays modal with given fields and detects id from displayEditBrand method
 function displayProduct(data){
+	editcategoryOption();
 	$("#product-edit-form input[name=productName]").val(data.productName);	
 	$("#editProductBrandName").val(data.productBrandName);		
 	$("#editProductBrandCategoryName").val(data.productBrandCategoryName);
 	$("#product-edit-form input[name=productMrp]").val(data.productMrp);
 	$("#product-edit-form input[name=productBarcode]").val(data.productBarcode);
 	$("#product-edit-form input[name=productId]").val(data.productId);	
+	editcategoryOption();
 	$('#edit-product-modal').modal('toggle');
 }
 
@@ -404,6 +468,8 @@ function addButton(){
   }
 //INITIALIZATION CODE
 function init(){
+	getProductList();
+	getBrandList();
 	role = $("meta[name=userRole]").attr("content");
     if(role == "supervisor"){
         $("#top-buttons").show();
@@ -422,7 +488,5 @@ function init(){
 }
 
 $(document).ready(init);
-$(document).ready(getProductList);
-$(document).ready(getBrandList);
 
 

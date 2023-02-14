@@ -47,4 +47,6 @@ public class AppUiController extends AbstractUiController {
 		return mav("dailyReport.html");
 	}
 
+
+
 }

@@ -15,7 +15,7 @@ function toJson($form) {
 
 function handleAjaxError(response) {
     var response = JSON.parse(response.responseText);
-    alert(response.message);
+    sendAlert(response.message);
 }
 
 function compare(a, b) {
@@ -28,6 +28,13 @@ function compare(a, b) {
     return 0;
 }
 
+function handleJsError(message)
+{
+    sendAlert(message);
+    throw new Error(message);
+    
+}
+
 function readFileData(file, callback) {
     var config = {
         header: true,
@@ -35,13 +42,28 @@ function readFileData(file, callback) {
         skipEmptyLines: "greedy",
         complete: function (results) {
             callback(results);
+            $("#process-data").hide();
             $("#download-errors").show();
+            $("#error-row").show();
         }
     }
     Papa.parse(file, config);
 }
+function sendAlert(message) {
+    Toastify({
+        text: message,
+        duration: 5000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: "linear-gradient(to right, #B00052, #C93D3D)",
+        },
+        onClick: function () { } // Callback after click
+    }).showToast();
 
-
+}
 function writeFileData(arr) {
     var config = {
         quoteChar: '',
@@ -64,14 +86,18 @@ function writeFileData(arr) {
     tempLink.click();
 }
 
+function hoverActive() {
+    $('.nav-item active').removeClass('active').removeAttr('aria-current');
+    $('a[href="' + location.pathname + '"]').closest('li').addClass('active').attr('aria-current', 'page');
+}
+
 function init() {
+
+    hoverActive();
     var role = $("meta[name=userRole]").attr("content");
     if (role == "supervisor") {
         $("#report_dropdown").show();
     }
 }
+
 $(document).ready(init);
-$(document).ready(function () {
-    $('.nav-item active').removeClass('active').removeAttr('aria-current');
-    $('a[href="' + location.pathname + '"]').closest('li').addClass('active').attr('aria-current', 'page');
-});

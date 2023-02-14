@@ -97,11 +97,11 @@ public class BrandDto {
     // validation of brand
     public void validation(BrandForm p) throws ApiException {
         if (StringUtil.isEmpty(p.getBrandName())) {
-            throw new ApiException("Brand Name cannot be empty");
+            throw new ApiException("Brand cannot be empty");
         }
 
         if (StringUtil.isEmpty(p.getBrandCategory())) {
-            throw new ApiException("Brand Category cannot be empty");
+            throw new ApiException("Category cannot be empty");
         }
 
         // Check if Brand exists already

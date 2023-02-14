@@ -116,6 +116,7 @@ public class ProductDto {
 		}
 		ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
 
+			
 		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
 			throw new ApiException("The given product already exists in the Database");
 		}
@@ -123,6 +124,7 @@ public class ProductDto {
 		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
 			throw new ApiException("The given product already exists with a different Barcode");
 		}
+
 	}
 	protected void validateProduct(ProductPojo p) throws ApiException {
 

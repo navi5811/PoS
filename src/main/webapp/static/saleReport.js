@@ -41,6 +41,7 @@ function displaySalesList(data) {
 function getList() {
     //Set the values to update
     var $form = $("#sales-form");
+    console.log($form)
     var json = toJson($form);
     var url = getSalesUrl();
     console.log(url);
@@ -108,16 +109,9 @@ function getBrandList() {
 	});
 }
 function datefunction(){
-
     var $form = $("#sales-form");
     var json = toJson($form);
-
     document.getElementById("inputEndDate").min=JSON.parse(json).startDate;
-    
-    // if(enDate!="")
-    // {
-    //     document.getElementById("inputEndDate").max=enDate;
-    // }
 }
 function endDatefunction()
 {
@@ -129,9 +123,12 @@ function endDatefunction()
 function init() {
     getList();
     getBrandList();
+    $("#get-sales").click();
     $("#get-sales").click(getList);
+    // inputEndDate.max=new Date().toISOString().split('T')[0]
     $("#inputStartDate").change(datefunction);
     $("#inputEndDate").change(endDatefunction);
 }
+
 $(document).ready(init);
 

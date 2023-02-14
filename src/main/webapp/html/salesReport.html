@@ -19,21 +19,21 @@
 
 					<div class="row">
 						<div class="form-group col-md-4">
-							<label for="inputStartDate">StartDate</label>
+							<label for="inputStartDate"><h6>StartDate</h6></label>
 
-							<input type="date" class="form-control" name="startDate" id="inputStartDate"
+							<input type="date" value=""class="form-control" name="startDate" id="inputStartDate"
 							min="1980-01-01" max="2100-01-01">
 
 						</div>
 						<div class="form-group col-md-4">
-							<label for="inputEndDate">EndDate</label>
-							<input type="date" class="form-control" name="endDate" id="inputEndDate"
+							<label for="inputEndDate"><h6>EndDate</h6></label>
+							<input type="date" value=""class="form-control" name="endDate" id="inputEndDate" onfocus="this.max=new Date().toISOString().split('T')[0]"
 							min="1980-01-01" max="2100-01-01">
 						</div>
 					</div>
 					<div class="row">
 						<div class="form-group col-md-4">
-							<label for="inputBrandName">Brand</label>
+							<label for="inputBrandName"><h6>Brand</h6></label>
 							<select required class="form-control" name="brand" id="inputBrandName">
 								<option value="mercedes">Mercedes</option>
 								<option value="audi">Audi</option>
@@ -41,7 +41,7 @@
 						</div>
 					
 						<div class="form-group col-md-4">
-							<label for="inputBrandCategory">Category</label>
+							<label for="inputBrandCategory"><h6>Category</h6></label>
 							<select required class="form-control" name="category" id="inputBrandCategory" placeholder="select-Category"> 
 								<option value="fd"></option>
 							</select>
@@ -49,8 +49,7 @@
 					</div>
 					
 
-					<button type="button" class="btn btn-success" id="get-sales"><i class="bi bi-funnel"></i>
-						Filter</button>
+					<button type="button" class="btn btn-success btn-sm" id="get-sales">Get Report</button>
 				</form>
 			</div>
 		</div>
@@ -63,9 +62,9 @@
 		<div class="row">
 
 			<!-- Table -->
-			<div class="col-12">
+			<div class="col-12"  style="z-index: 0;">
 				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="sales-table">
-					<thead>
+					<thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
 						<tr>
 							<th scope="col">Serial No.</th>
 							<th scope="col">Brand</th>

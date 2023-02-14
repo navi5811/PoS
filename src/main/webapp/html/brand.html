@@ -12,58 +12,20 @@
 
 		<h3>Brand</h3>
 
-		<!-- Top row with form-->
+		<!-- Top row with buttons-->
 		<div class="row" id="top-buttons" style="display:none">
 			<div class="col-12">
-				<button type="button" id="add-button" class="btn btn-success" data-target="#add-brand-modal"
-					data-toggle="modal"><i class="bi bi-plus"></i> Add</button>
+				<button type="button" id="add-button" class="btn btn-success btn-sm" data-target="#add-brand-modal"
+					data-toggle="modal"><i class="bi bi-plus-lg"></i> Add</button>
 				&nbsp;
-				<button type="button" class="btn btn-success" id="upload-data"><i class="bi bi-upload"></i>
+				<button type="button" class="btn btn-secondary btn-sm" id="upload-data"><i class="bi bi-upload"></i>
 					Upload</button>
 				&nbsp;
-				<button type="button" class="btn btn-primary" id="refresh-data"><i class="bi bi-arrow-clockwise"></i>
+				<button type="button" class="btn btn-dark btn-sm" id="refresh-data"><i
+						class="bi bi-arrow-clockwise"></i>
 					Refresh</button>
 			</div>
 		</div>
-
-
-		<!-- Brand Add Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="add-brand-modal">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Add Brand</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-
-						<form class="" id="brand-form">
-							<!-- div row required -->
-							<div class="form-group required col-md-12">
-								<label for="inputBrandName" class="control-label">Brand Name</label>
-								<input type="text" class="form-control w-100" name="brandName" id="inputBrandName"
-									placeholder="Enter Brand">
-							</div>
-
-							<div class="form-group required col-md-12">
-								<label for="inputBrandCategory" class="control-label">Category</label>
-								<input type="text" class="form-control w-100" name="brandCategory"
-									id="inputBrandCategory" placeholder="Enter Category">
-							</div>
-
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success" id="add-brand">Add</button>
-						&nbsp;
-					</div>
-
-				</div>
-			</div>
-		</div>
-
 
 		<!-- Blank Row -->
 		<div class="row">
@@ -72,16 +34,20 @@
 		<div class="row">
 
 			<!-- Table -->
-			<div class="col-12 ">
+			<div class="col-12" style="z-index: 0;">
 				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="brand-table">
-					<thead>
-						<tr>
-							<th scope="col">Serial No.</th>
-							<th scope="col">Brand</th>
-							<th scope="col">Category</th>
-							<th scope="col" id="edit-column" style="display:none">Action </th>
-						</tr>
-					</thead>
+					
+						<thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
+							
+							<tr>
+								<th scope="col">Serial No.</th>
+								<th scope="col">Brand</th>
+								<th scope="col">Category</th>
+								<th scope="col" id="edit-column" style="display:none">Action </th>
+							</tr>
+						
+						</thead>
+					
 					<tbody>
 						<tr>
 							<td>Nike</td>
@@ -104,8 +70,45 @@
 			</div>
 		</div>
 
+		<!-- Brand Add Modal -->
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="add-brand-modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add Brand</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+
+						<form class="" id="brand-form">
+							<!-- div row required -->
+							<div class="form-group required col-md-12">
+								<label for="inputBrandName" class="control-label"><h6>Brand</h6></label>
+								<input type="text" class="form-control w-100" name="brandName" id="inputBrandName"
+									placeholder="Enter Brand">
+							</div>
+
+							<div class="form-group required col-md-12">
+								<label for="inputBrandCategory" class="control-label"><h6>Category</h6></label>
+								<input type="text" class="form-control w-100" name="brandCategory"
+									id="inputBrandCategory" placeholder="Enter Category">
+							</div>
+
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success btn-sm" id="add-brand">Add</button>
+						&nbsp;
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 		<!-- Brand Edit Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="edit-brand-modal">
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="edit-brand-modal">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -117,7 +120,7 @@
 					<div class="modal-body">
 						<form class="" id="brand-edit-form">
 							<div class="form-group required col-md-12">
-								<label for="brandName" class="control-label">Brand Name</label>
+								<label for="brandName" class="control-label"><h6>Brand</h6></label>
 
 								<input type="text" class="form-control w-100" name="brandName"
 									placeholder="Enter Brand Name">
@@ -125,7 +128,7 @@
 							</div>
 
 							<div class="form-group required col-md-12">
-								<label for="brandCategory" class="control-label">Category</label>
+								<label for="brandCategory" class="control-label"><h6>Category</h6></label>
 
 								<input type="text" class="form-control w-100" name="brandCategory"
 									placeholder="Enter Category">
@@ -136,7 +139,7 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" id="update-brand">Update</button>
+						<button type="button" class="btn btn-success btn-sm" id="update-brand">Update</button>
 						&nbsp;
 					</div>
 				</div>
@@ -145,7 +148,7 @@
 
 
 		<!-- Brand Upload Modal -->
-		<div class="modal fade" tabindex="-1" role="dialog" id="upload-brand-modal">
+		<div class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" id="upload-brand-modal">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 
@@ -161,22 +164,24 @@
 						<div class="row-md-12">
 							<div class="brand-file col-md-12">
 								<input type="file" class="custom-file-input" id="brandFile">
-								<label class="custom-file-label col-md-12" for="brandFile"
-									id="brandFileName">Choose File</label>
+								<label class="custom-file-label col-md-12" for="brandFile" id="brandFileName">Choose
+									File</label>
 							</div>
 						</div>
 						<br>
 						<div class="row-md-12">
 							<a th:href="@{/sample/brand.tsv}" target="_blank">Download Sample</a>
 						</div>
-						Rows: <span id="rowCount">0</span>,
-						Processed: <span id="processCount">0</span>,
-						Errors: <span id="errorCount">0</span>
+						<div class="row-md-12" id="error-row" style="display:none">
+							Rows: <span id="rowCount">0</span>, Processed:
+							<span id="processCount">0</span>, Errors:
+							<span id="errorCount">0</span>
+						</div>
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-success" id="process-data">Upload</button>
-						<button type="button" class="btn btn-warning" id="download-errors"
+						<button type="button" class="btn btn-success btn-sm" id="process-data">Upload</button>
+						<button type="button" class="btn btn-warning btn-sm" id="download-errors"
 							style="display: none;">Download Errors</button>
 					</div>
 				</div>

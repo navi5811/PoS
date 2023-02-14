@@ -1,29 +1,32 @@
 <!doctype html>
 <html lang="en">
+
 <head th:replace="snippets.html :: name_head"></head>
+
 <body>
 	<nav th:replace="snippets.html :: name_app_navbar"></nav>
 
-	<div class="container-fluid" style="width:75%;">
+	<div class="container">
 
 		<h3>Order</h3>
 
-		<button class="btn btn-dark" id="add-button" type="button"><i class="bi bi-cart-plus"></i> Add
+		<button class="btn btn-success btn-sm" id="add-button" type="button"><i class="bi bi-plus-lg"></i> Add
 		</button>
 		&nbsp;
-		<button class="btn btn-dark" id="refresh-data" type="button"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+		<button class="btn btn-dark btn-sm" id="refresh-data" type="button"><i class="bi bi-arrow-clockwise"></i>
+			Refresh</button>
 		&nbsp;
 
 		<!-- Blank Row -->
 		<div class="row">
-            &nbsp;
-        </div>
+			&nbsp;
+		</div>
 		<div class="row">
 
 			<!-- Table -->
-			<div class="col-12">
+			<div class="col-12"  style="z-index: 0;">
 				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="order-table">
-					<thead>
+					<thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
 						<tr>
 							<th scope="col">Order Id</th>
 							<th scope="col">Order Time</th>
@@ -39,49 +42,49 @@
 	</div>
 
 	<!-- order Add Modal -->
-	<div class="modal fade" id="add-order-modal" role="dialog" tabindex="-1">
+	<div class="modal fade" id="add-order-modal" data-backdrop="static" role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Add Order Items</h5>
-					<button aria-label="Close" class="close" data-dismiss="modal"
-						type="button">
+					<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form class=""id="order-add-form">
+					<form class="" id="order-add-form">
 
 
 						<div class="form-group required col-md-12">
-							<label class="control-label" for="inputbarcode">Barcode</label>
-							
-								<input class="form-control w-100" name="productBarcode"
-									placeholder="Enter Barcode" required type="text">
-							
+							<label class="control-label"  for="inputbarcode"><h6>Barcode</h6></label>
+
+							<input class="form-control w-100" name="productBarcode" id="form-barcode" placeholder="Enter Barcode" required
+								type="text">
+
 						</div>
 						<div class="form-group required col-md-12">
-							<label class="control-label" for="inputquantity">Quantity</label>
-							
-								<input class="form-control w-100" name="productQuantity"
-									placeholder="Enter Quantity" required type="number">
-							
+							<label class="control-label" for="inputquantity"><h6>Quantity</h6></label>
+
+							<input class="form-control w-100" name="productQuantity" placeholder="Enter Quantity"
+								required type="number">
+
 						</div>
 						<div class="form-group required col-md-12">
-							<label class="control-label" for="inputsellingPrice">Selling
-								Price</label>
-							
-								<input class="form-control w-100" name="productSellingPrice"
-									placeholder="Enter Selling Price" required type="number" step="0.01">
-							
+							<label class="control-label" for="inputsellingPrice"><h6>Selling Price</h6></label>
+
+							<input class="form-control w-100" name="productSellingPrice"
+								placeholder="Enter Selling Price" required type="number" step="0.01">
 						</div>
 
 
 						<div class="modal-footer">
-							<button class="btn btn-primary" id="add-order"
-								type="submit">Add To Cart</i></button>
-							<button class="btn btn-primary" id="submit-order"
-								type="button">Place Order</button>
+							<button class="btn btn-success btn-sm" id="add-order" type="submit">Add To Cart</i></button>
+
+							<button class="btn btn-success btn-sm" id="submit-order" type="button">Place Order</button>
+
+							<button class="btn btn-success btn-sm d-none"  id="edit-cart-button" type="submit">update</i></button>
+
+							<button class="btn btn-warning btn-sm d-none" id="cancel-orderItem" type="button">cancel</button>
 						</div>
 					</form>
 				</div>
@@ -112,55 +115,51 @@
 	</div>
 
 	<!-- Order Edit Modal -->
-	<div class="modal fade" id="edit-orderitem-modal" role="dialog"
-		tabindex="-1">
+	<div class="modal fade" id="edit-orderitem-modal" data-backdrop="static" role="dialog" tabindex="-1">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Edit Order Item</h5>
-					<button class="btn" id="edit-close-button" type="button"><i class="bi bi-x"></i></button>
+					<button class="btn" id="edit-close-button" type="button"><i class="bi bi-x-lg"></i></button>
 				</div>
 				<div class="modal-body">
 					<form id="order-edit-form">
 						<div class="form-group row">
-							<label class="col-sm-4 col-form-label" for="inputbarcode">Barcode</label>
+							<label class="col-sm-4 col-form-label" for="inputbarcode"><h6>Barcode</h6></label>
 							<div class="col-sm-8 mt-2">
 								<span id="productBarcode"></span>
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-4 col-form-label" for="inputquantity">Quantity</label>
+							<label class="col-sm-4 col-form-label" for="inputquantity"><h6>Quantity</h6></label>
 							<div class="col-sm-8">
-								<input class="form-control" name="productQuantity"
-									placeholder="Enter Quantity" required type="number">
+								<input class="form-control" name="productQuantity" placeholder="Enter Quantity" required
+									type="number">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-4 col-form-label" for="inputsellingPrice">Selling
-								Price</label>
+							<label class="col-sm-4 col-form-label" for="inputsellingPrice"><h6>Selling Price</h6></label>
 							<div class="col-sm-8">
-								<input class="form-control" name="productSellingPrice"
-									placeholder="Enter Selling Price" required type="number">
+								<input class="form-control" name="productSellingPrice" placeholder="Enter Selling Price"
+									required type="number">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-4 col-form-label" for="inputmrp">MRP</label>
+							<label class="col-sm-4 col-form-label" for="inputmrp"><h6>MRP</h6></label>
 							<div class="col-sm-8 mt-2">
 								<span id="mrp"></span>
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-4 col-form-label"
-								for="inputavailableQuantity">Available Quantity</label>
+							<label class="col-sm-4 col-form-label" for="inputavailableQuantity"><h6>Available Quantity</h6></label>
 							<div class="col-sm-8 mt-2">
 								<span id="availableQuantity"></span>
 							</div>
 						</div>
-						<input type="hidden" name="productBarcode"> <input name="id"
-							type="hidden"> <input name="orderId" type="hidden">
+						<input type="hidden" name="productBarcode"> <input name="id" type="hidden"> <input
+							name="orderId" type="hidden">
 						<div class="modal-footer">
-							<button class="btn btn-success"
-								id="update-orderitem" type="submit">Submit</button>
+							<button class="btn btn-success btn-sm" id="update-orderitem" type="submit">Submit</button>
 						</div>
 					</form>
 				</div>
@@ -169,18 +168,16 @@
 	</div>
 
 	<!-- Order Display Modal -->
-	<div class="modal fade" data-backdrop="static" id="order-display-modal"
-		role="dialog" tabindex="-1">
+	<div class="modal fade" data-backdrop="static" id="order-display-modal" role="dialog" tabindex="-1">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					
-					<h5 class="modal-title">Order Item</h5>
-				
-				
 
-					<button aria-label="Close" class="close" data-dismiss="modal"
-						type="button">
+					<h5 class="modal-title">Order Item</h5>
+
+
+
+					<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -188,9 +185,10 @@
 
 					<div class="row">
 						<div class="col">
-							<label for="view-order-id" class="col"><b>Order ID:</b> <span id="view-order-id">0</span></label>
+							<label for="view-order-id" class="col"><b>Order ID:</b> <span
+									id="view-order-id">0</span></label>
 						</div>
-					
+
 					</div>
 					<div class="col-12">
 						<table class="table table-striped" id="orderitem-table">

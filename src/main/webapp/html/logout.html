@@ -7,12 +7,13 @@
 <nav th:replace="snippets.html :: name_site_navbar"></nav>
 
 
-<div class="container">
+<div class="container mx-auto">
  <!-- Top row with form-->
  <div class="row">
-	 <div class="col-12">
+	 <div class="col-12 text-center">
 		You have been logged out successfully.
-		Login again
+		<a th:href="@{/site/login}">Login</a>
+		again
 	 </div>	
 </div> 
 

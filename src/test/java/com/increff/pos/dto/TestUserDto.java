@@ -22,7 +22,7 @@ public class TestUserDto extends AbstractUnitTest {
 
     @Test
     public void testAddUser() throws ApiException {
-        String role="admin";
+        String role="operator";
         String password="password";
         String email="email@gmail.com";
         UserForm f=new UserForm();
@@ -44,7 +44,7 @@ public class TestUserDto extends AbstractUnitTest {
     }
     @Test
     public void testGet() throws ApiException {
-        String role="admin";
+        String role="operator";
         String password="password";
         String email="email@gmail.com";
         UserForm f=new UserForm();
@@ -64,7 +64,7 @@ public class TestUserDto extends AbstractUnitTest {
 
     @Test
     public void testDelete() throws ApiException {
-        String role="admin";
+        String role="operator";
         String password="password";
         String email="email@gmail.com";
         UserForm f=new UserForm();
@@ -87,6 +87,20 @@ public class TestUserDto extends AbstractUnitTest {
 
     }
 
+    @Test
+    public void testRegister() throws ApiException {
+        String password="password";
+        String email="email@gmail.com";
+        UserForm f=new UserForm();
+        f.setPassword(password);
+        f.setEmail(email);
+        String role="operator";
+        userDto.register(f);
+        UserData d=userDto.get(email);
+        assertEquals(d.getEmail(), email);
+        assertEquals(d.getRole(), role);
+        assertEquals(d.getPassword(), password);
+    }
 
 
 

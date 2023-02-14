@@ -127,11 +127,25 @@ public class OrderDto {
 	@Transactional
 	public List<OrderItemData> getAllOrderItems(List<OrderItemPojo> od) throws ApiException {
 
+		System.out.println("inside get all order items ");
 		List<OrderItemData> d = new ArrayList<OrderItemData>();
 		for (OrderItemPojo orderItemPojo : od) {
 			ProductPojo productPojo = productservice.findProduct(orderItemPojo.getOrderProductId());
+			if (productPojo == null) {
+				System.out.println("error in product pojo");
+			}
+
 			OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
+			if (orderPojo == null)
+			{
+				System.out.println("error in orderpojo");
+			}
 			InventoryPojo inventoryPojo = inventoryservice.findInventory(productPojo.getProductId());
+			if(inventoryPojo==null)
+			{
+				System.out.println("error in inventory pojo");
+			}
+			System.out.println("got all the pojos just about to covert ");
 			d.add(convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
 		}
 		return d;
@@ -168,6 +182,7 @@ public class OrderDto {
 //		// Fetching all order items
 	@Transactional
 	public List<OrderItemPojo> getAll() {
+		System.out.println("inside get all orders");
 		return orderservice.getAll();
 	}
 

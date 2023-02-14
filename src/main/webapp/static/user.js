@@ -21,7 +21,7 @@ function addUser(event){
 	   success: function(response) {
 	   		getUserList();    
 	   },
-	   error: handleAjaxError
+	   error: handleAjaxError(response)
 	});
 
 	return false;

@@ -1,5 +1,6 @@
 var closeinv;
 var closeid;
+var edit=true;
 function getOrderUrl() {
   var baseUrl = $("meta[name=baseUrl]").attr("content");
   return baseUrl + "/api/order";
@@ -12,7 +13,86 @@ function getInventoryUrl() {
 // BUTTON ACTIONS
 var order = [];
 
+function editOrderRow(event) {
+  $('#form-barcode').attr('readonly', false);
+  console.log("inside Edit");
+  event.preventDefault();
+  var $form = $("#order-add-form");
+  var json = toJson($form);
+  var orderItem = JSON.parse(json);
+
+  var barcode = orderItem.productBarcode;
+  var status= false;
+
+  var url = getInventoryUrl() + "/" + barcode;
+
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      console.log("entering display inventory");
+
+      var orderedQuantity = orderItem.productQuantity;
+
+      var availableQuantity = data.productQuantity;
+
+      console.log(availableQuantity);
+      if (orderedQuantity > availableQuantity) {
+        status = true;
+        sendAlert("Order quantity cannot be greater than available quantity");
+      }
+      if (orderItem.productSellingPrice > data.mrp) {
+        status = true;
+        sendAlert("order selling price must be less than MRP");
+      }
+
+      console.log(availableQuantity);
+
+    },
+    error: function (data) {
+      console.log("why this error is occuring");
+      status = true;
+      sendAlert("barcode is not available");
+    },
+  }).then(function () {
+    console.log(status);
+    if (orderItem.productQuantity <= 0) {
+      sendAlert("Quantity should be greater than 0");
+      status = true;
+    }
+    if(orderItem.productSellingPrice < 0)
+    {
+      sendAlert("Selling price should be greater than or equal to 0");
+      status = true;
+    }
+    var k = 0;
+    for (var p in order) {
+      console.log("producrtbarcode is ", order[k].productBarcode);
+      
+
+      console.log("inside Edit");
+      if (order[k].productBarcode == orderItem.productBarcode && status==false) {
+
+        order[k].productSellingPrice=parseInt(orderItem.productSellingPrice);
+        console.log(orderItem.productQuantity);
+       
+          order[k].productQuantity = parseInt(orderItem.productQuantity);
+        
+        cancelButton();
+      }
+      k++;
+    }
+    if (status == false) {
+      $("#order-add-form").trigger("reset");
+      console.log(order);
+      displayOrderItemListAdd(order);
+    }
+  });
+}
+
+
 function addOrderItem(event) {
+  console.log("inside add");
   event.preventDefault();
   var $form = $("#order-add-form");
   var json = toJson($form);
@@ -37,11 +117,11 @@ function addOrderItem(event) {
 
       if (orderedQuantity > availableQuantity) {
         flag = true;
-        alert("Order quantity cannot be greater than available quantity");
+        sendAlert("Order quantity cannot be greater than available quantity");
       }
       if (orderItem.productSellingPrice > data.mrp) {
         flag = true;
-        alert("order selling price must be less than MRP");
+        sendAlert("order selling price must be less than MRP");
       }
 
 
@@ -50,10 +130,16 @@ function addOrderItem(event) {
     error: function (data) {
       console.log("why this error is occuring");
       flag = true;
-      alert("barcode is not available");
+      sendAlert("barcode is not available");
     },
   }).then(function () {
-    if (orderItem.productQuantity < 0 || orderItem.productSellingPrice < 0) {
+    if (orderItem.productQuantity <= 0) {
+      sendAlert("Quantity should be greater than 0");
+      flag = true;
+    }
+    if(orderItem.productSellingPrice < 0)
+    {
+      sendAlert("Selling price should be greater than or equal to 0");
       flag = true;
     }
     var k = 0;
@@ -62,35 +148,35 @@ function addOrderItem(event) {
       console.log("orderitem barcode", orderItem.productBarcode);
       if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice != orderItem.productSellingPrice) {
         flag = true;
-        alert("same barcode product cannot be entered again");
+        sendAlert("same barcode product cannot be entered again");
       }
+
       else if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice == orderItem.productSellingPrice) {
         order[k].productQuantity = parseInt(orderItem.productQuantity) + parseInt(order[k].productQuantity);
-        flag = true;
-        $("#order-add-form").trigger("reset");
-        displayOrderItemListAdd(order);
+        
+        
+          $("#order-add-form").trigger("reset");
+          if(flag==false)
+          displayOrderItemListAdd(order);
+          flag = true;
       }
       k++;
     }
+
     if (flag == false) {
       order.push(orderItem);
       $("#order-add-form").trigger("reset");
       console.log(order);
       displayOrderItemListAdd(order);
-    } else if (orderItem.ProductQuantity <= 0) {
-      alert("Quantity should be greater than 0");
-      console.log("Quantity should be greater than 0");
-    } else if (orderItem.productSellingPrice < 0) {
-      alert("Selling price should be greater than or equal to 0");
-      console.log("Selling price should be greater than or equal to 0");
-    }
+    } 
+
   });
 }
 
 function cancelOrder(event) {
   order = [];
   $("#order-add-form").trigger("reset");
-  
+
 }
 
 function addOrder(event) {
@@ -107,6 +193,7 @@ function addOrder(event) {
       "Content-Type": "application/json",
     },
     success: function (response) {
+      sendAlert("Order placed successfully");
       order = [];
       getOrderList();
       $("#order-add-form").trigger("reset");
@@ -165,12 +252,12 @@ function updateOrderItem(event) {
   // Set the values to update
   var $form = $("#order-edit-form");
   var json = toJson($form);
-  let invoice=false;
+  let invoice = false;
 
-  
-  
 
-  
+
+
+
 
   $.ajax({
     url: url,
@@ -183,14 +270,14 @@ function updateOrderItem(event) {
       $("#edit-orderitem-modal").modal("hide");
       // getOrderItemList(orderId);
 
-      getOrderItemList(orderId,invoice);
+      getOrderItemList(orderId, invoice);
       getOrderList();
-      
+
     },
     error: function (response) {
       handleAjaxError(response);
       $("#edit-orderitem-modal").modal("hide");
-      getOrderItemList(orderId,invoice);
+      getOrderItemList(orderId, invoice);
     },
   });
 
@@ -233,7 +320,7 @@ function deleteOrderItem(id) {
     type: "DELETE",
     success: function (data) {
       getOrderItemList(id);
-      getOrderList(id);
+      getOrderList();
     },
     error: function (response) {
       handleAjaxError(response);
@@ -248,16 +335,6 @@ function deleteRow(data) {
   });
   displayOrderItemListAdd(order);
 }
-function editRow(data) {
-  var k = 0;
-  for (var p in order) {
-
-    if (order[k].productBarcode == orderItem.productBarcode) {
-
-    }
-    k++;
-  }
-}
 
 function displayOrderList(data) {
   var $tbody = $("#order-table").find("tbody");
@@ -267,12 +344,12 @@ function displayOrderList(data) {
     var date = new Date(e.datetime);
     date = date.toLocaleString();
     var invoice = e.invoiced;
-    value = '<button type="button" id="button-invoice" class="btn btn-dark" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
+    value = '<button type="button" id="button-invoice" class="btn btn-info btn-sm" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
     if (invoice == false) {
-      var value = '<button type="button" id="button-invoice" class="btn btn-secondary" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
+      var value = '<button type="button" id="button-invoice" class="btn btn-success btn-sm" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
     }
     var buttonHtml =
-      ' <button type="button" class="btn btn-dark mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice + ')"><i class="bi bi-eye"></i> View</button>';
+      ' <button type="button" class="btn btn-primary btn-sm mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice + ')"><i class="bi bi-eye"></i> View</button>';
     buttonHtml += value;
     var row =
       "<tr>" +
@@ -306,7 +383,7 @@ function displayOrderItem(data, invoice) {
     var e = data[i];
 
     var buttonHtml =
-      ' <button class="edit-button btn btn-dark" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>';
+      ' <button class="edit-button btn btn-primary btn-sm" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>';
     var row =
       "<tr>" +
       "<td>" +
@@ -322,7 +399,7 @@ function displayOrderItem(data, invoice) {
       e.productSellingPrice +
       "</td>" +
       "<td>" +
-      buttonHtml +"</td>" + "</tr>";
+      buttonHtml + "</td>" + "</tr>";
     $tbody.append(row);
   }
   if (invoice == false) {
@@ -336,15 +413,16 @@ function displayOrderItem(data, invoice) {
 function displayOrderItemListAdd(data) {
   var $tbody = $("#orderitemadd-table").find("tbody");
   $tbody.empty();
-  let serial=0;
+  let serial = 0;
   for (var i = data.length - 1; i >= 0; i--) {
     serial++;
     var e = data[i];
     var buttonHtml =
-      '<button type="button" class="btn btn-danger" title="Delete" onclick="deleteRow(\'' +
+      '<button type="button" class="btn btn-danger btn-sm mr-2" title="Delete" onclick="deleteRow(\'' +
       e.productBarcode +
-      "')\">delete</button>";
-    var row ="<tr>" +
+      "')\">delete</button>"
+    buttonHtml += '<button type="button" class="btn btn-primary btn-sm" title="Delete" onclick="editRow(\'' + e.productBarcode + "')\">Edit</button>";
+    var row = "<tr>" +
       "<td>" + serial + "</td>" +
       "<td>" + e.productBarcode + "</td>" +
       "<td>" + e.productQuantity + "</td>" +
@@ -352,23 +430,55 @@ function displayOrderItemListAdd(data) {
       "<td>" + buttonHtml + "</td>" +
       "</tr>";
     $tbody.append(row);
-  } 
+  }
 }
 
-function displayEditOrderItem(id , invoice) {
+function editRow(barcode, data) {
+
+  $('#form-barcode').attr('readonly', true);
+  $("#order-add-form").trigger("reset");
+  $("#add-order").hide();
+  $("#submit-order").hide();
+  $("#edit-cart-button").removeClass('d-none');
+  $("#cancel-orderItem").removeClass('d-none');
+  console.log("help");
+  console.log(data);
+  console.log(order[0]);
+  var quantity;
+  var sp;
+  var k = 0;
+  for (var p in order) {
+    if (order[k].productBarcode == barcode) {
+      quantity=order[k].productQuantity;
+      sp=order[k].productSellingPrice;
+    }
+    k++;
+}
+sendData(barcode,quantity,sp)
+}
+  function sendData(barcode,quantity,sp){
+    $("#edit-cart-button").show();
+    $("#cancel-orderItem").show();
+    $("#order-add-form input[name=productBarcode]").val(barcode);
+	  $("#order-add-form input[name=productQuantity]").val(quantity);
+	  $("#order-add-form input[name=productSellingPrice]").val(sp);
+  }
+
+
+function displayEditOrderItem(id, invoice) {
   $("#order-display-modal").modal("hide");
   var url = getOrderUrl() + "/item/" + id;
   $.ajax({
     url: url,
     type: "GET",
     success: function (data) {
-      displayOrderItemEdit(data , invoice);
+      displayOrderItemEdit(data, invoice);
     },
     error: handleAjaxError,
   });
 }
 
-function displayOrderItemEdit(data ,invoice) {
+function displayOrderItemEdit(data, invoice) {
   console.log("dataa : ", data);
   $("#order-edit-form input[name=productBarcode]").val(data.productBarcode);
   $("#productBarcode").html("" + data.productBarcode);
@@ -379,22 +489,42 @@ function displayOrderItemEdit(data ,invoice) {
   $("#order-edit-form input[name=id]").val(data.orderItemId);
   $("#order-edit-form input[name=orderId]").val(data.id);
   $("#edit-orderitem-modal").modal("toggle");
-  closeinv=invoice;
-  closeid=data.id;
+  closeinv = invoice;
+  closeid = data.id;
 }
 
-function addButton(){
+function addButton() {
+  $('#form-barcode').attr('readonly', false);
   $("#add-order-modal").modal("toggle");
   $("#order-add-form").trigger("reset");
   $("#orderitemadd-table tbody").empty();
+
+  $("#add-order").show();
+  $("#submit-order").show();
+  document.getElementById("edit-cart-button").classList.add("d-none");
+  document.getElementById("cancel-orderItem").classList.add("d-none");
+  for (var member in order)
+  { delete order[member];}
 }
-function close(){
-  console.log("Closer hona chahie");
+function close() {
   $("#edit-orderitem-modal").modal("hide");
-  getOrderItemList(closeid,closeinv);
+  getOrderItemList(closeid, closeinv);
+}
+function cancelButton(){
+  $('#form-barcode').attr('readonly', false);
+  $("#order-add-form").trigger("reset");
+  document.getElementById("edit-cart-button").classList.add("d-none");
+  document.getElementById("cancel-orderItem").classList.add("d-none");
+  $("#add-order").show();
+  $("#submit-order").show();
 }
 // INITIALIZATION CODE
 function init() {
+  getOrderList();
+  $("#cancel-orderItem").click(cancelButton);
+  
+  $("#edit-cart-button").click(editOrderRow);
+
   $("#add-button").click(addButton);
   $("#order-add-form").submit(addOrderItem);
   $("#order-edit-form").submit(updateOrderItem);
@@ -405,4 +535,3 @@ function init() {
 }
 
 $(document).ready(init);
-$(document).ready(getOrderList);
