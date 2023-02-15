@@ -44,6 +44,7 @@ function readFileData(file, callback) {
             callback(results);
             $("#process-data").hide();
             $("#download-errors").show();
+            sendAlert("Error in file is there");
             $("#error-row").show();
         }
     }
@@ -52,13 +53,13 @@ function readFileData(file, callback) {
 function sendAlert(message) {
     Toastify({
         text: message,
-        duration: 5000,
+        duration: -1,
         close: true,
         gravity: "top", // `top` or `bottom`
         position: "right", // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
-            background: "linear-gradient(to right, #B00052, #C93D3D)",
+            background: "linear-gradient(to right, #B00052, #C93D3D)",   
         },
         onClick: function () { } // Callback after click
     }).showToast();

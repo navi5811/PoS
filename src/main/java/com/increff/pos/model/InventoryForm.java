@@ -9,5 +9,12 @@ public class InventoryForm {
 
 	private String inventoryProductBarcode;
 	private Integer productQuantity;
-	
+
+	@Override
+	public String toString() {
+		return "InventoryForm{" +
+				"inventoryProductBarcode='" + inventoryProductBarcode + '\'' +
+				", productQuantity=" + productQuantity +
+				'}';
+	}
 }

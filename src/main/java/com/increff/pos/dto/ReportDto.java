@@ -181,6 +181,7 @@ public class ReportDto {
         BrandData d = new BrandData();
         d.setBrandCategory(p.getBrandCategory());
         d.setBrandName(p.getBrandName());
+        d.setBrandId(p.getBrandId());
         return d;
     }
 

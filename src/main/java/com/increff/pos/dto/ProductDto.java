@@ -92,12 +92,25 @@ public class ProductDto {
 	}
 
 	protected static void normalizeProduct(ProductPojo p) {
+		p.setProductName(p.getProductName().toLowerCase().trim());
+		p.setProductBarcode(p.getProductBarcode().toLowerCase().trim());
 
-		p.setProductName(StringUtil.toLowerCase(p.getProductName()));
-		p.setProductBarcode(StringUtil.toLowerCase(p.getProductBarcode()));
 	}
 
 	protected void validateEditProduct(ProductPojo p) throws ApiException {
+
+		if(p.getProductBarcode().length()>15)
+		{
+			throw new ApiException("Barcode length cannot be greater than 15");
+		}
+		if(p.getProductName().length()>15)
+		{
+			throw new ApiException("Product name cannot be so long");
+		}
+		if(p.getProductMrp().intValue()>1000000)
+		{
+			throw new ApiException("Mrp cannot be greater than 1000000");
+		}
 
 		if (StringUtil.isEmpty(p.getProductName())) {
 			throw new ApiException("Product Name cannot be empty");
@@ -116,17 +129,30 @@ public class ProductDto {
 		}
 		ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
 
-			
-		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
-			throw new ApiException("The given product already exists in the Database");
-		}
 
-		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
-			throw new ApiException("The given product already exists with a different Barcode");
-		}
+//		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
+//			throw new ApiException("The given product already exists in the Database");
+//		}
+//
+//		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
+//			throw new ApiException("The given product already exists with a different Barcode");
+//		}
 
 	}
 	protected void validateProduct(ProductPojo p) throws ApiException {
+
+		if(p.getProductBarcode().length()>15)
+		{
+			throw new ApiException("Barcode length cannot be greater than 15");
+		}
+		if(p.getProductName().length()>15)
+		{
+			throw new ApiException("Product name cannot be so long");
+		}
+		if(p.getProductMrp().intValue()>1000000)
+		{
+			throw new ApiException("Mrp cannot be greater than 1000000");
+		}
 
 		if (StringUtil.isEmpty(p.getProductName())) {
 			throw new ApiException("Product Name cannot be empty");

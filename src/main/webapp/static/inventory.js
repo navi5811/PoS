@@ -33,9 +33,18 @@ async function addInventory(event){
     var barcode = $("#inventory-form input[name=inventoryProductBarcode]").val();
 	console.log("product barcode is",barcode);
     var $form = $("#inventory-form");
+	console.log($form);
     var json = toJson($form);
+	console.log(json);
+
     var inventoryObj = JSON.parse(json, barcode);
 	console.log("invetory obj values",inventoryObj);
+	if(inventoryObj.productQuantity.includes("."))
+	{
+		sendAlert("Please enter a valid quantity");
+		$("#add-inventory-modal").modal("show");
+		return;
+	}
     await updateQuantity(inventoryObj, barcode);
     var finalInvObj = await inventoryObj;
     json = await JSON.stringify(finalInvObj);
@@ -58,7 +67,11 @@ async function updateQuantity(inventoryObj, barcode){
             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity);
             console.log("Value in update qty fn " + inventoryObj.productQuantity);
         },
-        error: handleAjaxError
+        error: function(response){
+			$("#add-inventory-modal").modal("toggle");
+			handleAjaxError(response)
+			
+		   }
     });
     await console.log(inventoryObj.productQuantity);
     return await inventoryObj;
@@ -86,7 +99,7 @@ function updateApiCall(json){
 
 //Done//doubtfull
 function updateInventory(event){
-	$('#edit-inventory-modal').modal('toggle');
+	$('#edit-inventory-modal').modal('show');
 	//Get the ID
 	var productId = $("#inventory-edit-form input[name=productId]").val();	
 	console.log("Heyy"+ productId);
@@ -97,6 +110,11 @@ function updateInventory(event){
 	var $form = $("#inventory-edit-form");
 	var json = toJson($form);
 
+	if(JSON.parse(json).productQuantity.includes(".")){
+		$("#edit-inventory-modal").modal("show");
+		sendAlert("Please enter a valid quantity");
+		return;
+	}
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
@@ -106,9 +124,14 @@ function updateInventory(event){
        },	   
 	   success: function(response) {
 		sendAlert("Inventory updated successfully");
+		$("#edit-inventory-modal").modal("hide");
 	   		getInventoryList();   
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+		handleAjaxError(response)
+		$("#edit-inventory-modal").modal("show");
+	   }
+	   
 	});
 	return false;
 }
@@ -161,7 +184,6 @@ async function uploadRows(){
 			$("#upload-inventory-modal").modal('toggle');
 		}
 			getInventoryList();
-		
 		return;
 	}
 	
@@ -184,6 +206,23 @@ async function uploadRows(){
 	// Object.keys(tempObj).reduce(()=>{
 
 	// },{})
+
+
+	let quan=parseInt(row.Quantity);
+	
+
+	if(row.Quantity!=quan)
+	{
+		row.error = "Quantity is not valid";
+	   		errorData.push(row);
+	   		uploadRows();
+			return;
+	}
+	// if((qn.matches("[0-9]+")==false))
+	// {
+
+		
+	// }
 
 	var barcode=row.Barcode;
 
@@ -213,7 +252,6 @@ async function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-			sendAlert("Errors are there in the file");
 			row.error = JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();

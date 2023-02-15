@@ -89,13 +89,22 @@ public class BrandDto {
 
     // noramlization of brand
     public void normalizeBrand(BrandForm p) {
-        p.setBrandName(StringUtil.toLowerCase(p.getBrandName()));
-        p.setBrandCategory(StringUtil.toLowerCase(p.getBrandCategory()));
+        p.setBrandName(p.getBrandName().toLowerCase().trim());
+        p.setBrandCategory(p.getBrandCategory().toLowerCase().trim());
     }
 
 
     // validation of brand
     public void validation(BrandForm p) throws ApiException {
+        if(p.getBrandName().length()>15)
+        {
+            throw new ApiException("Brand Name cannot be so long");
+        }
+        if(p.getBrandCategory().length()>15)
+        {
+            throw new ApiException("Category Name cannot be so long");
+        }
+
         if (StringUtil.isEmpty(p.getBrandName())) {
             throw new ApiException("Brand cannot be empty");
         }

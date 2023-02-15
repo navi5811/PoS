@@ -144,7 +144,6 @@ function uploadRows() {
 			uploadRows();
 		},
 		error: function (response) {
-			sendAlert("Errors are there in the file");
 			row.error = JSON.parse(response.responseText).message;
 			errorData.push(row);
 			uploadRows();

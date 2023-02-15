@@ -312,15 +312,22 @@ function getOrderItemList(id, invoice) {
   });
 }
 
-function deleteOrderItem(id) {
+function deleteOrderItem(id , orderId , invoice) {
   var url = getOrderUrl() + "/item/" + id;
-
+  
+  console.log(id);
+  console.log(orderId);
   $.ajax({
     url: url,
     type: "DELETE",
     success: function (data) {
-      getOrderItemList(id);
-      getOrderList();
+      sendAlert("OrderItem deleted successfully");
+      // $("#order-display-modal").modal("toggle");
+      // $("#order-display-modal").modal("toggle");
+      getOrderItemList(orderId,invoice);
+      $("#order-display-modal").show();
+
+      // getOrderList();
     },
     error: function (response) {
       handleAjaxError(response);
@@ -382,8 +389,11 @@ function displayOrderItem(data, invoice) {
   for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
 
+    console.log(e.id);
     var buttonHtml =
-      ' <button class="edit-button btn btn-primary btn-sm" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>';
+      ' <button class="edit-button btn btn-primary btn-sm mr-2" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
+      
+      buttonHtml += '<button type="button" class="delete-orderItem btn btn-danger btn-sm"title="Delete" style="display:none" onclick="deleteOrderItem(' + e.orderItemId + "," + e.id + ","+ invoice +")\">delete</button>";
     var row =
       "<tr>" +
       "<td>" +
@@ -405,9 +415,12 @@ function displayOrderItem(data, invoice) {
   if (invoice == false) {
     $("#action-button").show();
     $(".edit-button").show();
+    $(".delete-orderItem").show();
+
     // $(".edit-button").html("Generate Invoice");
   }
-  $("#order-display-modal").modal("toggle");
+  $("#order-display-modal").modal('show');
+
 }
 
 function displayOrderItemListAdd(data) {

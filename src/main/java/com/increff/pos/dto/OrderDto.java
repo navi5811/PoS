@@ -189,6 +189,16 @@ public class OrderDto {
 	//deleting an order item
 	@Transactional
 	public void delete(Integer id) throws ApiException {
+
+
+		OrderItemData orderItemData= getOrderItemDetails(id);
+		Integer orderId=orderItemData.getId();
+		List<OrderItemData> orderItemDataList=getOrderItemByOrderId(orderId);
+		if(orderItemDataList.size()==1)
+		{
+			throw new ApiException("Order Item cannot be deleted as minimun 1 order is required");
+		}
+
 		increaseInventory(orderservice.delete(id));
 	}
 
