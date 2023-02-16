@@ -1,7 +1,5 @@
 package com.increff.pos.controller;
 
-import java.util.List;
-
 import com.increff.pos.dto.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import com.increff.pos.service.ApiException;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
-public class InitApiController extends AbstractUiController {
+public class SignupApiController extends AbstractUiController {
 
     @Autowired
     private InfoData info;

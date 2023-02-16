@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @Configuration
-@ComponentScan("com.increff.pos")
+@ComponentScan("com.increff.pos")//to specify the packages that we want to be scanned
 @PropertySources({ //
 		@PropertySource(value = "file:./pos.properties", ignoreResourceNotFound = true) //
 })

@@ -135,10 +135,6 @@ public class OrderService {
     @Transactional(rollbackFor = ApiException.class)
     public OrderPojo checkIfExistsOrder(Integer id) {
         OrderPojo p = orderDao.select(id);
-        if(p==null)
-        {
-            System.out.println("error found" + id);
-        }
         return p;
     }
 

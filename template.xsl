@@ -53,7 +53,7 @@
                                             </fo:table-cell>
                                             <fo:table-cell  text-align="center" padding-right="3pt" background-color="#f5f5f5" border="1px solid #b8b6b6" >
                                               <fo:block padding="1mm">
-                                                <xsl:value-of select="billAmount" />
+                                                <xsl:value-of select="format-number(billAmount,'#.00')" />
                                               </fo:block>
                                             </fo:table-cell>
                                           </fo:table-row>
@@ -82,13 +82,13 @@
             </fo:table-cell>
             <fo:table-cell border="1px solid #b8b6b6" text-align="center">
                 <fo:block padding="1mm">
-                    <xsl:value-of select="productSellingPrice"/>
+                    <xsl:value-of select="format-number(productSellingPrice,'#.00')"/>
                 </fo:block>
             </fo:table-cell>
 
             <fo:table-cell border="1px solid #b8b6b6" text-align="center">
                 <fo:block padding="1mm">
-                    <xsl:value-of select="(productQuantity * productSellingPrice)"/>
+                    <xsl:value-of select="format-number(productQuantity * productSellingPrice, '#.00')"/>
                 </fo:block>
             </fo:table-cell>
         </fo:table-row>

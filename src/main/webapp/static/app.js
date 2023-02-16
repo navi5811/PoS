@@ -2,7 +2,6 @@
 //HELPER METHOD
 function toJson($form) {
     var serialized = $form.serializeArray();
-    console.log(serialized);
     var s = '';
     var data = {};
     for (s in serialized) {
@@ -32,7 +31,6 @@ function handleJsError(message)
 {
     sendAlert(message);
     throw new Error(message);
-    
 }
 
 function readFileData(file, callback) {
@@ -44,7 +42,7 @@ function readFileData(file, callback) {
             callback(results);
             $("#process-data").hide();
             $("#download-errors").show();
-            sendAlert("Error in file is there");
+            sendAlert("Error in file is there Please re-upload after reconsutruction");
             $("#error-row").show();
         }
     }
@@ -63,8 +61,25 @@ function sendAlert(message) {
         },
         onClick: function () { } // Callback after click
     }).showToast();
+}
+
+function successAlert(message) {
+    Toastify({
+        text: message,
+        duration: 2000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: "linear-gradient(to right, #228B22, #ADFF2F)",   
+        },
+        onClick: function () { } // Callback after click
+    }).showToast();
 
 }
+
+
 function writeFileData(arr) {
     var config = {
         quoteChar: '',

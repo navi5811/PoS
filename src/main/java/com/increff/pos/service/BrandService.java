@@ -35,7 +35,6 @@ public class BrandService {
 
     @Transactional
     public void updateBrand(Integer id, BrandPojo p) {
-
         BrandPojo ex = getBrand(id);
         ex.setBrandName(p.getBrandName());
         ex.setBrandCategory(p.getBrandCategory());

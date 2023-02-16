@@ -21,11 +21,11 @@
 					data-toggle="modal"><i class="bi bi-plus-lg"></i> Add</button>
 
 				&nbsp;
-				<button type="button" class="btn btn-secondary btn-sm" id="upload-data"><i class="bi bi-upload"></i>
+				<button type="button" class="btn btn-success btn-sm" id="upload-data"><i class="bi bi-upload"></i>
 					Upload</button>
 
 				&nbsp;
-				<button type="button" class="btn btn-dark btn-sm" id="refresh-data"><i
+				<button type="button" class="btn btn-secondary btn-sm" id="refresh-data"><i
 						class="bi bi-arrow-clockwise"></i>
 					Refresh</button>
 
@@ -85,7 +85,7 @@
 
 							<div class="form-group required col-md-12">
 								<label for="inputProductQuantity" class="control-label"><h6>Quantity</h6></label>
-								<input type="number" class="form-control w-100" name="productQuantity"
+								<input type="number" class="form-control w-100" min="0" step="1" name="productQuantity" oninput="validity.valid||(value='');"
 									id="inputProductQuantity" placeholder="Enter Quantity">
 							</div>
 						</form>

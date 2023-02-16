@@ -44,7 +44,6 @@ public class ReportDto {
     @Autowired
     private OrderService orderservice;
 
-    private static Logger logger = LogManager.getLogger(ReportDto.class);
 
     @Transactional
     public List<BrandData> getAllBrand() throws ApiException {
@@ -61,7 +60,6 @@ public class ReportDto {
     public List<ReportInventoryData> getInventoryReport() throws ApiException {
 
         List<BrandPojo> list = brandservice.getAllBrand();
-        System.out.println("size of brand list is"+ list.size());
         List<ReportInventoryData> rid = new ArrayList<ReportInventoryData>();
         for (BrandPojo bp : list) {
             Integer number = 0;
@@ -71,7 +69,6 @@ public class ReportDto {
 
             for (ProductPojo productpojo : pp) {
                 InventoryPojo ip = inventoryservice.getInventory(productpojo.getProductId());
-                System.out.println("invetory pojo quantity is " + ip.getProductQuantity());
                 number += ip.getProductQuantity();
             }
 
@@ -81,7 +78,6 @@ public class ReportDto {
 
             rid.add(rd);
         }
-        System.out.println("just exiting");
         return rid;
     }
 
@@ -94,8 +90,6 @@ public class ReportDto {
         String category = form.getCategory();
         SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
 
-
-        logger.error("start date is " + startDate);
         Date enDate;
         //this is for comparison that if start date is entered as all, then we will consider it as null
         List<ReportSalesData> rsd = new ArrayList<ReportSalesData>();
@@ -111,22 +105,6 @@ public class ReportDto {
             enDate = formatter2.parse(endDate);
         }
         Date stDate = formatter2.parse(startDate);
-        logger.error("start date is " + stDate);
-        logger.error("end date is " + enDate);
-//		enDate.setHours(23);
-//		enDate.setMinutes(59);
-//		enDate.setSeconds(59);
-
-        logger.error("end date again is " + enDate);
-
-        logger.error("value of brand is  " + brand);
-
-        logger.error("value of category is  " + category);
-
-//        if (stDate.compareTo(enDate) > 0) {
-//            throw new ApiException("start Date must be less than end date");
-//        }
-
 
         List<OrderPojo> orderList = orderservice.getAllBetween(stDate, enDate);
 

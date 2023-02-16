@@ -5,8 +5,8 @@ function getSalesUrl() {
 }
 
 function getBrandUrl() {
-	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/brand";
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/brand";
 }
 
 //function for sorting the table
@@ -33,7 +33,7 @@ function displaySalesList(data) {
             + '<td>' + e.brand + '</td>'
             + '<td>' + e.category + '</td>'
             + '<td>' + e.quantity + '</td>'
-            + '<td>' + e.totalAmount + '</td>'
+            + '<td>' + parseFloat(e.totalAmount).toFixed(2) + '</td>'
             + '</tr>';
         $tbody.append(row);
     }
@@ -41,10 +41,8 @@ function displaySalesList(data) {
 function getList() {
     //Set the values to update
     var $form = $("#sales-form");
-    console.log($form)
     var json = toJson($form);
     var url = getSalesUrl();
-    console.log(url);
     $.ajax({
         url: url,
         type: 'POST',
@@ -54,7 +52,7 @@ function getList() {
         },
         success: function (response) {
             displaySalesList(response);
-            
+
         },
         error: handleAjaxError
     });
@@ -64,7 +62,6 @@ function getList() {
 
 
 function updateBrandOptions(data) {
-    console.log("data is ",data);
     var $selectBrandCategoryName = $("#inputBrandCategory");
     $selectBrandCategoryName.empty();
 
@@ -84,7 +81,7 @@ function updateBrandOptions(data) {
         names.add(brandDetails.brandName);
         categories.add(brandDetails.brandCategory);
     }
-    
+
 
     for (brandCategory of categories.values()) {
         var option1 = $('<option></option>').attr("value", brandCategory).text(brandCategory);
@@ -98,26 +95,27 @@ function updateBrandOptions(data) {
 }
 
 function getBrandList() {
-	var url = getBrandUrl();
-	$.ajax({
-		url: url,
-		type: 'GET',
-		success: function (data) {
-			updateBrandOptions(data);
-		},
-		error: handleAjaxError
-	});
+    var url = getBrandUrl();
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            updateBrandOptions(data);
+        },
+        error: handleAjaxError
+    });
 }
-function datefunction(){
+function datefunction() {
     var $form = $("#sales-form");
     var json = toJson($form);
-    document.getElementById("inputEndDate").min=JSON.parse(json).startDate;
+    // document.getElementById("inputStartDate").max = new Date().toISOString().split('T')[0];
+    // document.getElementById("inputEndDate").max = new Date().toISOString().split('T')[0]
+    document.getElementById("inputEndDate").min = JSON.parse(json).startDate;
 }
-function endDatefunction()
-{
+function endDatefunction() {
     var $form = $("#sales-form");
     var json = toJson($form);
-    document.getElementById("inputStartDate").max=JSON.parse(json).endDate;
+    document.getElementById("inputStartDate").max = JSON.parse(json).endDate;
 }
 
 function init() {
@@ -125,7 +123,8 @@ function init() {
     getBrandList();
     $("#get-sales").click();
     $("#get-sales").click(getList);
-    // inputEndDate.max=new Date().toISOString().split('T')[0]
+    document.getElementById("inputStartDate").max  = new Date().toISOString().split('T')[0];
+    document.getElementById("inputEndDate").max = new Date().toISOString().split('T')[0];
     $("#inputStartDate").change(datefunction);
     $("#inputEndDate").change(endDatefunction);
 }

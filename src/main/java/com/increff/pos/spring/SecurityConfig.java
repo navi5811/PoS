@@ -27,21 +27,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/ui/**")//
 				.and().authorizeRequests()//
 
+				//order has access of both supervisor and operator
 				.antMatchers(HttpMethod.POST,"/api/order/**").hasAnyAuthority("supervisor","operator")//
 				.antMatchers(HttpMethod.PUT,"/api/order/**").hasAnyAuthority("supervisor","operator")//
 
-//				.antMatchers(HttpMethod.POST,"/site/init/**").hasAnyAuthority("supervisor","operator")//
-//				.antMatchers(HttpMethod.PUT,"/site/init/**").hasAnyAuthority("supervisor","operator")//
 
 				.antMatchers(HttpMethod.POST,"/api/**").hasAuthority("supervisor")//
 				.antMatchers(HttpMethod.PUT,"/api/**").hasAuthority("supervisor")//
+
+				//reports are accessed only by supervisor
+				.antMatchers(HttpMethod.GET,"/api/report/**").hasAuthority("supervisor")//
+				.antMatchers(HttpMethod.POST,"/api/report/**").hasAuthority("supervisor")//
+
 				.antMatchers("/api/**").hasAnyAuthority("supervisor", "operator")//
 				.antMatchers("/ui/**").hasAnyAuthority("supervisor", "operator")//
+				.and()
+				.formLogin()
+				.loginPage("/site/login")
 
 
-				// Ignore CSRF and CORS
+				// Ignore CSRF and CORS used for stopping cross region requests
 				.and().csrf().disable().cors().disable();
-		logger.info("Configuration complete");
 	}
 
 	@Override

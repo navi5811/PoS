@@ -1,6 +1,7 @@
 var closeinv;
 var closeid;
-var edit=true;
+var edit = true;
+var availableQuantity;
 function getOrderUrl() {
   var baseUrl = $("meta[name=baseUrl]").attr("content");
   return baseUrl + "/api/order";
@@ -15,14 +16,13 @@ var order = [];
 
 function editOrderRow(event) {
   $('#form-barcode').attr('readonly', false);
-  console.log("inside Edit");
   event.preventDefault();
   var $form = $("#order-add-form");
   var json = toJson($form);
   var orderItem = JSON.parse(json);
 
   var barcode = orderItem.productBarcode;
-  var status= false;
+  var status = false;
 
   var url = getInventoryUrl() + "/" + barcode;
 
@@ -30,13 +30,10 @@ function editOrderRow(event) {
     url: url,
     type: "GET",
     success: function (data) {
-      console.log("entering display inventory");
-
       var orderedQuantity = orderItem.productQuantity;
 
       var availableQuantity = data.productQuantity;
 
-      console.log(availableQuantity);
       if (orderedQuantity > availableQuantity) {
         status = true;
         sendAlert("Order quantity cannot be greater than available quantity");
@@ -45,46 +42,35 @@ function editOrderRow(event) {
         status = true;
         sendAlert("order selling price must be less than MRP");
       }
-
-      console.log(availableQuantity);
-
     },
     error: function (data) {
-      console.log("why this error is occuring");
       status = true;
       sendAlert("barcode is not available");
     },
   }).then(function () {
-    console.log(status);
     if (orderItem.productQuantity <= 0) {
       sendAlert("Quantity should be greater than 0");
       status = true;
     }
-    if(orderItem.productSellingPrice < 0)
-    {
+    if (orderItem.productSellingPrice < 0) {
       sendAlert("Selling price should be greater than or equal to 0");
       status = true;
     }
     var k = 0;
     for (var p in order) {
-      console.log("producrtbarcode is ", order[k].productBarcode);
-      
 
-      console.log("inside Edit");
-      if (order[k].productBarcode == orderItem.productBarcode && status==false) {
+      if (order[k].productBarcode == orderItem.productBarcode && status == false) {
 
-        order[k].productSellingPrice=parseInt(orderItem.productSellingPrice);
-        console.log(orderItem.productQuantity);
-       
-          order[k].productQuantity = parseInt(orderItem.productQuantity);
-        
+        order[k].productSellingPrice = parseInt(orderItem.productSellingPrice);
+
+        order[k].productQuantity = parseInt(orderItem.productQuantity);
+
         cancelButton();
       }
       k++;
     }
     if (status == false) {
       $("#order-add-form").trigger("reset");
-      console.log(order);
       displayOrderItemListAdd(order);
     }
   });
@@ -92,7 +78,6 @@ function editOrderRow(event) {
 
 
 function addOrderItem(event) {
-  console.log("inside add");
   event.preventDefault();
   var $form = $("#order-add-form");
   var json = toJson($form);
@@ -109,15 +94,12 @@ function addOrderItem(event) {
     url: url,
     type: "GET",
     success: function (data) {
-      console.log("entering display inventory");
-
       var orderedQuantity = orderItem.productQuantity;
-
-      var availableQuantity = data.productQuantity;
+      availableQuantity = data.productQuantity;
 
       if (orderedQuantity > availableQuantity) {
         flag = true;
-        sendAlert("Order quantity cannot be greater than available quantity");
+        sendAlert("Order quantity cannot be greater than available quantity :" + availableQuantity);
       }
       if (orderItem.productSellingPrice > data.mrp) {
         flag = true;
@@ -128,7 +110,6 @@ function addOrderItem(event) {
 
     },
     error: function (data) {
-      console.log("why this error is occuring");
       flag = true;
       sendAlert("barcode is not available");
     },
@@ -137,15 +118,12 @@ function addOrderItem(event) {
       sendAlert("Quantity should be greater than 0");
       flag = true;
     }
-    if(orderItem.productSellingPrice < 0)
-    {
+    if (orderItem.productSellingPrice < 0) {
       sendAlert("Selling price should be greater than or equal to 0");
       flag = true;
     }
     var k = 0;
     for (var p in order) {
-      console.log("producrtbarcode is ", order[k].productBarcode);
-      console.log("orderitem barcode", orderItem.productBarcode);
       if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice != orderItem.productSellingPrice) {
         flag = true;
         sendAlert("same barcode product cannot be entered again");
@@ -153,12 +131,19 @@ function addOrderItem(event) {
 
       else if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice == orderItem.productSellingPrice) {
         order[k].productQuantity = parseInt(orderItem.productQuantity) + parseInt(order[k].productQuantity);
-        
-        
-          $("#order-add-form").trigger("reset");
-          if(flag==false)
+
+
+        $("#order-add-form").trigger("reset");
+
+
+
+        if (order[k].productQuantity < availableQuantity) {
+
           displayOrderItemListAdd(order);
-          flag = true;
+        }
+        if(order[k].productQuantity > availableQuantity)
+       { sendAlert("Order quantity exceeded the available quantity :" + availableQuantity);}
+        flag = true;
       }
       k++;
     }
@@ -166,9 +151,8 @@ function addOrderItem(event) {
     if (flag == false) {
       order.push(orderItem);
       $("#order-add-form").trigger("reset");
-      console.log(order);
       displayOrderItemListAdd(order);
-    } 
+    }
 
   });
 }
@@ -181,10 +165,6 @@ function cancelOrder(event) {
 
 function addOrder(event) {
   var url = getOrderUrl();
-  console.log("submit order");
-  console.log(JSON.stringify(order));
-  console.log("order : ", order);
-
   $.ajax({
     url: url,
     type: "POST",
@@ -193,7 +173,7 @@ function addOrder(event) {
       "Content-Type": "application/json",
     },
     success: function (response) {
-      sendAlert("Order placed successfully");
+      successAlert("Order placed successfully");
       order = [];
       getOrderList();
       $("#order-add-form").trigger("reset");
@@ -201,18 +181,14 @@ function addOrder(event) {
       $("#orderitemadd-table tbody").empty();
     },
     error: function (response) {
-      console.log("entered error");
       handleAjaxError(response);
     },
   });
   return false;
 }
 
-function getInvoice(id) {
-
-  console.log("entered invoice");
+function getInvoice(id, invoice) {
   var url = getOrderUrl() + "/invoice/" + id;
-  console.log(url);
   $.ajax({
     url: url,
     type: "GET",
@@ -228,10 +204,20 @@ function getInvoice(id) {
         }
         return bytes;
       }
+      if (invoice == false) {
+        successAlert("Invocie generated successfully");
+      }
 
-      var blob = new Blob([arrayBuffer], { type: "application/pdf" });
-      var link = window.URL.createObjectURL(blob);
-      window.open(link, "");
+      if (invoice == true) {
+        var blob = new Blob([arrayBuffer], { type: "application/pdf" });
+        var link = window.URL.createObjectURL(blob);
+        var downloadLink = document.createElement("a");
+        downloadLink.href = link;
+        var name = "invoice" + id;
+        downloadLink.download = name;
+        downloadLink.click();
+        downloadLink.remove();
+      }
       getOrderList();
 
     },
@@ -267,6 +253,7 @@ function updateOrderItem(event) {
       "Content-Type": "application/json",
     },
     success: function (response) {
+      successAlert("OrderItem edited successfully");
       $("#edit-orderitem-modal").modal("hide");
       // getOrderItemList(orderId);
 
@@ -284,39 +271,32 @@ function updateOrderItem(event) {
   return false;
 }
 function getOrderList() {
-  console.log("getting order list");
   var url = getOrderUrl();
   $.ajax({
     url: url,
     type: "GET",
     success: function (data) {
       displayOrderList(data);
-      console.log(data);
     },
     error: handleAjaxError,
   });
 }
 
 function getOrderItemList(id, invoice) {
-  console.log("invoice is", invoice);
-  console.log("getting order item list");
   var url = getOrderUrl() + "/" + id;
   $.ajax({
     url: url,
     type: "GET",
     success: function (data) {
       displayOrderItem(data, invoice);
-      console.log(data);
     },
     error: handleAjaxError,
   });
 }
 
-function deleteOrderItem(id , orderId , invoice) {
+function deleteOrderItem(id, orderId, invoice) {
   var url = getOrderUrl() + "/item/" + id;
-  
-  console.log(id);
-  console.log(orderId);
+
   $.ajax({
     url: url,
     type: "DELETE",
@@ -324,7 +304,7 @@ function deleteOrderItem(id , orderId , invoice) {
       sendAlert("OrderItem deleted successfully");
       // $("#order-display-modal").modal("toggle");
       // $("#order-display-modal").modal("toggle");
-      getOrderItemList(orderId,invoice);
+      getOrderItemList(orderId, invoice);
       $("#order-display-modal").show();
 
       // getOrderList();
@@ -336,7 +316,6 @@ function deleteOrderItem(id , orderId , invoice) {
 }
 
 function deleteRow(data) {
-  console.log(data);
   order = order.filter((item) => {
     return item.productBarcode !== data;
   });
@@ -348,12 +327,14 @@ function displayOrderList(data) {
   $tbody.empty();
   for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
+
+
     var date = new Date(e.datetime);
     date = date.toLocaleString();
     var invoice = e.invoiced;
-    value = '<button type="button" id="button-invoice" class="btn btn-info btn-sm" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-download"></i> Download Invoice</button>';
+    value = '<button type="button" id="button-invoice" class="btn btn-info btn-sm" onclick="getInvoice(' + e.orderId + "," + invoice + ')"><i class="bi bi-download"></i> Download Invoice</button>';
     if (invoice == false) {
-      var value = '<button type="button" id="button-invoice" class="btn btn-success btn-sm" onclick="getInvoice(' + e.orderId + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
+      var value = '<button type="button" id="button-invoice" class="btn btn-success btn-sm" onclick="getInvoice(' + e.orderId + "," + invoice + ')"><i class="bi bi-receipt"></i> Generate Invoice</button>';
     }
     var buttonHtml =
       ' <button type="button" class="btn btn-primary btn-sm mr-2" onclick="getOrderItemList(' + e.orderId + "," + invoice + ')"><i class="bi bi-eye"></i> View</button>';
@@ -367,14 +348,13 @@ function displayOrderList(data) {
       date +
       "</td>" +
       "<td>" +
-      e.billAmount +
+      parseFloat(e.billAmount).toFixed(2) +
       "</td>" +
       "<td>" +
       buttonHtml +
       "</td>" +
       "</tr>";
     $tbody.append(row);
-    console.log("invoice is ", invoice);
   }
 }
 //edited the button edit// class="btn text-bodye" data-toggle="tooltip" title="Edit"
@@ -385,15 +365,13 @@ function displayOrderItem(data, invoice) {
   if (invoice == true) {
     $("#action-button").hide();
   }
-  console.log("dataaa : ", data);
   for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
 
-    console.log(e.id);
     var buttonHtml =
-      ' <button class="edit-button btn btn-primary btn-sm mr-2" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')"><i class="bi bi-pencil-square"></i> Edit</button>'
-      
-      buttonHtml += '<button type="button" class="delete-orderItem btn btn-danger btn-sm"title="Delete" style="display:none" onclick="deleteOrderItem(' + e.orderItemId + "," + e.id + ","+ invoice +")\">delete</button>";
+      ' <button class="edit-button btn btn-primary btn-sm mr-2" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')">Edit</button>'
+
+    buttonHtml += '<button type="button" class="delete-orderItem btn btn-danger btn-sm"title="Delete" style="display:none" onclick="deleteOrderItem(' + e.orderItemId + "," + e.id + "," + invoice + ")\">Delete</button>";
     var row =
       "<tr>" +
       "<td>" +
@@ -406,7 +384,8 @@ function displayOrderItem(data, invoice) {
       e.productQuantity +
       "</td>" +
       "<td>" +
-      e.productSellingPrice +
+      parseFloat(e.productSellingPrice).toFixed(2)
+      +
       "</td>" +
       "<td>" +
       buttonHtml + "</td>" + "</tr>";
@@ -433,13 +412,13 @@ function displayOrderItemListAdd(data) {
     var buttonHtml =
       '<button type="button" class="btn btn-danger btn-sm mr-2" title="Delete" onclick="deleteRow(\'' +
       e.productBarcode +
-      "')\">delete</button>"
+      "')\">Delete</button>"
     buttonHtml += '<button type="button" class="btn btn-primary btn-sm" title="Delete" onclick="editRow(\'' + e.productBarcode + "')\">Edit</button>";
     var row = "<tr>" +
       "<td>" + serial + "</td>" +
       "<td>" + e.productBarcode + "</td>" +
       "<td>" + e.productQuantity + "</td>" +
-      "<td>" + e.productSellingPrice + "</td>" +
+      "<td>" +parseFloat(e.productSellingPrice).toFixed(2) + "</td>" +
       "<td>" + buttonHtml + "</td>" +
       "</tr>";
     $tbody.append(row);
@@ -454,28 +433,25 @@ function editRow(barcode, data) {
   $("#submit-order").hide();
   $("#edit-cart-button").removeClass('d-none');
   $("#cancel-orderItem").removeClass('d-none');
-  console.log("help");
-  console.log(data);
-  console.log(order[0]);
   var quantity;
   var sp;
   var k = 0;
   for (var p in order) {
     if (order[k].productBarcode == barcode) {
-      quantity=order[k].productQuantity;
-      sp=order[k].productSellingPrice;
+      quantity = order[k].productQuantity;
+      sp = order[k].productSellingPrice;
     }
     k++;
-}
-sendData(barcode,quantity,sp)
-}
-  function sendData(barcode,quantity,sp){
-    $("#edit-cart-button").show();
-    $("#cancel-orderItem").show();
-    $("#order-add-form input[name=productBarcode]").val(barcode);
-	  $("#order-add-form input[name=productQuantity]").val(quantity);
-	  $("#order-add-form input[name=productSellingPrice]").val(sp);
   }
+  sendData(barcode, quantity, sp)
+}
+function sendData(barcode, quantity, sp) {
+  $("#edit-cart-button").show();
+  $("#cancel-orderItem").show();
+  $("#order-add-form input[name=productBarcode]").val(barcode);
+  $("#order-add-form input[name=productQuantity]").val(quantity);
+  $("#order-add-form input[name=productSellingPrice]").val(sp);
+}
 
 
 function displayEditOrderItem(id, invoice) {
@@ -492,7 +468,6 @@ function displayEditOrderItem(id, invoice) {
 }
 
 function displayOrderItemEdit(data, invoice) {
-  console.log("dataa : ", data);
   $("#order-edit-form input[name=productBarcode]").val(data.productBarcode);
   $("#productBarcode").html("" + data.productBarcode);
   $("#mrp").html("" + data.mrp);
@@ -516,14 +491,13 @@ function addButton() {
   $("#submit-order").show();
   document.getElementById("edit-cart-button").classList.add("d-none");
   document.getElementById("cancel-orderItem").classList.add("d-none");
-  for (var member in order)
-  { delete order[member];}
+  for (var member in order) { delete order[member]; }
 }
 function close() {
   $("#edit-orderitem-modal").modal("hide");
   getOrderItemList(closeid, closeinv);
 }
-function cancelButton(){
+function cancelButton() {
   $('#form-barcode').attr('readonly', false);
   $("#order-add-form").trigger("reset");
   document.getElementById("edit-cart-button").classList.add("d-none");
@@ -535,7 +509,7 @@ function cancelButton(){
 function init() {
   getOrderList();
   $("#cancel-orderItem").click(cancelButton);
-  
+
   $("#edit-cart-button").click(editOrderRow);
 
   $("#add-button").click(addButton);

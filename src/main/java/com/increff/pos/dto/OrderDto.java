@@ -4,10 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
@@ -47,8 +44,15 @@ public class OrderDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderData createOrder(List<OrderItemForm> forms) throws ApiException {
 		List<OrderItemPojo> orderItemList = new ArrayList<OrderItemPojo>();
+		Set<String> hash_Set = new HashSet<String>();
 		for (OrderItemForm f : forms) {
 			normalize(f.getProductBarcode());
+			if(hash_Set.contains(f.getProductBarcode())){
+
+				throw new ApiException("Cannot add same barcode again");
+			}
+			hash_Set.add(f.getProductBarcode());
+
 			ProductPojo p = productservice.findProduct(f.getProductBarcode());
 			if(p==null)
 			{
@@ -63,7 +67,7 @@ public class OrderDto {
 			throw new ApiException("Order List cannot be empty");
 		}
 
-		Integer orderId = orderservice.createOrder(orderItemList);
+
 
 		for (OrderItemPojo oip : orderItemList) {
 			ProductPojo productPojo = productservice.findProduct(oip.getOrderProductId());
@@ -73,6 +77,7 @@ public class OrderDto {
 			updateInventory(oip);
 		}
 
+		Integer orderId = orderservice.createOrder(orderItemList);
 		Double total = orderservice.billTotal(orderId);
 		return convertOrderPojo(orderservice.getOrder(orderId), total);
 	}
@@ -111,7 +116,7 @@ public class OrderDto {
 		return Base64.getEncoder().encodeToString(contents);
 	}
 
-	// Fetching an Order item by id
+	// Fetching an Order item by orderItemId
 	@Transactional
 	public OrderItemData getOrderItemDetails(Integer id) throws ApiException {
 		checkIfExists(id);
@@ -124,33 +129,21 @@ public class OrderDto {
 
 	}
 
+	//gets the list of all order items
 	@Transactional
 	public List<OrderItemData> getAllOrderItems(List<OrderItemPojo> od) throws ApiException {
 
-		System.out.println("inside get all order items ");
 		List<OrderItemData> d = new ArrayList<OrderItemData>();
 		for (OrderItemPojo orderItemPojo : od) {
 			ProductPojo productPojo = productservice.findProduct(orderItemPojo.getOrderProductId());
-			if (productPojo == null) {
-				System.out.println("error in product pojo");
-			}
-
 			OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
-			if (orderPojo == null)
-			{
-				System.out.println("error in orderpojo");
-			}
 			InventoryPojo inventoryPojo = inventoryservice.findInventory(productPojo.getProductId());
-			if(inventoryPojo==null)
-			{
-				System.out.println("error in inventory pojo");
-			}
-			System.out.println("got all the pojos just about to covert ");
 			d.add(convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
 		}
 		return d;
 	}
 
+	//gets the list of all orders
 	@Transactional
 	public List<OrderData> getAllOrders() throws ApiException {
 		List<OrderPojo> orders_list = orderservice.getAllOrders();
@@ -162,6 +155,7 @@ public class OrderDto {
 		return list1;
 	}
 
+	//gets the list of orderitems in a particular order
 	@Transactional
 	public List<OrderItemData> getOrderItemByOrderId(Integer id) throws ApiException {
 		checkIfExistsOrder(id);
@@ -176,21 +170,15 @@ public class OrderDto {
 		return d;
 	}
 
-	// Calculate Total
-
-//
-//		// Fetching all order items
+// Fetching all order items
 	@Transactional
 	public List<OrderItemPojo> getAll() {
-		System.out.println("inside get all orders");
 		return orderservice.getAll();
 	}
 
 	//deleting an order item
 	@Transactional
 	public void delete(Integer id) throws ApiException {
-
-
 		OrderItemData orderItemData= getOrderItemDetails(id);
 		Integer orderId=orderItemData.getId();
 		List<OrderItemData> orderItemDataList=getOrderItemByOrderId(orderId);
@@ -216,13 +204,39 @@ public class OrderDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateOrderItem(Integer id, OrderItemForm f) throws ApiException {
+
+		OrderItemPojo oip=orderservice.get(id);
+		if(oip==null)
+		{
+			throw new ApiException("OrderItem Id does not exist");
+		}
+		ProductPojo p=productservice.findProduct(oip.getOrderProductId());
+
+
+
 		ProductPojo productPojo = productservice.findProduct(f.getProductBarcode());
+
+
+
+		if(productPojo==null)
+		{
+			throw new ApiException("invalid barcode");
+		}
+
+		if(!p.getProductBarcode().equals(f.getProductBarcode()))
+		{
+			throw new ApiException("Barcode is not Editable");
+		}
 
 		//orderItem pojo that is received through edit form
 		OrderItemPojo orderItemPojo = convertOrderItemForm(f, productPojo);
 
 		//orderItem pojo that is get from backend through id
-		OrderItemPojo oip=orderservice.get(id);
+
+
+
+
+
 		//quantity that is present in the order already
 		 Integer quantity=oip.getOrderQuantity();
 
@@ -230,6 +244,7 @@ public class OrderDto {
 
 		Integer orderId=oip.getOrderId();
 		OrderPojo op=orderservice.getOrder(orderId);
+
 		if(op.isInvoiced()==true)
 		{
 			throw new ApiException("Order Item can't be edited");
@@ -343,7 +358,7 @@ public class OrderDto {
 	}
 
 	public void normalize(String barcode) {
-		StringUtil.toLowerCase(barcode);
+		barcode.toLowerCase().trim();
 	}
 
 	public static OrderItemPojo convertOrderItemForm(OrderItemForm orderItemForm, ProductPojo productPojo) {
@@ -359,8 +374,8 @@ public class OrderDto {
 	public static OrderData convertOrderPojo(OrderPojo pojo, Double total) {
 		OrderData d = new OrderData();
 		d.setOrderId(pojo.getOrderId());
-//			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-//			String datetime = dateFormat.format(pojo.getDate());
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			String datetime = dateFormat.format(pojo.getDate());
 		d.setDatetime(pojo.getDate());
 		d.setBillAmount(total);
 		d.setInvoiced(pojo.isInvoiced());

@@ -18,7 +18,7 @@ function addUser(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
-			sendAlert("user sign up done suceesfully you can login now");
+			sendAlert("user sign up done sucessfully you can login now");
 			location.href="http://localhost:9000/pos/site/login";
 		},
 		error: handleAjaxError

@@ -31,17 +31,18 @@ public class ProductDto {
 	@Autowired
 	private InventoryService inventoryservice;
 
+	//adds a product
 	@Transactional(rollbackOn = ApiException.class)
 	public void addProduct(ProductForm f) throws ApiException {
-
+		normalizeProduct(f);
 		ProductPojo p = convert(f);
-		normalizeProduct(p);
 		validateProduct(p);
 		productservice.addProduct(p);
 		InventoryPojo inv = new InventoryPojo(p.getProductId(), 0);
 		inventoryservice.addInventory(inv);
 	}
 
+	//gets the list of all the prducts in the database
 	@Transactional
 	public List<ProductData> getAllProduct() throws ApiException {
 
@@ -53,15 +54,22 @@ public class ProductDto {
 		return list2;
 	}
 
+	//updates a product or say edit a product
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(Integer id, ProductForm f) throws ApiException {
 
+		normalizeProduct(f);
 		ProductPojo p = convert(f);
-		normalizeProduct(p);
-
 		validateEditProduct(p);
 		ProductPojo ex = productservice.findProduct(id);
-
+		if(!ex.getProductBarcode().equals(f.getProductBarcode()))
+		{
+			throw new ApiException("Barcode is not editable ");
+		}
+		if(!ex.getProductName().equals(f.getProductName()))
+		{
+			throw new ApiException("Product Name is not editable");
+		}
 		ex.setProductName(p.getProductName());
 		ex.setProductBrandCategory(p.getProductBrandCategory());
 		ex.setProductBarcode(p.getProductBarcode());
@@ -70,6 +78,8 @@ public class ProductDto {
 		productservice.updateProduct(id, ex);
 	}
 
+
+	//finds a product with given id
 	@Transactional
 	public ProductData findProduct(Integer id) throws ApiException {
 		ProductPojo p = productservice.findProduct(id);
@@ -81,6 +91,7 @@ public class ProductDto {
 		return pd;
 	}
 
+	//finds a product with given barcode
 	@Transactional
 	public ProductData findProduct(String barcode) throws ApiException {
 		ProductPojo p = productservice.findProduct(barcode);
@@ -91,12 +102,16 @@ public class ProductDto {
 		return pd;
 	}
 
-	protected static void normalizeProduct(ProductPojo p) {
+
+	//normalisation of product
+	protected static void normalizeProduct(ProductForm p) {
 		p.setProductName(p.getProductName().toLowerCase().trim());
 		p.setProductBarcode(p.getProductBarcode().toLowerCase().trim());
-
+		p.setProductBrandName(p.getProductBrandName().toLowerCase().trim());
+		p.setProductBrandCategoryName(p.getProductBrandCategoryName().toLowerCase().trim());
 	}
 
+	//validations for editing product
 	protected void validateEditProduct(ProductPojo p) throws ApiException {
 
 		if(p.getProductBarcode().length()>15)
@@ -130,15 +145,9 @@ public class ProductDto {
 		ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
 
 
-//		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
-//			throw new ApiException("The given product already exists in the Database");
-//		}
-//
-//		if ((check != null) && check.getProductBarcode() != p.getProductBarcode()) {
-//			throw new ApiException("The given product already exists with a different Barcode");
-//		}
-
 	}
+
+	//validations for adding a product
 	protected void validateProduct(ProductPojo p) throws ApiException {
 
 		if(p.getProductBarcode().length()>15)
@@ -186,6 +195,7 @@ public class ProductDto {
 		}
 	}
 
+	//conversion of product pojo to product data
 	public ProductData convert(ProductPojo p) throws ApiException {
 		ProductData d = new ProductData();
 
@@ -206,9 +216,14 @@ public class ProductDto {
 		return d;
 	}
 
+	//conversion of product form to porduct pojo
 	public ProductPojo convert(ProductForm f) throws ApiException {
 		ProductPojo p = new ProductPojo();
 
+		if(f.getProductMrp()==null)
+		{
+			throw new ApiException("MRP cannot be null");
+		}
 		if (StringUtil.isEmpty(f.getProductBrandName())) {
 			throw new ApiException("Product must belong to a brand, Brand name field cannot be empty");
 		}
@@ -224,7 +239,7 @@ public class ProductDto {
 
 		if(foundBrand==null)
 		{
-			throw new ApiException("can't find brand");
+			throw new ApiException("Can't find brand-category combination");
 		}
 		Integer foundBrandId = foundBrand.getBrandId();
 

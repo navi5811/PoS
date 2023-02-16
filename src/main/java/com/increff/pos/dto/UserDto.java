@@ -42,30 +42,7 @@ public class UserDto extends AbstractUiController {
     private InfoData info;
 
     @Transactional
-    public void add(UserForm f) throws ApiException {
-
-        String email = f.getEmail();
-        String regex = "^(.+)@(.+)$";
-
-        Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(email);
-        if(matcher.matches()==false){
-            throw new ApiException("email is not valid");
-        }
-
-        UserPojo p = convert(f);
-        normalize(p);
-        UserPojo existing = userService.get(p.getEmail());
-        if (existing != null) {
-            throw new ApiException("User with given email already exists");
-        }
-        userService.add(p);
-    }
-
-    @Transactional
     public UserData get(String email) throws ApiException {
-        System.out.println("entered get");
         UserPojo p = userService.get(email);
         if (p == null) {
             return null;
@@ -82,11 +59,6 @@ public class UserDto extends AbstractUiController {
             list.add(convert(u));
         }
         return list;
-    }
-
-    @Transactional
-    public void delete(Integer id) {
-        userService.delete(id);
     }
 
     @Transactional

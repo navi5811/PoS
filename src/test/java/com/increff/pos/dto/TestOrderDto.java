@@ -412,12 +412,54 @@ public class TestOrderDto extends AbstractUnitTest {
 		form.setProductSellingPrice(sellingPrice);
 
 		List<OrderItemForm> orderItemForm = new ArrayList<OrderItemForm>();
-		orderItemForm.add(form);
-		orderdto.createOrder(orderItemForm);
+//		orderItemForm.add(form);
+//		orderdto.createOrder(orderItemForm);
 		// orderCreated
+
+		brandname="newbrand";
+		String newbarcode = "newbarcode";
+		BrandForm newbrandform = new BrandForm();
+		newbrandform.setBrandName(brandname);
+		newbrandform.setBrandCategory(brandcategory);
+		String newproductname = "newpname";
+
+		branddto.addBrand(newbrandform);
+
+
+
+		ProductForm nf = new ProductForm();
+		nf.setProductBarcode(newbarcode);
+		nf.setProductBrandName(brandname);
+		nf.setProductBrandCategoryName(brandcategory);
+		nf.setProductName(newproductname);
+		nf.setProductMrp(mrp);
+		productdto.addProduct(nf);
+
+		InventoryForm newinventoryform = new InventoryForm();
+		newinventoryform.setInventoryProductBarcode(barcode);
+		newinventoryform.setProductQuantity(50);
+		inventorydto.updateInventory(newinventoryform);
+
+
+
+
+		quantity = 5;
+		sellingPrice = 50.0;
+
+		OrderItemForm newform = new OrderItemForm();
+		newform.setProductBarcode(barcode);
+		newform.setProductQuantity(quantity);
+		newform.setProductSellingPrice(sellingPrice);
+
+		List<OrderItemForm> neworderItemForm = new ArrayList<OrderItemForm>();
+		neworderItemForm.add(form);
+		neworderItemForm.add(newform);
+		orderdto.createOrder(neworderItemForm);
+
+
 		List<OrderItemPojo> orderItemPojo_list = orderdto.getAll();
 		List<OrderItemData> oid = orderdto.getAllOrderItems(orderItemPojo_list);
-		int orderItemId = oid.get(0).getOrderItemId();
+		Integer orderItemId = oid.get(0).getOrderItemId();
 		orderdto.delete(orderItemId);
 
 		try {

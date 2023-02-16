@@ -19,5 +19,4 @@ public class AboutAppService {
 	public String getVersion() {
 		return version;
 	}
-
 }

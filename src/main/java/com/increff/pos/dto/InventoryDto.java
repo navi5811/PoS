@@ -76,7 +76,6 @@ public class InventoryDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateInventory(InventoryForm f) throws ApiException {
 
-		System.out.println(f);
 		validateInventory(f);
 		InventoryPojo p = convert(f);
 		InventoryPojo ex = inventoryservice.getInventory(p.getProductId());

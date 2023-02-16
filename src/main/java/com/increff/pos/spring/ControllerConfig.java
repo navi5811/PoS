@@ -42,7 +42,9 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
-	
+
+	//Bean is used to mark a method as one that creates a bean and Spring will then add it to the context for us
+	//the function that is created via bean will work in whole project not need to configure it again
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)//

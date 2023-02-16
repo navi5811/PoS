@@ -36,6 +36,7 @@ public class DbConfig {
 	private String hibernateHbm2ddl;
 	
 
+	//database use
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
 //		logger.info("jdbcDriver: " + jdbcDriver + ", jdbcUrl: " + jdbcUrl + ", jdbcUsername: " + jdbcUsername);
@@ -54,6 +55,7 @@ public class DbConfig {
 		return bean;
 	}
 
+	//jpql queries used
 	@Bean(name = "entityManagerFactory")
 	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
@@ -71,7 +73,8 @@ public class DbConfig {
 		bean.setJpaProperties(jpaProperties);
 		return bean;
 	}
-	
+
+	//@transanctional use
 	@Bean(name = "transactionManager")
 	@Autowired
 	public JpaTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean emf) {

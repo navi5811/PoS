@@ -14,8 +14,6 @@ async function uploadQuantity(inventoryObj, barcode){
         success: function(response) {
             qty = parseInt(response.productQuantity);
             inventoryObj.Quantity = parseInt(inventoryObj.Quantity) + parseInt(qty);
-            // inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity);
-            console.log("Value in update qty fn " + inventoryObj.Quantity);
         },
         error: function(response){
 			inventoryObj.error = JSON.parse(response.responseText).message;
@@ -31,14 +29,13 @@ var qty=0;
 async function addInventory(event){
     //Set the values to update
     var barcode = $("#inventory-form input[name=inventoryProductBarcode]").val();
-	console.log("product barcode is",barcode);
     var $form = $("#inventory-form");
-	console.log($form);
+
     var json = toJson($form);
-	console.log(json);
+
 
     var inventoryObj = JSON.parse(json, barcode);
-	console.log("invetory obj values",inventoryObj);
+
 	if(inventoryObj.productQuantity.includes("."))
 	{
 		sendAlert("Please enter a valid quantity");
@@ -52,8 +49,6 @@ async function addInventory(event){
 }
 async function updateQuantity(inventoryObj, barcode){
 	var url = getInventoryUrl() + "/" + barcode;
-	console.log(url);
-	console.log("product quantity",inventoryObj.productQuantity);
     await $.ajax({
         url: url,
         type: 'GET',
@@ -61,14 +56,11 @@ async function updateQuantity(inventoryObj, barcode){
             'Content-Type': 'application/json'
         },
         success: function(response) {
-			$('#add-inventory-modal').modal('toggle');
             qty = parseInt(response.productQuantity);
             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity) + parseInt(qty);
             inventoryObj.productQuantity = parseInt(inventoryObj.productQuantity);
-            console.log("Value in update qty fn " + inventoryObj.productQuantity);
         },
         error: function(response){
-			$("#add-inventory-modal").modal("toggle");
 			handleAjaxError(response)
 			
 		   }
@@ -78,7 +70,6 @@ async function updateQuantity(inventoryObj, barcode){
 }
 function updateApiCall(json){
     var url = getInventoryUrl();
-	console.log("entered update api call");
     $.ajax({
         url: url,
         type: 'PUT',
@@ -88,10 +79,13 @@ function updateApiCall(json){
             'Content-Type': 'application/json'
         },
         success: function(response) {
-			sendAlert("Inventory added successfully");
+			$('#add-inventory-modal').modal('toggle');
+			successAlert("Inventory added successfully");
             getInventoryList();
         },
-        error: handleAjaxError
+        error: function(response){
+			handleAjaxError(response)
+		}
      });
      return false;
 }
@@ -101,10 +95,9 @@ function updateApiCall(json){
 function updateInventory(event){
 	$('#edit-inventory-modal').modal('show');
 	//Get the ID
-	var productId = $("#inventory-edit-form input[name=productId]").val();	
-	console.log("Heyy"+ productId);
+	var productId = $("#inventory-edit-form input[name=productId]").val();
 	var url = getInventoryUrl() + "/" + productId;
-	console.log(productId, url);
+
 
 	//Set the values to update
 	var $form = $("#inventory-edit-form");
@@ -123,7 +116,7 @@ function updateInventory(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-		sendAlert("Inventory updated successfully");
+		successAlert("Inventory updated successfully");
 		$("#edit-inventory-modal").modal("hide");
 	   		getInventoryList();   
 	   },
@@ -138,7 +131,6 @@ function updateInventory(event){
 
 // Done
 function getInventoryList(){
-    console.log("just entered get inventory");
 	var url = getInventoryUrl();
 
 	$.ajax({
@@ -146,8 +138,6 @@ function getInventoryList(){
 	   type: 'GET',
 	   success: function(data) {
 
-
-        console.log("just entring the display inventory");
 	   		displayInventoryList(data);
 
 	   },
@@ -291,18 +281,14 @@ function displayInventoryList(data){
 
 // Displays Modal
 function displayEditInventory(barcode){
-    console.log("entered edit inventory");
 	var url = getInventoryUrl() + "/" + barcode;
-    console.log("url is " ,url);
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-        console.log("entring display inventory");
 	   		displayInventory(data);   
 	   },
 	   error: function(data){
-        console.log("why this error is occuring");
         handleAjaxError
        }
        

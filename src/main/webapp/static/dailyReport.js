@@ -5,7 +5,6 @@ function getdailyReportUrl(){
 
 function getReportList(){
 	var url = getdailyReportUrl();
-	console.log(url);
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -17,29 +16,23 @@ function getReportList(){
 }
 
 function displayReportList(data){
-	console.log("inside display report");
 	var $tbody = $('#dailyReport-table').find('tbody');
 	$tbody.empty();
 	var serial=0;
 	for(var i in data){
 		serial++;
 		var e = data[i];
-		var date = new Date(e.date);
+		let date = new Date(e.date).toLocaleDateString();
     	date = date.toLocaleString();
-		console.log(e.date);
-		console.log(e.numberOfOrders);
-		console.log(e.numberOfItems);
-		console.log(e.total);
 		var row = '<tr>'
 		+ '<td>' + serial + '</td>'
 		+ '<td>' + date + '</td>'
 		+ '<td>'  + e.numberOfOrders + '</td>'
         + '<td>'  + e.numberOfItems + '</td>'
-        + '<td>'  + e.total + '</td>'
+        + '<td>'  + parseFloat(e.total).toFixed(2) + '</td>'
 		// + '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
-		console.log("Iteration...");
 	}
 }
 

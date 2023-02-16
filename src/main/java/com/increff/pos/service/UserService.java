@@ -31,9 +31,4 @@ public class UserService {
 		return dao.selectAll();
 	}
 
-	@Transactional
-	public void delete(Integer id) {
-		dao.delete(id);
-	}
-
 }

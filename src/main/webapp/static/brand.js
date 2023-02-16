@@ -21,7 +21,7 @@ function addBrand(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
-			sendAlert("Brand Added Successfully");
+			successAlert("Brand Added Successfully");
 			$('#add-brand-modal').modal('toggle');
 			getBrandList();
 		},
@@ -36,9 +36,7 @@ function updateBrand(event) {
 
 	//Get the ID
 	var id = $("#brand-edit-form input[name=brandId]").val();
-	console.log("Heyy" + id);
 	var url = getBrandUrl() + "/" + id;
-	console.log(id, url);
 
 	//Set the values to update
 	var $form = $("#brand-edit-form");
@@ -52,7 +50,7 @@ function updateBrand(event) {
 			'Content-Type': 'application/json'
 		},
 		success: function (response) {
-			sendAlert("Brand Updated Successfully");
+			successAlert("Brand Updated Successfully");
 			$('#edit-brand-modal').modal('toggle');
 			getBrandList();
 		},

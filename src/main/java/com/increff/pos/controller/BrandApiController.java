@@ -19,10 +19,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Api
-@RestController
+@RestController //mapping request data to the defined request handler method
 public class BrandApiController {
 
-	@Autowired
+	@Autowired  //used for dependency injection
 	private BrandDto dto;
 
 
@@ -47,6 +47,6 @@ public class BrandApiController {
 	@ApiOperation(value = "Updates a Brand")
 	@RequestMapping(path = "/api/brand/{id}", method = RequestMethod.PUT)
 	public void update(@PathVariable int id, @RequestBody BrandForm f) throws ApiException {
-		dto.updateBrand(id, f);
+		dto.updateBrand(id,f);
 	}
 }
