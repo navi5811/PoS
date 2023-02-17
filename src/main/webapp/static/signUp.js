@@ -5,6 +5,7 @@ function getUserUrl() {
 
 //user add function
 function addUser(event) {
+	event.preventDefault();
 	//Set the values to update
 	var $form = $("#init-form");
 	var json = toJson($form);
@@ -37,7 +38,7 @@ function myFunction() {
 }
 
 function init() {
-	$('#login').click(addUser);
+	$('#init-form').submit(addUser);
 }
 $(document).ready(init);
 

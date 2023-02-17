@@ -29,11 +29,14 @@ import com.increff.pos.model.BillData;
 public class PDFUtils {
 
     public static void generatePDFFromJavaObject(BillData billData, String fileName) throws Exception {
+        // XML source reads an XML data file and populates the columns in the source output with the data
         ByteArrayOutputStream xmlSource = getXMLSource(billData);
+        //Acts as an holder for a transformation Source in the form of a stream of XML markup.
         StreamSource streamSource = new StreamSource(new ByteArrayInputStream(xmlSource.toByteArray()));
         generatePDF(streamSource, fileName);
     }
 
+    //marshaller converts java context to xml
     private static ByteArrayOutputStream getXMLSource(BillData billData) {
         JAXBContext context;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();

@@ -22,7 +22,7 @@ import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.util.StringUtil;
 
-@Component
+@Service
 public class InventoryDto {
 
 	@Autowired

@@ -17,8 +17,8 @@
 		<div class="row" id="top-buttons" style="display:none">
 			<div class="col-12">
 
-				<button type="button" id="add-button-inventory" class="btn btn-success btn-sm" data-target="#add-inventory-modal"
-					data-toggle="modal"><i class="bi bi-plus-lg"></i> Add</button>
+				<button type="button" id="add-button-inventory" class="btn btn-success btn-sm"
+					data-target="#add-inventory-modal" data-toggle="modal"><i class="bi bi-plus-lg"></i> Add</button>
 
 				&nbsp;
 				<button type="button" class="btn btn-success btn-sm" id="upload-data"><i class="bi bi-upload"></i>
@@ -39,7 +39,7 @@
 
 		<div class="row">
 			<!-- Table -->
-			<div class="col-12"  style="z-index: 0;">
+			<div class="col-12" style="z-index: 0;">
 				<table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="inventory-table">
 					<thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
 						<tr>
@@ -78,22 +78,28 @@
 						<form class="" id="inventory-form">
 
 							<div class="form-group required col-md-12">
-								<label for="inputProductBarcode" class="control-label"><h6>Barcode</h6></label>
-								<input type="text" class="form-control w-100" name="inventoryProductBarcode"
-									id="inputProductBarcode" placeholder="Enter Barcode">
+								<label for="inputProductBarcode" class="control-label">
+									<h6>Barcode</h6>
+								</label>
+								<input type="text" required class="form-control w-100" minlength="2" maxlength="15"
+									name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Barcode">
 							</div>
 
-							<div class="form-group required col-md-12">
-								<label for="inputProductQuantity" class="control-label"><h6>Quantity</h6></label>
-								<input type="number" class="form-control w-100" min="0" step="1" name="productQuantity" oninput="validity.valid||(value='');"
+							<div class="form-group required col-md-12 mb-4">
+								<label for="inputProductQuantity" class="control-label">
+									<h6>Quantity</h6>
+								</label>
+								<input type="number" required class="form-control w-100" min="0" step="1"
+									name="productQuantity" oninput="validity.valid||(value='');"
 									id="inputProductQuantity" placeholder="Enter Quantity">
+							</div>
+							<div class="modal-footer pb-1">
+								<button type="submit" class="btn btn-success btn-sm" id="add-inventory">Add</button>
+								&nbsp;
 							</div>
 						</form>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success btn-sm" id="add-inventory">Add</button>
-						&nbsp;
-					</div>
+
 
 				</div>
 			</div>
@@ -113,26 +119,34 @@
 						<form class="" id="inventory-edit-form">
 
 							<div class="form-group required col-md-12">
-								<label for="inputProductBarcode" class="control-label"><h6>Barcode</h6></label>
+								<label for="inputProductBarcode" class="control-label">
+									<h6>Barcode</h6>
+								</label>
 
 								<input type="text" readonly class="form-control-plaintext w-100"
 									name="inventoryProductBarcode" id="inputProductBarcode" placeholder="Enter Barcode">
 
 							</div>
 
-							<div class="form-group required col-md-12">
-								<label for="inputProductQuantity" class="control-label"><h6>Quantity</h6></label>
+							<div class="form-group required col-md-12 mb-4">
+								<label for="inputProductQuantity" class="control-label">
+									<h6>Quantity</h6>
+								</label>
 
-								<input type="number" class="form-control w-100" name="productQuantity"
-									id="inputProductQuantity" placeholder="Enter Quantity">
+								<input type="number" required class="form-control w-100" name="productQuantity"
+									oninput="validity.valid||(value='');" id="inputProductQuantity"
+									placeholder="Enter Quantity">
 
 							</div>
 							<input type="hidden" name="productId">
+
+							<div class="modal-footer pb-1">
+								<button type="submit" class="btn btn-success btn-sm"
+									id="update-inventory">Update</button>
+							</div>
 						</form>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success btn-sm" id="update-inventory">Update</button>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -154,7 +168,8 @@
 						<div class="row-md-12">
 							<div class="inventory-file col-md-12">
 								<input type="file" class="custom-file-input" id="inventoryFile">
-								<label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose Inventory File
+								<label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose
+									Inventory File
 								</label>
 							</div>
 						</div>

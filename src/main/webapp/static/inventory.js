@@ -27,6 +27,7 @@ async function uploadQuantity(inventoryObj, barcode){
 
 var qty=0;
 async function addInventory(event){
+	event.preventDefault();
     //Set the values to update
     var barcode = $("#inventory-form input[name=inventoryProductBarcode]").val();
     var $form = $("#inventory-form");
@@ -93,6 +94,7 @@ function updateApiCall(json){
 
 //Done//doubtfull
 function updateInventory(event){
+	event.preventDefault();
 	$('#edit-inventory-modal').modal('show');
 	//Get the ID
 	var productId = $("#inventory-edit-form input[name=productId]").val();
@@ -352,8 +354,8 @@ function init(){
 		$("#edit-column").show();
     }
 	$('#add-button-inventory').click(addButton);
-	$('#add-inventory').click(addInventory);
-	$('#update-inventory').click(updateInventory);
+	$('#inventory-form').submit(addInventory);
+	$('#inventory-edit-form').submit(updateInventory);
 	$('#refresh-data').click(getInventoryList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);

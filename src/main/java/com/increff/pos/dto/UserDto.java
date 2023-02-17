@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-@Component
+@Service
 public class UserDto extends AbstractUiController {
     @Value("#{'${app.supervisor.emails}'.split(',')}")
     private List<String> supervisorEmails;

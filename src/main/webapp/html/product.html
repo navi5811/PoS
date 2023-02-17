@@ -34,7 +34,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">
       <!-- Table -->
-      <div class="col-12"  style="z-index: 0;">
+      <div class="col-12" style="z-index: 0;">
         <table class="table table-striped shadow p-3 mb-5 bg-white rounded" id="product-table">
           <thead class="table-light shadow-sm p-3 mb-5 bg-white rounded sticky-top">
             <tr>
@@ -84,15 +84,19 @@
             <form class="" id="product-form">
 
               <div class="form-group required col-md-12">
-                <label for="inputProductName" class="control-label"><h6>Product Name</h6></label>
+                <label for="inputProductName" class="control-label">
+                  <h6>Product Name</h6>
+                </label>
 
-                <input required type="text" class="form-control" name="productName" id="inputProductName"
-                  placeholder="Enter Product Name" />
+                <input required type="text" class="form-control" minlength="2" maxlength="15" name="productName"
+                  id="inputProductName" placeholder="Enter Product Name" />
 
               </div>
               <div class="form-row col-md-12">
                 <div class="form-group required col-md-6">
-                  <label for="inputProductBrandName"><h6>Brand</h6></label>
+                  <label for="inputProductBrandName">
+                    <h6>Brand</h6>
+                  </label>
                   &nbsp; &nbsp;
                   <select required class="form-control" name="productBrandName" id="inputProductBrandName">
                     <option value=""></option>
@@ -101,7 +105,9 @@
                 </div>
 
                 <div class="form-group required col-md-6">
-                  <label for="inputProductBrandCategoryName"><h6>Category</h6></label>
+                  <label for="inputProductBrandCategoryName">
+                    <h6>Category</h6>
+                  </label>
                   &nbsp; &nbsp;
                   <select required class="form-control" name="productBrandCategoryName"
                     id="inputProductBrandCategoryName">
@@ -109,26 +115,31 @@
                 </div>
               </div>
               <div class="form-group required col-md-12">
-                <label for="inputProductBarcode" class="control-label"><h6>Barcode</h6></label>
+                <label for="inputProductBarcode" class="control-label">
+                  <h6>Barcode</h6>
+                </label>
 
-                <input required type="text" class="form-control" name="productBarcode" id="inputProductBarcode"
-                  placeholder="Enter Barcode" />
-
-              </div>
-
-              <div class="form-group required col-md-12">
-                <label for="inputProductMrp" class="control-label"><h6>MRP</h6></label>
-
-                <input required type="number" class="form-control" name="productMrp" id="inputProductMrp"
-                  placeholder="Enter MRP" />
+                <input required type="text" class="form-control" minlength="2" maxlength="15" name="productBarcode"
+                  id="inputProductBarcode" placeholder="Enter Barcode" />
 
               </div>
-              &nbsp;
+
+              <div class="form-group required col-md-12 mb-4">
+                <label for="inputProductMrp" class="control-label">
+                  <h6>MRP</h6>
+                </label>
+
+                <input required type="number" class="form-control" name="productMrp"
+                  oninput="validity.valid||(value='');" id="inputProductMrp" placeholder="Enter MRP" />
+              </div>
+
+              <div class="modal-footer pb-1">
+                <button type="submit" class="btn btn-success btn-sm" id="add-product">Add</button>
+                &nbsp;
+              </div>
+
             </form>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-success btn-sm" id="add-product">Add</button>
-              &nbsp;
-            </div>
+
           </div>
         </div>
       </div>
@@ -150,7 +161,9 @@
             <form class="" id="product-edit-form">
 
               <div class="form-group required col-md-12">
-                <label for="productName" class="control-label"><h6>Product Name</h6></label>
+                <label for="productName" class="control-label">
+                  <h6>Product Name</h6>
+                </label>
                 <input required type="text" readonly class="form-control-plaintext" name="productName"
                   placeholder="Enter Product Name" />
               </div>
@@ -158,7 +171,9 @@
               <div class="form-row col-md-12">
 
                 <div class="form-group required col-md-6">
-                  <label for="productBrandName"><h6>Brand</h6></label>
+                  <label for="productBrandName">
+                    <h6>Brand</h6>
+                  </label>
                   &nbsp; &nbsp;
                   <select required class="form-control" name="productBrandName" id="editProductBrandName">
                     <option value="string">Volvo</option>
@@ -166,7 +181,9 @@
                 </div>
 
                 <div class="form-group required col-md-6">
-                  <label for="productBrandCategoryName"><h6>Category</h6></label>
+                  <label for="productBrandCategoryName">
+                    <h6>Category</h6>
+                  </label>
                   &nbsp; &nbsp;
                   <select required class="form-control" name="productBrandCategoryName"
                     id="editProductBrandCategoryName">
@@ -177,23 +194,29 @@
               </div>
 
               <div class="form-group required col-md-12">
-                <label for="productBarcode" class="control-label"><h6>Barcode</h6></label>
+                <label for="productBarcode" class="control-label">
+                  <h6>Barcode</h6>
+                </label>
                 <input type="text" readonly class="form-control-plaintext" name="productBarcode">
               </div>
 
-              <div class="form-group required col-md-12">
-                <label for="productMrp" class="control-label"><h6>MRP</h6></label>
-                <input required type="number" class="form-control" name="productMrp" placeholder="Enter MRP" />
+              <div class="form-group required col-md-12 mb-4">
+                <label for="productMrp" class="control-label">
+                  <h6>MRP</h6>
+                </label>
+                <input required type="number" class="form-control" oninput="validity.valid||(value='');"
+                  name="productMrp" placeholder="Enter MRP" />
               </div>
 
               <input type="hidden" name="productId" />
+              <div class="modal-footer pb-1">
+                <button type="submit" class="btn btn-success btn-sm" id="update-product">Update</button>
+                &nbsp;
+              </div>
             </form>
           </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success btn-sm" id="update-product">Update</button>
-            &nbsp;
-          </div>
+
 
         </div>
       </div>

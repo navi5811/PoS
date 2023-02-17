@@ -25,7 +25,7 @@ import java.util.List;
 
 
 @EnableScheduling
-@Component
+@Service
 public class DailyReportDto {
 
     @Autowired

@@ -30,7 +30,7 @@ import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 
 //todo rename employee
-@Component
+@Service
 public class ReportDto {
 
     @Autowired

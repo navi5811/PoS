@@ -27,7 +27,7 @@ import com.increff.pos.util.PDFUtils;
 import com.increff.pos.util.StringUtil;
 
 //todo
-@Component
+@Service
 public class OrderDto {
 
 	@Autowired

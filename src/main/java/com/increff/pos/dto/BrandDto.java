@@ -17,7 +17,7 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 import com.increff.pos.util.StringUtil;
 
-@Component
+@Service
 public class BrandDto {
 
     @Autowired
