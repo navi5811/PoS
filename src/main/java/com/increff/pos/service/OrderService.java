@@ -85,24 +85,8 @@ public class OrderService {
         Integer order_id = orderItemDao.select(id).getOrderId();
         OrderItemPojo orderItemPojo = orderItemDao.select(id);
         orderItemDao.delete(id);
-        List<OrderItemPojo> lis = orderItemDao.selectOrder(order_id);
-        if (lis.isEmpty()) {
-            orderDao.delete(order_id);
-        }
         return orderItemPojo;
     }
-
-    // Deletion of order doubtfull
-    @Transactional
-    public void deleteOrder(OrderItemPojo orderItemPojo) {
-        orderItemDao.delete(orderItemPojo.getOrderId());
-
-    }
-
-    public void deleteOrderhelper(Integer orderId) {
-        orderDao.delete(orderId);
-    }
-
 
     // Updating order item
     @Transactional(rollbackFor = ApiException.class)

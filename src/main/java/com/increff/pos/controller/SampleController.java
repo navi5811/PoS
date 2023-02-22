@@ -34,7 +34,6 @@ public class SampleController {
 		} finally {
 			IOUtil.closeQuietly(is);
 		}
-
 	}
 
 }

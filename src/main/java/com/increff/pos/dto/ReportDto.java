@@ -29,7 +29,6 @@ import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 
-//todo rename employee
 @Service
 public class ReportDto {
 
@@ -51,7 +50,7 @@ public class ReportDto {
         List<BrandPojo> list = brandservice.getAllBrand();
         List<BrandData> list2 = new ArrayList<BrandData>();
         for (BrandPojo p : list) {
-            list2.add(convert(p));
+            list2.add(convertBrandPojoToData(p));
         }
         return list2;
     }
@@ -155,7 +154,7 @@ public class ReportDto {
         return salesReportData;
     }
 
-    private static BrandData convert(BrandPojo p) {
+    private static BrandData convertBrandPojoToData(BrandPojo p) {
         BrandData d = new BrandData();
         d.setBrandCategory(p.getBrandCategory());
         d.setBrandName(p.getBrandName());

@@ -42,7 +42,7 @@ function readFileData(file, callback) {
             callback(results);
             $("#process-data").hide();
             $("#download-errors").show();
-            sendAlert("Error in file is there Please re-upload after reconsutruction");
+            
             $("#error-row").show();
         }
     }

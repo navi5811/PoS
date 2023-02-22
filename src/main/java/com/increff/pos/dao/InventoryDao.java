@@ -33,12 +33,6 @@ public class InventoryDao extends AbstractDao {
 		return getSingle(query);
 	}
 
-//	public InventoryPojo select(String barcode) {
-//		TypedQuery<InventoryPojo> query = getQuery(select_bar, InventoryPojo.class);
-//		query.setParameter("barcode", barcode);
-//		return getSingle(query);
-//	}
-
 	public List<InventoryPojo> selectAll() {
 		TypedQuery<InventoryPojo> query = getQuery(select_all, InventoryPojo.class);
 		return query.getResultList();

@@ -83,6 +83,11 @@ var processCount = 0;
 // Initial fn called
 function processData() {
 	var file = $('#brandFile')[0].files[0];
+	var fileName = document.getElementById('brandFile').files[0].name;
+    var lastFour = fileName.substr(fileName.length - 4);
+    if(lastFour!='.tsv'){
+        handleJsError("Please upload a TSV file");
+    }
 	readFileData(file, readFileDataCallback);
 }
 
@@ -101,6 +106,10 @@ function uploadRows() {
 	if (processCount == fileData.length) {
 		if (errorData.length == 0) {
 			$("#upload-brand-modal").modal('toggle');
+
+		}
+		else{
+			sendAlert("Error in file is there Please re-upload after reconsutruction");
 		}
 		getBrandList();
 
@@ -218,7 +227,7 @@ function updateUploadDialog() {
 // To replace choose file with Upload File name
 function updateFileName() {
 	// var $file = $('#brandFile');
-	var fileName = document.getElementById("brandFile").files[0].name;
+	var fileName = document.getElementById('brandFile').files[0].name;
 	$('#brandFileName').html(fileName);
 }
 

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.increff.pos.dao.BrandDao;
 import com.increff.pos.pojo.BrandPojo;
 
-//todo we can add @transactional on the top of class
 @Service
 public class BrandService {
 

@@ -43,7 +43,7 @@ public class InventoryDto {
 		}
 		InventoryPojo ip = inventoryservice.getInventory(pp.getProductId());
 		BrandPojo bp=brandService.getBrand(pp.getProductBrandCategory());
-		InventoryData id = convert(ip);
+		InventoryData id = convertInventoryPojoToData(ip);
 		id.setMrp(pp.getProductMrp());
 		id.setProductName(pp.getProductName());
 		id.setBrandName(bp.getBrandName());
@@ -56,7 +56,7 @@ public class InventoryDto {
 		List<InventoryPojo> list = inventoryservice.getAllInventory();
 		List<InventoryData> list2 = new ArrayList<InventoryData>();
 		for (InventoryPojo p : list) {
-			InventoryData d = convert(p);
+			InventoryData d = convertInventoryPojoToData(p);
 			ProductPojo productpojo = productservice.findProduct(d.getInventoryProductBarcode());
 
 			BrandPojo bd = brandService.getBrand(productpojo.getProductBrandCategory());
@@ -77,7 +77,8 @@ public class InventoryDto {
 	public void updateInventory(InventoryForm f) throws ApiException {
 
 		validateInventory(f);
-		InventoryPojo p = convert(f);
+
+		InventoryPojo p = convertInvetoryFormToPojo(f);
 		InventoryPojo ex = inventoryservice.getInventory(p.getProductId());
 		ex.setProductQuantity(p.getProductQuantity());
 		inventoryservice.updateInventory(ex);
@@ -89,11 +90,20 @@ public class InventoryDto {
 		if (p == null) {
 			throw new ApiException("Inventory with given ID does not exit, id: " + id);
 		}
-		InventoryData i = convert(p);
+		InventoryData i = convertInventoryPojoToData(p);
 		return i;
 	}
 
-	protected static void validateInventory(InventoryForm p) throws ApiException {
+	protected  void validateInventory(InventoryForm p) throws ApiException {
+
+		if (StringUtil.isEmpty(p.getInventoryProductBarcode())) {
+			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
+		}
+
+		if(productservice.findProduct(p.getInventoryProductBarcode())==null)
+		{
+			throw new ApiException("product with given barcode does not exist");
+		}
 
 		if(StringUtil.isEmpty(p.getInventoryProductBarcode()))
 		{
@@ -114,30 +124,20 @@ public class InventoryDto {
 
 	}
 
-	public InventoryData convert(InventoryPojo p) throws ApiException {
+	public InventoryData convertInventoryPojoToData(InventoryPojo p) throws ApiException {
 		InventoryData d = new InventoryData();
-
 		ProductPojo prod = productservice.findProduct(p.getProductId());
-
 		d.setProductId(prod.getProductId());
 		d.setInventoryProductBarcode(prod.getProductBarcode());
 		d.setProductQuantity(p.getProductQuantity());
-
 		return d;
 	}
 
-	public InventoryPojo convert(InventoryForm f) throws ApiException {
+	public InventoryPojo convertInvetoryFormToPojo(InventoryForm f) throws ApiException {
 		InventoryPojo p = new InventoryPojo();
 
-		if (StringUtil.isEmpty(f.getInventoryProductBarcode())) {
-			throw new ApiException("Please enter a valid barcode, Barcode field cannot be empty");
-		}
 		ProductPojo prod = productservice.findProduct(f.getInventoryProductBarcode());
 
-		if(prod==null)
-		{
-			throw new ApiException("product with given barcode does not exist");
-		}
 		p.setProductId(prod.getProductId());
 		p.setProductQuantity(f.getProductQuantity());
 		return p;

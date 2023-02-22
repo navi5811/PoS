@@ -71,20 +71,17 @@ public class DailyReportDto {
         dailyReportService.addReport(p);
     }
 
-
-
     public List<DailyReportData> getAllReport(){
         List<DailyReportPojo> list=dailyReportService.getAllReport();
         List<DailyReportData> list1= new ArrayList<>();
         for(DailyReportPojo p:list)
         {
-            list1.add(convert(p));
+            list1.add(convertDailyReportDtoToData(p));
         }
         return list1;
     }
 
-
-    public DailyReportData convert(DailyReportPojo p)
+    public DailyReportData convertDailyReportDtoToData(DailyReportPojo p)
     {
         DailyReportData d=new DailyReportData();
         d.setDate(p.getDate());

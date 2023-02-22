@@ -61,32 +61,6 @@ public class TestUserDto extends AbstractUnitTest {
         assertEquals(d.getPassword(), password);
     }
 
-
-//    @Test
-//    public void testDelete() throws ApiException {
-//        String role="operator";
-//        String password="password";
-//        String email="email@gmail.com";
-//        UserForm f=new UserForm();
-//        f.setRole(role);
-//        f.setPassword(password);
-//        f.setEmail(email);
-//        userDto.add(f);
-//        //user added
-//
-//        UserData d=userDto.get(email);
-//
-//        int id=d.getId();
-//        userDto.delete(id);
-//        List<UserData> list=userDto.getAll();
-//
-//        if(list.size()!=0)
-//        {
-//            fail();
-//        }
-//
-//    }
-
     @Test
     public void testRegister() throws ApiException {
         String password="password";
@@ -103,6 +77,15 @@ public class TestUserDto extends AbstractUnitTest {
     }
 
 
+    @Test
+    public void testConvert(){
+        UserData userData=new UserData();
+        userData.setRole("operator");
+        userData.setId(1);
+        userData.setPassword("123");
+        userData.setEmail("navneet@gmail.com");
+        userDto.convertUserData(userData);
+    }
 
 
 

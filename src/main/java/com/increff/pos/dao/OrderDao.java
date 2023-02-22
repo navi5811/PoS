@@ -16,19 +16,11 @@ public class OrderDao extends AbstractDao {
 
 	
 	private static String select_id = "select p from OrderPojo p where orderId=:id";
-	private static String delete_id = "delete from OrderPojo p where orderId=:id";
 	@Transactional
 	public void insert(OrderPojo p) {
 		em.persist(p);
 	}
-	
-	public void delete(int id) {
-		Query query = em.createQuery(delete_id);
-		query.setParameter("id", id);
-		query.executeUpdate();
-	}
 
-	
 	public OrderPojo select(int id) {
 		TypedQuery<OrderPojo> query = getQuery(select_id, OrderPojo.class);
 		query.setParameter("id", id);

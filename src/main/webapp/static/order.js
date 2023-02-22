@@ -132,17 +132,13 @@ function addOrderItem(event) {
       else if (order[k].productBarcode == orderItem.productBarcode && order[k].productSellingPrice == orderItem.productSellingPrice) {
         order[k].productQuantity = parseInt(orderItem.productQuantity) + parseInt(order[k].productQuantity);
 
-
         $("#order-add-form").trigger("reset");
-
-
 
         if (order[k].productQuantity < availableQuantity) {
 
           displayOrderItemListAdd(order);
         }
-        if(order[k].productQuantity > availableQuantity)
-       { sendAlert("Order quantity exceeded the available quantity :" + availableQuantity);}
+        if (order[k].productQuantity > availableQuantity) { sendAlert("Order quantity exceeded the available quantity :" + availableQuantity); }
         flag = true;
       }
       k++;
@@ -239,11 +235,6 @@ function updateOrderItem(event) {
   var $form = $("#order-edit-form");
   var json = toJson($form);
   let invoice = false;
-
-
-
-
-
 
   $.ajax({
     url: url,
@@ -365,30 +356,23 @@ function displayOrderItem(data, invoice) {
   if (invoice == true) {
     $("#action-button").hide();
   }
+  let serial=0;
   for (var i = data.length - 1; i >= 0; i--) {
     var e = data[i];
 
+    serial++;
     var buttonHtml =
       ' <button class="edit-button btn btn-primary btn-sm mr-2" style="display:none" type="button"onclick="displayEditOrderItem(' + e.orderItemId + "," + invoice + ')">Edit</button>'
 
     buttonHtml += '<button type="button" class="delete-orderItem btn btn-danger btn-sm"title="Delete" style="display:none" onclick="deleteOrderItem(' + e.orderItemId + "," + e.id + "," + invoice + ")\">Delete</button>";
-    var row =
-      "<tr>" +
-      "<td>" +
-      e.name +
-      "</td>" +
-      "<td>" +
-      e.productBarcode +
-      "</td>" +
-      "<td>" +
-      e.productQuantity +
-      "</td>" +
-      "<td>" +
-      parseFloat(e.productSellingPrice).toFixed(2)
-      +
-      "</td>" +
-      "<td>" +
-      buttonHtml + "</td>" + "</tr>";
+    var row =  "<tr>" +
+      "<td>" +  serial +  "</td>" +
+      "<td>" +  e.name +  "</td>" +
+      "<td>" +  e.productBarcode +  "</td>" +
+      "<td>" +  e.productQuantity +  "</td>" +
+      "<td>" +  parseFloat(e.productSellingPrice).toFixed(2)  +  "</td>" +
+      "<td>" +  buttonHtml + "</td>" +
+      "</tr>";
     $tbody.append(row);
   }
   if (invoice == false) {
@@ -418,7 +402,7 @@ function displayOrderItemListAdd(data) {
       "<td>" + serial + "</td>" +
       "<td>" + e.productBarcode + "</td>" +
       "<td>" + e.productQuantity + "</td>" +
-      "<td>" +parseFloat(e.productSellingPrice).toFixed(2) + "</td>" +
+      "<td>" + parseFloat(e.productSellingPrice).toFixed(2) + "</td>" +
       "<td>" + buttonHtml + "</td>" +
       "</tr>";
     $tbody.append(row);

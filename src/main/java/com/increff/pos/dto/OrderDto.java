@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import javax.transaction.Transactional;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
@@ -24,9 +24,8 @@ import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.util.PDFUtils;
-import com.increff.pos.util.StringUtil;
 
-//todo
+
 @Service
 public class OrderDto {
 
@@ -40,7 +39,7 @@ public class OrderDto {
 	private InventoryService inventoryservice;
 
 
-// Creating order
+	// Creating order
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderData createOrder(List<OrderItemForm> forms) throws ApiException {
 		List<OrderItemPojo> orderItemList = new ArrayList<OrderItemPojo>();
@@ -58,8 +57,8 @@ public class OrderDto {
 			{
 				throw new ApiException("product with given barcode does not exist");
 			}
-			OrderItemPojo orderitempojo = convertOrderItemForm(f, p);
-			
+			OrderItemPojo orderitempojo = convertOrderItemFormToPojo(f, p);
+
 			validate(orderitempojo);
 			orderItemList.add(orderitempojo);
 		}
@@ -79,7 +78,7 @@ public class OrderDto {
 
 		Integer orderId = orderservice.createOrder(orderItemList);
 		Double total = orderservice.billTotal(orderId);
-		return convertOrderPojo(orderservice.getOrder(orderId), total);
+		return convertOrderPojoToData(orderservice.getOrder(orderId), total);
 	}
 
 	@Transactional
@@ -91,21 +90,21 @@ public class OrderDto {
 		for (OrderItemPojo orderItemPojo : orderItemPojo_list) {
 			ProductPojo productPojo = productservice.findProduct(orderItemPojo.getOrderProductId());
 			InventoryPojo inventoryPojo = inventoryservice.getInventory(productPojo.getProductId());
-			d.add(convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
+			d.add(convertToOrderItemData(orderItemPojo, productPojo, orderPojo, inventoryPojo));
 		}
 		//orderPojo.getDate())
 		billData.setOrderItemData(d);
 		billData.setBillAmount(orderservice.billTotal(orderId));
 
-			if(orderPojo.isInvoiced()!=true)
-			{ billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss aa").format(new Date()));
+		if(orderPojo.isInvoiced()!=true)
+		{ billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss aa").format(new Date()));
 			orderPojo.setInvoicedTime(new Date());
 			orderPojo.setInvoiced(true);
 //			orderData.setInvoiced(true);
-			}
-			else {
-				billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(orderPojo.getInvoicedTime()));
-			}
+		}
+		else {
+			billData.setDatetime(new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(orderPojo.getInvoicedTime()));
+		}
 		billData.setOrderId(orderId);
 		String basePath = new File("").getPath();
 		String fileName = basePath + "src/main/resources/com/increff/pos/invoice/invoice" + orderId + ".pdf";
@@ -125,7 +124,7 @@ public class OrderDto {
 		ProductPojo productpojo = productservice.findProduct(i);
 		OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
 		InventoryPojo inventorypojo = inventoryservice.findInventory(productpojo.getProductId());
-		return convert(orderItemPojo, productpojo, orderPojo, inventorypojo);
+		return convertToOrderItemData(orderItemPojo, productpojo, orderPojo, inventorypojo);
 
 	}
 
@@ -138,7 +137,7 @@ public class OrderDto {
 			ProductPojo productPojo = productservice.findProduct(orderItemPojo.getOrderProductId());
 			OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
 			InventoryPojo inventoryPojo = inventoryservice.findInventory(productPojo.getProductId());
-			d.add(convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
+			d.add(convertToOrderItemData(orderItemPojo, productPojo, orderPojo, inventoryPojo));
 		}
 		return d;
 	}
@@ -150,7 +149,7 @@ public class OrderDto {
 		List<OrderData> list1 = new ArrayList<OrderData>();
 		for (OrderPojo p : orders_list) {
 			double total = orderservice.billTotal(p.getOrderId());
-			list1.add(convertOrderPojo(p, total));
+			list1.add(convertOrderPojoToData(p, total));
 		}
 		return list1;
 	}
@@ -165,12 +164,12 @@ public class OrderDto {
 			ProductPojo productPojo = productservice.findProduct(orderItemPojo.getOrderProductId());
 			OrderPojo orderPojo = orderservice.getOrder(orderItemPojo.getOrderId());
 			InventoryPojo inventoryPojo = inventoryservice.findInventory(productPojo.getProductId());
-			d.add(convert(orderItemPojo, productPojo, orderPojo, inventoryPojo));
+			d.add(convertToOrderItemData(orderItemPojo, productPojo, orderPojo, inventoryPojo));
 		}
 		return d;
 	}
 
-// Fetching all order items
+	// Fetching all order items
 	@Transactional
 	public List<OrderItemPojo> getAll() {
 		return orderservice.getAll();
@@ -188,18 +187,6 @@ public class OrderDto {
 		}
 
 		increaseInventory(orderservice.delete(id));
-	}
-
-	// Deletion of order
-	@Transactional
-	public void deleteOrder(Integer orderId) throws ApiException {
-
-		List<OrderItemPojo> orderItemList = orderservice.getOrderItems(orderId);
-		for (OrderItemPojo orderItemPojo : orderItemList) {
-			increaseInventory(orderItemPojo);
-			orderservice.deleteOrder(orderItemPojo);
-		}
-		orderservice.deleteOrderhelper(orderId);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -229,7 +216,7 @@ public class OrderDto {
 		}
 
 		//orderItem pojo that is received through edit form
-		OrderItemPojo orderItemPojo = convertOrderItemForm(f, productPojo);
+		OrderItemPojo orderItemPojo = convertOrderItemFormToPojo(f, productPojo);
 
 		//orderItem pojo that is get from backend through id
 
@@ -238,7 +225,7 @@ public class OrderDto {
 
 
 		//quantity that is present in the order already
-		 Integer quantity=oip.getOrderQuantity();
+		Integer quantity=oip.getOrderQuantity();
 
 
 
@@ -361,7 +348,7 @@ public class OrderDto {
 		barcode.toLowerCase().trim();
 	}
 
-	public static OrderItemPojo convertOrderItemForm(OrderItemForm orderItemForm, ProductPojo productPojo) {
+	public static OrderItemPojo convertOrderItemFormToPojo(OrderItemForm orderItemForm, ProductPojo productPojo) {
 		OrderItemPojo item = new OrderItemPojo();
 		item.setOrderProductId(productPojo.getProductId());
 		item.setOrderQuantity(orderItemForm.getProductQuantity());
@@ -371,19 +358,19 @@ public class OrderDto {
 	}
 
 	// Convert Order Pojo to Order Data
-	public static OrderData convertOrderPojo(OrderPojo pojo, Double total) {
+	public static OrderData convertOrderPojoToData(OrderPojo pojo, Double total) {
 		OrderData d = new OrderData();
 		d.setOrderId(pojo.getOrderId());
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-			String datetime = dateFormat.format(pojo.getDate());
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		String datetime = dateFormat.format(pojo.getDate());
 		d.setDatetime(pojo.getDate());
 		d.setBillAmount(total);
 		d.setInvoiced(pojo.isInvoiced());
 		return d;
 	}
 
-	public static OrderItemData convert(OrderItemPojo orderItemPojo, ProductPojo productPojo, OrderPojo orderPojo,
-			InventoryPojo inventoryPojo) {
+	public static OrderItemData convertToOrderItemData(OrderItemPojo orderItemPojo, ProductPojo productPojo, OrderPojo orderPojo,
+										InventoryPojo inventoryPojo) {
 		OrderItemData d = new OrderItemData();
 		d.setId(orderPojo.getOrderId());
 		d.setOrderItemId(orderItemPojo.getOrderItemId());

@@ -45,6 +45,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
 
 	//Bean is used to mark a method as one that creates a bean and Spring will then add it to the context for us
 	//the function that is created via bean will work in whole project not need to configure it again
+	//only those paths will be shown which have /api as their starting url
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)//
@@ -82,7 +83,8 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
 		resolver.setCharacterEncoding("UTF-8");
 		return resolver;
 	}
-	
+
+	//for thymeleaf purpose
 	@Bean
 	public ITemplateResolver templateResolver() {
 		SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
@@ -91,7 +93,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
 		resolver.setTemplateMode(TemplateMode.HTML);
 		return resolver;
 	}
-	
+	//reading and writing json
 	@Bean
 	public ObjectMapper objectMapper() {
 		JavaTimeModule javaTimeModule = new JavaTimeModule();

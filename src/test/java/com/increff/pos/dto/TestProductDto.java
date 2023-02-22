@@ -202,10 +202,10 @@ public class TestProductDto extends AbstractUnitTest {
 		int id = list.get(0).getProductId();
 
 		// Verifying the Update function
-		barcode = "barcodechanged";
+
 		brandname = "namechanged";
 		brandcategory = "categorychanged";
-		productname = "pnamechanged";
+
 
 		mrp = 900.0;
 

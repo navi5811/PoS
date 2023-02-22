@@ -154,6 +154,12 @@ var processCount = 0;
 // Initial fn called
 function processData(){
 	var file = $('#inventoryFile')[0].files[0];
+	var fileName = document.getElementById('inventoryFile').files[0].name;
+    var lastFour = fileName.substr(fileName.length - 4);
+    if(lastFour!='.tsv'){
+        handleJsError("Please upload a TSV file");
+    }
+	
 	readFileData(file, readFileDataCallback);
 }
 
@@ -175,6 +181,9 @@ async function uploadRows(){
 		if(errorData.length == 0){
 			$("#upload-inventory-modal").modal('toggle');
 		}
+		else{
+			sendAlert("Error in file is there Please re-upload after reconsutruction");
+		}
 			getInventoryList();
 		return;
 	}
@@ -188,16 +197,6 @@ async function uploadRows(){
 	if((fileObject.length!=2) || (fileObject[0]!="Barcode") || (fileObject[1]!="Quantity")){
 		handleJsError("File headers are not valid");
     }
-	// tempObj = {
-	// 	'Barcode': inventoryProductBarcode,
-	// 	'Quantity': productQuantity
-	// };
-
-	//logic, loops, conditions
-
-	// Object.keys(tempObj).reduce(()=>{
-
-	// },{})
 
 
 	let quan=parseInt(row.Quantity);
@@ -210,11 +209,6 @@ async function uploadRows(){
 	   		uploadRows();
 			return;
 	}
-	// if((qn.matches("[0-9]+")==false))
-	// {
-
-		
-	// }
 
 	var barcode=row.Barcode;
 
@@ -320,8 +314,7 @@ function updateUploadDialog(){
 
 // To replace choose file with Upload File name
 function updateFileName(){
-	var $file = $('#inventoryFile');
-	var fileName = document.getElementById("inventoryFile").files[0].name;
+	var fileName = document.getElementById('inventoryFile').files[0].name;
 	$('#inventoryFileName').html(fileName);
 }
 

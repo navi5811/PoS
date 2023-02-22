@@ -48,7 +48,7 @@ public class UserDto extends AbstractUiController {
             return null;
         }
         normalize(p);
-        return convert(p);
+        return convertUserPojoToData(p);
     }
 
     @Transactional
@@ -56,7 +56,7 @@ public class UserDto extends AbstractUiController {
         List<UserData> list = new ArrayList<>();
         List<UserPojo> up = userService.getAll();
         for (UserPojo u : up) {
-            list.add(convert(u));
+            list.add(convertUserPojoToData(u));
         }
         return list;
     }
@@ -81,7 +81,7 @@ public class UserDto extends AbstractUiController {
         }
 
 
-        UserPojo p = convert(form);
+        UserPojo p = convertUserFormToPojo(form);
         normalize(p);
         UserPojo existing = userService.get(p.getEmail());
         if (existing != null) {
@@ -102,7 +102,7 @@ public class UserDto extends AbstractUiController {
         }
 
         // Create authentication object
-        Authentication authentication = convertp(p);
+        Authentication authentication = convertUserData(p);
         // Create new session
         HttpSession session = req.getSession(true);
         // Attach Spring SecurityContext to this new session
@@ -119,7 +119,7 @@ public class UserDto extends AbstractUiController {
         p.setRole(p.getRole().toLowerCase().trim());
     }
 
-    private static UserPojo convert(UserForm f) {
+    private static UserPojo convertUserFormToPojo(UserForm f) {
         UserPojo p = new UserPojo();
         p.setEmail(f.getEmail());
         p.setRole(f.getRole());
@@ -127,7 +127,7 @@ public class UserDto extends AbstractUiController {
         return p;
     }
 
-    private static UserData convert(UserPojo p) {
+    private static UserData convertUserPojoToData(UserPojo p) {
         UserData d = new UserData();
         d.setEmail(p.getEmail());
         d.setRole(p.getRole());
@@ -136,7 +136,7 @@ public class UserDto extends AbstractUiController {
         return d;
     }
 
-    public static Authentication convertp(UserData p) {
+    public static Authentication convertUserData(UserData p) {
         // Create principal
         UserPrincipal principal = new UserPrincipal();
         principal.setEmail(p.getEmail());
@@ -146,7 +146,6 @@ public class UserDto extends AbstractUiController {
         ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(p.getRole()));
         // you can add more roles if required
-
         // Create Authentication
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null,
                 authorities);

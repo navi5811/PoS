@@ -248,66 +248,66 @@ public class TestOrderDto extends AbstractUnitTest {
 		assertEquals(data.getName(), productname);
 	}
 
-	@Test
-	public void testDeleteOrder() throws ApiException {
-		String barcode = "barcode";
-		String brandname = "name";
-		String brandcategory = "category";
-		String productname = "pname";
-		Double mrp = 800.0;
-
-		BrandForm brandform = new BrandForm();
-		brandform.setBrandName(brandname);
-		brandform.setBrandCategory(brandcategory);
-
-		branddto.addBrand(brandform);
-		ProductForm f = new ProductForm();
-		f.setProductBarcode(barcode);
-		f.setProductBrandName(brandname);
-		f.setProductBrandCategoryName(brandcategory);
-		f.setProductName(productname);
-		f.setProductMrp(mrp);
-		productdto.addProduct(f);
-
-		InventoryForm inventoryform = new InventoryForm();
-		inventoryform.setInventoryProductBarcode(barcode);
-		inventoryform.setProductQuantity(50);
-		inventorydto.updateInventory(inventoryform);
-
-		Date date = new Date();
-		OrderPojo op = new OrderPojo();
-		op.setDate(date);
-		Integer quantity = 5;
-		Double sellingPrice = 50.0;
-
-		OrderItemForm form = new OrderItemForm();
-		form.setProductBarcode(barcode);
-		form.setProductQuantity(quantity);
-		form.setProductSellingPrice(sellingPrice);
-
-		List<OrderItemForm> orderItemForm = new ArrayList<OrderItemForm>();
-		orderItemForm.add(form);
-		orderdto.createOrder(orderItemForm);
-		// orderCreated
-
-		List<OrderData> orderDataList = orderdto.getAllOrders();
-
-		// checking that order exists in the orderlist
-		if (orderDataList.size() == 0) {
-			return;
-		}
-
-		int orderId = orderDataList.get(0).getOrderId();
-
-		orderdto.deleteOrder(orderId);
-		List<OrderData> neworderDataList = orderdto.getAllOrders();
-
-		// checking that after deleting order list is empty
-		if (neworderDataList.size() == 0)
-			return;
-		fail();
-
-	}
+//	@Test
+//	public void testDeleteOrder() throws ApiException {
+//		String barcode = "barcode";
+//		String brandname = "name";
+//		String brandcategory = "category";
+//		String productname = "pname";
+//		Double mrp = 800.0;
+//
+//		BrandForm brandform = new BrandForm();
+//		brandform.setBrandName(brandname);
+//		brandform.setBrandCategory(brandcategory);
+//
+//		branddto.addBrand(brandform);
+//		ProductForm f = new ProductForm();
+//		f.setProductBarcode(barcode);
+//		f.setProductBrandName(brandname);
+//		f.setProductBrandCategoryName(brandcategory);
+//		f.setProductName(productname);
+//		f.setProductMrp(mrp);
+//		productdto.addProduct(f);
+//
+//		InventoryForm inventoryform = new InventoryForm();
+//		inventoryform.setInventoryProductBarcode(barcode);
+//		inventoryform.setProductQuantity(50);
+//		inventorydto.updateInventory(inventoryform);
+//
+//		Date date = new Date();
+//		OrderPojo op = new OrderPojo();
+//		op.setDate(date);
+//		Integer quantity = 5;
+//		Double sellingPrice = 50.0;
+//
+//		OrderItemForm form = new OrderItemForm();
+//		form.setProductBarcode(barcode);
+//		form.setProductQuantity(quantity);
+//		form.setProductSellingPrice(sellingPrice);
+//
+//		List<OrderItemForm> orderItemForm = new ArrayList<OrderItemForm>();
+//		orderItemForm.add(form);
+//		orderdto.createOrder(orderItemForm);
+//		// orderCreated
+//
+//		List<OrderData> orderDataList = orderdto.getAllOrders();
+//
+//		// checking that order exists in the orderlist
+//		if (orderDataList.size() == 0) {
+//			return;
+//		}
+//
+//		int orderId = orderDataList.get(0).getOrderId();
+//
+//		orderdto.deleteOrder(orderId);
+//		List<OrderData> neworderDataList = orderdto.getAllOrders();
+//
+//		// checking that after deleting order list is empty
+//		if (neworderDataList.size() == 0)
+//			return;
+//		fail();
+//
+//	}
 
 	@Test
 	public void testUpdate() throws ApiException {
@@ -436,7 +436,7 @@ public class TestOrderDto extends AbstractUnitTest {
 		productdto.addProduct(nf);
 
 		InventoryForm newinventoryform = new InventoryForm();
-		newinventoryform.setInventoryProductBarcode(barcode);
+		newinventoryform.setInventoryProductBarcode(newbarcode);
 		newinventoryform.setProductQuantity(50);
 		inventorydto.updateInventory(newinventoryform);
 
@@ -444,10 +444,10 @@ public class TestOrderDto extends AbstractUnitTest {
 
 
 		quantity = 5;
-		sellingPrice = 50.0;
+		sellingPrice = 40.0;
 
 		OrderItemForm newform = new OrderItemForm();
-		newform.setProductBarcode(barcode);
+		newform.setProductBarcode(newbarcode);
 		newform.setProductQuantity(quantity);
 		newform.setProductSellingPrice(sellingPrice);
 

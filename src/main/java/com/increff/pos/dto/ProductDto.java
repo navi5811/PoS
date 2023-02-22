@@ -23,7 +23,7 @@ import com.increff.pos.util.StringUtil;
 
 @Service
 public class ProductDto {
-	
+
 	@Autowired
 	private ProductService productservice;
 	@Autowired
@@ -35,8 +35,9 @@ public class ProductDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void addProduct(ProductForm f) throws ApiException {
 		normalizeProduct(f);
-		ProductPojo p = convert(f);
-		validateProduct(p);
+		emptyCheck(f);
+		validateProduct(f);
+		ProductPojo p = convertProductFormToPojo(f);
 		productservice.addProduct(p);
 		InventoryPojo inv = new InventoryPojo(p.getProductId(), 0);
 		inventoryservice.addInventory(inv);
@@ -49,7 +50,7 @@ public class ProductDto {
 		List<ProductPojo> list = productservice.getAllProduct();
 		List<ProductData> list2 = new ArrayList<ProductData>();
 		for (ProductPojo p : list) {
-			list2.add(convert(p));
+			list2.add(convertProductPojoToData(p));
 		}
 		return list2;
 	}
@@ -59,8 +60,10 @@ public class ProductDto {
 	public void updateProduct(Integer id, ProductForm f) throws ApiException {
 
 		normalizeProduct(f);
-		ProductPojo p = convert(f);
-		validateEditProduct(p);
+		emptyCheck(f);
+		validateEditProduct(f);
+		ProductPojo p = convertProductFormToPojo(f);
+
 		ProductPojo ex = productservice.findProduct(id);
 		if(!ex.getProductBarcode().equals(f.getProductBarcode()))
 		{
@@ -83,11 +86,11 @@ public class ProductDto {
 	@Transactional
 	public ProductData findProduct(Integer id) throws ApiException {
 		ProductPojo p = productservice.findProduct(id);
-		
+
 		if (p == null) {
 			throw new ApiException("Product with given ID does not exist, id: " + id);
 		}
-		ProductData pd=convert(p);
+		ProductData pd=convertProductPojoToData(p);
 		return pd;
 	}
 
@@ -98,7 +101,7 @@ public class ProductDto {
 		if (p == null) {
 			throw new ApiException("Product with given barcode does not exist, Barcode: " + barcode);
 		}
-		ProductData pd=convert(p);
+		ProductData pd=convertProductPojoToData(p);
 		return pd;
 	}
 
@@ -112,7 +115,7 @@ public class ProductDto {
 	}
 
 	//validations for editing product
-	protected void validateEditProduct(ProductPojo p) throws ApiException {
+	protected void validateEditProduct(ProductForm p) throws ApiException {
 
 		if(p.getProductBarcode().length()>15)
 		{
@@ -142,13 +145,15 @@ public class ProductDto {
 		if (p.getProductMrp()<=0.0) {
 			throw new ApiException("Product Mrp cannot be less than or equal to 0");
 		}
-		ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
-
-
+		BrandPojo brandPojo=brandservice.findBrand(p.getProductBrandName(),p.getProductBrandCategoryName());
+		if(brandPojo==null)
+		{
+			throw new ApiException("Given Brand-Category combination does not exist");
+		}
 	}
 
 	//validations for adding a product
-	protected void validateProduct(ProductPojo p) throws ApiException {
+	protected void validateProduct(ProductForm p) throws ApiException {
 
 		if(p.getProductBarcode().length()>15)
 		{
@@ -183,8 +188,13 @@ public class ProductDto {
 			throw new ApiException("Product with the same Barcode already exists");
 		}
 
+		BrandPojo brandPojo=brandservice.findBrand(p.getProductBrandName(),p.getProductBrandCategoryName());
+		if(brandPojo==null)
+		{
+			throw new ApiException("Given Brand-Category combination does not exist");
+		}
 //		 To check if Product already exists with a different barcode
-			ProductPojo check = productservice.find(p.getProductName(), p.getProductBrandCategory());
+		ProductPojo check = productservice.find(p.getProductName(), brandPojo.getBrandId());
 
 		if ((check != null) && check.getProductBarcode() == p.getProductBarcode()) {
 			throw new ApiException("The given product already exists in the Database");
@@ -196,7 +206,7 @@ public class ProductDto {
 	}
 
 	//conversion of product pojo to product data
-	public ProductData convert(ProductPojo p) throws ApiException {
+	public ProductData convertProductPojoToData(ProductPojo p) throws ApiException {
 		ProductData d = new ProductData();
 
 		d.setProductBarcode(p.getProductBarcode());
@@ -206,10 +216,6 @@ public class ProductDto {
 
 		Integer productBrandId = p.getProductBrandCategory();
 		BrandPojo brandPojo = brandservice.getBrand(productBrandId);
-		if(brandPojo==null)
-		{
-			throw new ApiException("corresponding brand category does not exist");
-		}
 		d.setProductBrandCategoryName(brandPojo.getBrandCategory());
 		d.setProductBrandName(brandPojo.getBrandName());
 
@@ -217,9 +223,23 @@ public class ProductDto {
 	}
 
 	//conversion of product form to porduct pojo
-	public ProductPojo convert(ProductForm f) throws ApiException {
+	public ProductPojo convertProductFormToPojo(ProductForm f) throws ApiException {
 		ProductPojo p = new ProductPojo();
+		String toFindBrandName = f.getProductBrandName();
+		String toFindBrandCategoryName = f.getProductBrandCategoryName();
 
+		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
+
+		Integer foundBrandId = foundBrand.getBrandId();
+
+		p.setProductBrandCategory(foundBrandId);
+		p.setProductName(f.getProductName());
+		p.setProductMrp(f.getProductMrp());
+		p.setProductBarcode(f.getProductBarcode());
+
+		return p;
+	}
+	public void emptyCheck(ProductForm f) throws ApiException{
 		if(f.getProductMrp()==null)
 		{
 			throw new ApiException("MRP cannot be null");
@@ -231,24 +251,6 @@ public class ProductDto {
 		if (StringUtil.isEmpty(f.getProductBrandCategoryName())) {
 			throw new ApiException("Product must belong to a category, Category name field cannot be empty");
 		}
-
-		String toFindBrandName = StringUtil.toLowerCase(f.getProductBrandName());
-		String toFindBrandCategoryName = StringUtil.toLowerCase(f.getProductBrandCategoryName());
-
-		BrandPojo foundBrand = brandservice.findBrand(toFindBrandName, toFindBrandCategoryName);
-
-		if(foundBrand==null)
-		{
-			throw new ApiException("Can't find brand-category combination");
-		}
-		Integer foundBrandId = foundBrand.getBrandId();
-
-		p.setProductBrandCategory(foundBrandId);
-		p.setProductName(f.getProductName());
-		p.setProductMrp(f.getProductMrp());
-		p.setProductBarcode(f.getProductBarcode());
-
-		return p;
 	}
 
 }
